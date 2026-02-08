@@ -1,12 +1,13 @@
-# The Lab — Marketing Website
+# Ligerian Labs — Site Marketing
 
-AI-driven innovation lab. Empowering local actors through artificial intelligence.
+Laboratoire d'innovation IA basé à Angers, Pays de la Loire.
 
 ## Stack
 
-- **Astro** — zero-JS by default, blazing fast
-- **Tailwind CSS** — utility-first styling
-- **Markdown blog** — content in `src/content/blog/`
+- **Astro** (hybrid SSR) — zero-JS par défaut, ultra rapide
+- **Tailwind CSS** — styling utilitaire
+- **Blog Markdown** — contenu dans `src/content/blog/`
+- **Lead capture** — formulaire de contact → `leads/` (JSONL + fichiers individuels)
 
 ## Getting Started
 
@@ -17,27 +18,41 @@ npm run dev
 
 Open [http://localhost:4321](http://localhost:4321).
 
+## Pages
+
+- `/` — Accueil (hero, pilliers, articles récents, CTA)
+- `/a-propos` — À propos du lab
+- `/blog` — Index des articles
+- `/blog/<slug>` — Article individuel
+- `/contact` — Formulaire de contact (lead capture)
+
 ## Blog
 
-Write posts as `.md` files in `src/content/blog/`. Frontmatter:
+Écrire des articles `.md` dans `src/content/blog/` :
 
 ```yaml
 ---
-title: "Your Post Title"
+title: "Titre de l'article"
 date: "2026-02-08"
-excerpt: "Short description for the blog index."
-author: "Author Name"
-tags: ["ai", "tools"]
+excerpt: "Description courte pour l'index."
+author: "Nom"
+tags: ["ia", "outils"]
 ---
 ```
 
-Posts are automatically listed on `/blog` and rendered at `/blog/<slug>`.
+## Leads
+
+Les soumissions du formulaire de contact sont stockées dans :
+- `leads/leads.jsonl` — un JSON par ligne (append-only)
+- `leads/lead_<id>.json` — fichiers individuels
+
+Les leads sont gitignorés. Pour un usage production, branchez un service email (Resend, Postmark) ou un CRM.
 
 ## Build & Deploy
 
 ```bash
-npm run build    # outputs to dist/
-npm run preview  # preview the build locally
+npm run build
+npm run preview
 ```
 
-Deploy `dist/` anywhere — Vercel, Netlify, Cloudflare Pages, or any static host.
+Deploy sur Vercel, Netlify, ou tout hébergeur supportant Astro SSR.

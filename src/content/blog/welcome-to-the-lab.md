@@ -1,31 +1,31 @@
 ---
-title: "Welcome to The Lab"
+title: "Bienvenue chez Ligerian Labs"
 date: "2026-02-08"
-excerpt: "We're an AI-driven lab on a mission to empower local actors through artificial intelligence. Here's what we're about."
-author: "The Lab Team"
-tags: ["announcement", "ai"]
+excerpt: "On est un labo IA basé à Angers. Notre mission : rendre l'intelligence artificielle accessible aux entreprises des Pays de la Loire."
+author: "L'équipe Ligerian Labs"
+tags: ["annonce", "ia"]
 ---
 
-## Why We Exist
+## Pourquoi on existe
 
-The AI revolution is here — but it's not evenly distributed. Big companies have teams of ML engineers. Local businesses, creators, and communities? They're often left behind.
+La révolution IA est là — mais elle n'est pas distribuée de manière équitable. Les grandes entreprises ont des équipes entières dédiées au machine learning. Les PME, les artisans, les collectivités locales ? Souvent laissés sur le bord de la route.
 
-**That's where we come in.**
+**C'est là qu'on intervient.**
 
-The Lab is an AI-driven innovation lab focused on one thing: bringing the power of AI to the people who need it most. We call it **AI empowerment** — giving local actors the tools, knowledge, and strategies to leverage artificial intelligence in their daily work.
+Ligerian Labs est un laboratoire d'innovation IA basé à Angers, au cœur des Pays de la Loire. Notre focus : amener la puissance de l'IA aux acteurs qui en ont le plus besoin. On appelle ça l'**empowerment par l'IA** — donner aux acteurs locaux les outils, les connaissances et les stratégies pour tirer parti de l'intelligence artificielle dans leur quotidien.
 
-## What We Do
+## Ce qu'on fait
 
-- **AI Strategy** — We help you figure out where AI fits in your workflow
-- **AI Tooling** — We build custom solutions that actually solve your problems
-- **AI Education** — We run workshops and create resources to demystify AI
+- **Conseil IA** — On vous aide à identifier où l'IA s'intègre dans votre activité
+- **Outils sur mesure** — On développe des solutions qui résolvent vos vrais problèmes
+- **Formation** — On anime des ateliers et on crée des ressources pour démystifier l'IA
 
-## Our Philosophy
+## Notre philosophie
 
-We don't believe in AI for AI's sake. We believe in **leverage**. The right AI tool in the right hands can 10x a one-person operation. That's the kind of impact we're chasing.
+On ne croit pas à l'IA pour l'IA. On croit au **levier**. Le bon outil IA entre les bonnes mains peut démultiplier l'impact d'une petite structure. C'est exactement ce type de résultats qu'on vise.
 
-## What's Next
+## La suite
 
-This blog will be our home for sharing insights, case studies, tutorials, and thoughts on the future of AI for local actors. Stay tuned.
+Ce blog sera notre espace pour partager des retours d'expérience, des études de cas, des tutoriels et nos réflexions sur l'avenir de l'IA pour les acteurs locaux en Pays de la Loire.
 
-Welcome to The Lab. Let's build.
+Bienvenue chez Ligerian Labs. Construisons ensemble.

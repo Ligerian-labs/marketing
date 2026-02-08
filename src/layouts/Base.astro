@@ -8,17 +8,59 @@ interface Props {
   description?: string;
 }
 
-const { title, description = "AI-driven innovation lab empowering local actors through artificial intelligence." } = Astro.props;
+const {
+  title,
+  description = "Ligerian Labs — Laboratoire d'innovation IA à Angers. Nous accompagnons les entreprises des Pays de la Loire dans leur transformation par l'intelligence artificielle."
+} = Astro.props;
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang="fr">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content={description} />
+
+    <!-- SEO Geo targeting -->
+    <meta name="geo.region" content="FR-PDL" />
+    <meta name="geo.placename" content="Angers" />
+    <meta name="geo.position" content="47.4784;-0.5632" />
+    <meta name="ICBM" content="47.4784, -0.5632" />
+
+    <!-- Open Graph -->
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:locale" content="fr_FR" />
+    <meta property="og:type" content="website" />
+
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="canonical" href={Astro.url.href} />
     <title>{title}</title>
+
+    <!-- JSON-LD Structured Data -->
+    <script type="application/ld+json" set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      "name": "Ligerian Labs",
+      "url": "https://ligerianlabs.fr",
+      "email": "bonjour@ligerianlabs.fr",
+      "description": "Laboratoire d'innovation IA à Angers, accompagnant les entreprises des Pays de la Loire",
+      "address": {
+        "@type": "PostalAddress",
+        "addressLocality": "Angers",
+        "addressRegion": "Pays de la Loire",
+        "addressCountry": "FR"
+      },
+      "areaServed": {
+        "@type": "GeoCircle",
+        "geoMidpoint": {
+          "@type": "GeoCoordinates",
+          "latitude": 47.4784,
+          "longitude": -0.5632
+        },
+        "geoRadius": "100000"
+      }
+    })} />
   </head>
   <body class="min-h-screen flex flex-col">
     <Header />

@@ -7,49 +7,78 @@ const posts = (await getCollection("blog"))
   .slice(0, 3);
 ---
 
-<Base title="The Lab — AI-Driven Innovation">
+<Base title="Ligerian Labs — Intelligence Artificielle à Angers | Pays de la Loire">
   <!-- Hero -->
   <section class="max-w-6xl mx-auto px-6 py-32 text-center">
     <div class="inline-block bg-accent/10 text-accent text-sm font-medium px-4 py-1.5 rounded-full mb-8">
-      AI-Driven Lab
+      Laboratoire IA — Angers, Pays de la Loire
     </div>
     <h1 class="text-5xl md:text-7xl font-extrabold tracking-tight mb-6">
-      Empowering Local Actors<br />
-      <span class="gradient-text">Through AI</span>
+      L'IA au service<br />
+      <span class="gradient-text">de votre entreprise</span>
     </h1>
     <p class="text-xl text-gray-400 max-w-2xl mx-auto mb-12">
-      We are an AI-driven innovation lab. We build tools, strategies, and solutions
-      that bring artificial intelligence to the people who need it most — local
-      businesses, creators, and communities.
+      Ligerian Labs est un laboratoire d'innovation basé à Angers. Nous accompagnons
+      les entreprises et acteurs locaux des Pays de la Loire dans leur transformation
+      grâce à l'intelligence artificielle — concrètement, sans jargon.
     </p>
-    <div class="flex gap-4 justify-center">
-      <a href="/about" class="bg-accent hover:bg-accent-light text-white px-8 py-3 rounded-lg font-medium transition">
-        Learn More
+    <div class="flex gap-4 justify-center flex-wrap">
+      <a href="/contact" class="bg-accent hover:bg-accent-light text-white px-8 py-3 rounded-lg font-medium transition">
+        Parlons de votre projet
       </a>
-      <a href="/blog" class="border border-white/20 hover:border-white/40 text-white px-8 py-3 rounded-lg font-medium transition">
-        Read the Blog
+      <a href="/a-propos" class="border border-white/20 hover:border-white/40 text-white px-8 py-3 rounded-lg font-medium transition">
+        Découvrir le lab
       </a>
     </div>
   </section>
 
   <!-- Pillars -->
   <section class="max-w-6xl mx-auto px-6 py-20">
-    <h2 class="text-3xl font-bold text-center mb-16">What We Do</h2>
+    <h2 class="text-3xl font-bold text-center mb-4">Ce qu'on fait</h2>
+    <p class="text-gray-400 text-center max-w-xl mx-auto mb-16">
+      On ne vend pas du rêve. On identifie où l'IA crée de la valeur dans votre activité, et on construit les outils pour la capturer.
+    </p>
     <div class="grid md:grid-cols-3 gap-8">
       <div class="bg-surface border border-white/5 rounded-xl p-8 hover:border-accent/30 transition glow">
         <div class="text-4xl mb-4">🧠</div>
-        <h3 class="text-xl font-semibold mb-3">AI Strategy</h3>
-        <p class="text-gray-400">We help local actors identify where AI creates the most leverage in their workflow.</p>
+        <h3 class="text-xl font-semibold mb-3">Conseil IA</h3>
+        <p class="text-gray-400">
+          On analyse votre activité pour identifier les leviers IA les plus impactants.
+          Pas de PowerPoint creux — un plan d'action concret.
+        </p>
       </div>
       <div class="bg-surface border border-white/5 rounded-xl p-8 hover:border-accent/30 transition glow">
         <div class="text-4xl mb-4">⚡</div>
-        <h3 class="text-xl font-semibold mb-3">AI Tooling</h3>
-        <p class="text-gray-400">We build and deploy custom AI tools tailored to real-world needs — not hype.</p>
+        <h3 class="text-xl font-semibold mb-3">Outils sur mesure</h3>
+        <p class="text-gray-400">
+          On développe des solutions IA adaptées à vos besoins réels.
+          Automatisation, analyse de données, assistants intelligents.
+        </p>
       </div>
       <div class="bg-surface border border-white/5 rounded-xl p-8 hover:border-accent/30 transition glow">
         <div class="text-4xl mb-4">📚</div>
-        <h3 class="text-xl font-semibold mb-3">AI Education</h3>
-        <p class="text-gray-400">We run workshops, write guides, and create resources to demystify AI for everyone.</p>
+        <h3 class="text-xl font-semibold mb-3">Formation</h3>
+        <p class="text-gray-400">
+          On forme vos équipes pour qu'elles maîtrisent l'IA au quotidien.
+          Ateliers pratiques, pas de théorie abstraite.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Local Trust -->
+  <section class="max-w-6xl mx-auto px-6 py-20">
+    <div class="bg-surface border border-white/5 rounded-2xl p-12 glow text-center">
+      <h2 class="text-3xl font-bold mb-4">Ancré dans le territoire</h2>
+      <p class="text-gray-400 max-w-2xl mx-auto mb-8">
+        Basés à Angers, on travaille avec les entreprises, artisans et collectivités
+        des Pays de la Loire. On connaît le tissu économique local et on croit que l'IA
+        n'est pas réservée aux géants de la tech — c'est un accélérateur pour tous.
+      </p>
+      <div class="flex justify-center gap-8 text-sm text-muted">
+        <span>📍 Angers</span>
+        <span>🏢 PME & TPE</span>
+        <span>🤝 Accompagnement humain</span>
       </div>
     </div>
   </section>
@@ -58,8 +87,8 @@ const posts = (await getCollection("blog"))
   {posts.length > 0 && (
     <section class="max-w-6xl mx-auto px-6 py-20">
       <div class="flex justify-between items-center mb-12">
-        <h2 class="text-3xl font-bold">Latest from the Blog</h2>
-        <a href="/blog" class="text-accent hover:text-accent-light text-sm">View all →</a>
+        <h2 class="text-3xl font-bold">Derniers articles</h2>
+        <a href="/blog" class="text-accent hover:text-accent-light text-sm">Voir tout →</a>
       </div>
       <div class="grid md:grid-cols-3 gap-8">
         {posts.map((post) => (
@@ -76,13 +105,13 @@ const posts = (await getCollection("blog"))
   <!-- CTA -->
   <section class="max-w-4xl mx-auto px-6 py-20 text-center">
     <div class="bg-surface border border-white/5 rounded-2xl p-12 glow">
-      <h2 class="text-3xl font-bold mb-4">Ready to leverage AI?</h2>
+      <h2 class="text-3xl font-bold mb-4">Prêt à passer à l'IA ?</h2>
       <p class="text-gray-400 mb-8 max-w-lg mx-auto">
-        Whether you're a local business, a creator, or a community — we'll help you
-        harness AI to amplify what you do best.
+        Que vous soyez une PME, un artisan ou une collectivité en Pays de la Loire —
+        on vous aide à intégrer l'IA là où ça compte vraiment.
       </p>
-      <a href="mailto:hello@thelab.ai" class="bg-accent hover:bg-accent-light text-white px-8 py-3 rounded-lg font-medium transition inline-block">
-        Let's Talk
+      <a href="/contact" class="bg-accent hover:bg-accent-light text-white px-8 py-3 rounded-lg font-medium transition inline-block">
+        Discutons ensemble
       </a>
     </div>
   </section>

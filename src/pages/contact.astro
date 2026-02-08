@@ -1,0 +1,131 @@
+---
+import Base from "../layouts/Base.astro";
+---
+
+<Base title="Contact — Ligerian Labs | IA à Angers" description="Contactez Ligerian Labs pour discuter de votre projet IA. Basés à Angers, nous accompagnons les entreprises des Pays de la Loire.">
+  <section class="max-w-4xl mx-auto px-6 py-20">
+    <div class="grid md:grid-cols-2 gap-16">
+      <!-- Left: Info -->
+      <div>
+        <h1 class="text-4xl font-bold mb-6">Parlons de votre projet</h1>
+        <p class="text-gray-400 leading-relaxed mb-8">
+          Vous avez une idée, un besoin, ou juste une question sur l'IA ?
+          Écrivez-nous. On répond vite et on ne mord pas.
+        </p>
+
+        <div class="space-y-6">
+          <div>
+            <h3 class="font-semibold text-white mb-1">Email</h3>
+            <a href="mailto:bonjour@ligerianlabs.fr" class="text-accent hover:text-accent-light transition">
+              bonjour@ligerianlabs.fr
+            </a>
+          </div>
+          <div>
+            <h3 class="font-semibold text-white mb-1">Localisation</h3>
+            <p class="text-gray-400">Angers, Pays de la Loire, France</p>
+          </div>
+          <div>
+            <h3 class="font-semibold text-white mb-1">Pour qui ?</h3>
+            <ul class="text-gray-400 space-y-1 text-sm">
+              <li>• PME et TPE des Pays de la Loire</li>
+              <li>• Artisans et commerçants</li>
+              <li>• Collectivités et associations</li>
+              <li>• Startups en phase de croissance</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right: Form -->
+      <div>
+        <form id="contact-form" class="space-y-5">
+          <div>
+            <label for="name" class="form-label">Nom *</label>
+            <input type="text" id="name" name="name" required class="form-input" placeholder="Votre nom" />
+          </div>
+          <div>
+            <label for="email" class="form-label">Email *</label>
+            <input type="email" id="email" name="email" required class="form-input" placeholder="votre@email.fr" />
+          </div>
+          <div>
+            <label for="company" class="form-label">Entreprise</label>
+            <input type="text" id="company" name="company" class="form-input" placeholder="Nom de votre entreprise" />
+          </div>
+          <div>
+            <label for="phone" class="form-label">Téléphone</label>
+            <input type="tel" id="phone" name="phone" class="form-input" placeholder="06 XX XX XX XX" />
+          </div>
+          <div>
+            <label for="subject" class="form-label">Sujet *</label>
+            <select id="subject" name="subject" required class="form-input">
+              <option value="" disabled selected>Choisir un sujet</option>
+              <option value="conseil">Conseil IA — Audit & stratégie</option>
+              <option value="outil">Développement d'un outil IA</option>
+              <option value="formation">Formation IA pour mon équipe</option>
+              <option value="autre">Autre</option>
+            </select>
+          </div>
+          <div>
+            <label for="message" class="form-label">Message *</label>
+            <textarea id="message" name="message" rows="5" required class="form-input" placeholder="Décrivez brièvement votre projet ou besoin..."></textarea>
+          </div>
+
+          <!-- Honeypot anti-spam -->
+          <div class="hidden" aria-hidden="true">
+            <input type="text" name="website" tabindex="-1" autocomplete="off" />
+          </div>
+
+          <button type="submit" class="w-full bg-accent hover:bg-accent-light text-white px-8 py-3 rounded-lg font-medium transition">
+            Envoyer
+          </button>
+        </form>
+
+        <!-- Success message -->
+        <div id="success-message" class="hidden mt-6 bg-green-900/30 border border-green-500/30 rounded-lg p-6 text-center">
+          <p class="text-green-400 font-medium">✓ Message envoyé !</p>
+          <p class="text-gray-400 text-sm mt-2">On revient vers vous rapidement.</p>
+        </div>
+
+        <!-- Error message -->
+        <div id="error-message" class="hidden mt-6 bg-red-900/30 border border-red-500/30 rounded-lg p-6 text-center">
+          <p class="text-red-400 font-medium">Erreur lors de l'envoi</p>
+          <p class="text-gray-400 text-sm mt-2">Envoyez-nous un email directement à <a href="mailto:bonjour@ligerianlabs.fr" class="text-accent">bonjour@ligerianlabs.fr</a></p>
+        </div>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<script>
+  const form = document.getElementById("contact-form") as HTMLFormElement;
+  const successMsg = document.getElementById("success-message")!;
+  const errorMsg = document.getElementById("error-message")!;
+
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    const formData = new FormData(form);
+
+    // Honeypot check
+    if (formData.get("website")) return;
+
+    const data = Object.fromEntries(formData.entries());
+
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      });
+
+      if (res.ok) {
+        form.classList.add("hidden");
+        successMsg.classList.remove("hidden");
+      } else {
+        throw new Error("Failed");
+      }
+    } catch {
+      errorMsg.classList.remove("hidden");
+    }
+  });
+</script>
