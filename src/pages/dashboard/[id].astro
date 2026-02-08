@@ -1,0 +1,120 @@
+---
+export const prerender = false;
+import Base from "../../layouts/Base.astro";
+import { getAuthenticatedUser } from "../../lib/auth";
+import { getSubscriptionById, getSubscriptionResources } from "../../lib/subscriptions";
+
+const user = getAuthenticatedUser(Astro.cookies);
+if (!user) return Astro.redirect("/auth/login");
+
+const { id } = Astro.params;
+const subscription = id ? getSubscriptionById(id) : undefined;
+
+if (!subscription || subscription.user_id !== user.id) {
+  return Astro.redirect("/dashboard");
+}
+
+const resources = getSubscriptionResources(subscription.id);
+
+const packLabels: Record<string, string> = {
+  "agent-starter": "🚀 Agent Starter",
+  "openclaw-setup": "🧠 Agent sur mesure",
+  "moderation-support": "🛡️ Modération IA",
+};
+
+const statusSteps = [
+  { key: "pending", label: "Commande reçue" },
+  { key: "deploying", label: "Déploiement" },
+  { key: "active", label: "Actif" },
+];
+---
+
+<Base title={`${packLabels[subscription.pack] || subscription.pack} — Ligerian Labs`}>
+  <section class="max-w-4xl mx-auto px-6 py-12">
+    <a href="/dashboard" class="text-sm text-muted hover:text-white transition mb-6 inline-block">
+      ← Retour au tableau de bord
+    </a>
+
+    <div class="flex justify-between items-start mb-8">
+      <div>
+        <h1 class="text-3xl font-bold">{packLabels[subscription.pack] || subscription.pack}</h1>
+        <p class="text-gray-400 mt-1">
+          Créé le {new Date(subscription.created_at).toLocaleDateString("fr-FR")}
+        </p>
+      </div>
+    </div>
+
+    <!-- Progress Steps -->
+    <div class="bg-surface border border-white/5 rounded-xl p-6 mb-8">
+      <h2 class="font-semibold mb-4">Statut du déploiement</h2>
+      <div class="flex gap-4">
+        {statusSteps.map((step, i) => {
+          const stepIndex = statusSteps.findIndex((s) => s.key === subscription.status);
+          const isComplete = i <= stepIndex;
+          const isCurrent = i === stepIndex;
+          return (
+            <div class="flex-1">
+              <div class={`h-2 rounded-full mb-2 ${isComplete ? "bg-accent" : "bg-white/10"}`} />
+              <p class={`text-sm ${isCurrent ? "text-accent font-medium" : isComplete ? "text-white" : "text-muted"}`}>
+                {step.label}
+              </p>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+
+    <!-- Infrastructure Details -->
+    <div class="bg-surface border border-white/5 rounded-xl p-6 mb-8">
+      <h2 class="font-semibold mb-4">Infrastructure</h2>
+      <div class="grid md:grid-cols-2 gap-4 text-sm">
+        <div class="flex justify-between py-2 border-b border-white/5">
+          <span class="text-gray-400">Serveur</span>
+          <span class="font-mono">{subscription.server_ip || "En attente"}</span>
+        </div>
+        <div class="flex justify-between py-2 border-b border-white/5">
+          <span class="text-gray-400">Fournisseur</span>
+          <span>{subscription.server_provider || "—"}</span>
+        </div>
+        <div class="flex justify-between py-2 border-b border-white/5">
+          <span class="text-gray-400">Tailscale</span>
+          <span class="font-mono">{subscription.tailscale_hostname || "En attente"}</span>
+        </div>
+        <div class="flex justify-between py-2 border-b border-white/5">
+          <span class="text-gray-400">OpenClaw</span>
+          <span>{subscription.openclaw_version || "—"}</span>
+        </div>
+        <div class="flex justify-between py-2 border-b border-white/5">
+          <span class="text-gray-400">Canal</span>
+          <span>{subscription.channel_type || "—"}</span>
+        </div>
+        <div class="flex justify-between py-2 border-b border-white/5">
+          <span class="text-gray-400">Canal connecté</span>
+          <span>{subscription.channel_connected ? "✅ Oui" : "⏳ Non"}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Resources -->
+    <div class="bg-surface border border-white/5 rounded-xl p-6">
+      <h2 class="font-semibold mb-4">Ressources</h2>
+      {resources.length === 0 ? (
+        <p class="text-muted text-sm">Vos ressources apparaîtront ici une fois le déploiement terminé.</p>
+      ) : (
+        <div class="space-y-3">
+          {resources.map((res) => (
+            <div class="flex items-center justify-between py-3 border-b border-white/5 last:border-0">
+              <div>
+                <p class="font-medium">{res.title}</p>
+                <p class="text-xs text-muted">{res.type} · {new Date(res.created_at).toLocaleDateString("fr-FR")}</p>
+              </div>
+              {res.content && (
+                <span class="text-xs text-accent">Voir</span>
+              )}
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  </section>
+</Base>

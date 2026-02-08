@@ -1,0 +1,57 @@
+---
+export const prerender = false;
+import Base from "../../layouts/Base.astro";
+import { getUserByEmail, verifyPassword, createSession, setSessionCookie } from "../../lib/auth";
+
+let error = "";
+
+if (Astro.request.method === "POST") {
+  const formData = await Astro.request.formData();
+  const email = formData.get("email") as string;
+  const password = formData.get("password") as string;
+
+  if (!email || !password) {
+    error = "Email et mot de passe requis.";
+  } else {
+    const user = getUserByEmail(email);
+    if (!user || !verifyPassword(password, user.password_hash)) {
+      error = "Email ou mot de passe incorrect.";
+    } else {
+      const sessionId = createSession(user.id);
+      setSessionCookie(Astro.cookies, sessionId);
+      return Astro.redirect("/dashboard");
+    }
+  }
+}
+---
+
+<Base title="Connexion — Ligerian Labs">
+  <section class="max-w-md mx-auto px-6 py-20">
+    <h1 class="text-3xl font-bold mb-2 text-center">Connexion</h1>
+    <p class="text-gray-400 text-center mb-8">Accédez à votre espace client</p>
+
+    {error && (
+      <div class="bg-red-900/30 border border-red-500/30 rounded-lg p-4 mb-6 text-red-400 text-sm text-center">
+        {error}
+      </div>
+    )}
+
+    <form method="POST" class="space-y-5">
+      <div>
+        <label for="email" class="form-label">Email</label>
+        <input type="email" id="email" name="email" required class="form-input" placeholder="votre@email.fr" />
+      </div>
+      <div>
+        <label for="password" class="form-label">Mot de passe</label>
+        <input type="password" id="password" name="password" required class="form-input" placeholder="••••••••" />
+      </div>
+      <button type="submit" class="w-full bg-accent hover:bg-accent-light text-white px-6 py-3 rounded-lg font-medium transition">
+        Se connecter
+      </button>
+    </form>
+
+    <p class="text-center text-sm text-muted mt-6">
+      Pas encore de compte ? <a href="/auth/register" class="text-accent hover:text-accent-light">Créer un compte</a>
+    </p>
+  </section>
+</Base>

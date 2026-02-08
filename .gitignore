@@ -6,3 +6,7 @@ dist/
 .env.*
 leads/*.json
 leads/*.jsonl
+data/
+data/*.db
+data/*.db-wal
+data/*.db-shm
