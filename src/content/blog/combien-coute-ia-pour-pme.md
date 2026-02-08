@@ -64,6 +64,16 @@ On parle typiquement de :
 
 C'est un investissement, mais rapporté au gain de temps et à la valeur créée, la rentabilité arrive souvent en quelques mois.
 
+## L'IA ne remplace pas vos équipes — elle les libère
+
+On va être clairs : l'objectif n'est pas de remplacer des gens par des machines. C'est de **supprimer les tâches ingrates** — celles qui ne demandent aucune compétence particulière et que personne n'a envie de faire.
+
+Recopier des données d'un tableur à un autre. Trier 200 mails pour trouver les 5 qui comptent. Reformater un document pour la troisième fois. Ce n'est pas pour ça que vous avez recruté vos collaborateurs.
+
+L'IA prend en charge le travail à faible valeur ajoutée pour que vos équipes se concentrent sur ce qu'elles font de mieux : la relation client, la créativité, la prise de décision, le terrain. Bref, le travail qui demande un cerveau humain — et pas juste des doigts sur un clavier.
+
+Une PME qui investit dans l'IA, c'est une PME qui investit dans ses gens.
+
 ## Le vrai calcul : le coût de ne rien faire
 
 Le piège, c'est de comparer le coût de l'IA à zéro. La bonne comparaison, c'est le coût de ne rien faire :
