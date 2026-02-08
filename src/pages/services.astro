@@ -1,0 +1,167 @@
+---
+import Base from "../layouts/Base.astro";
+---
+
+<Base title="Nos offres — Ligerian Labs | IA pour entreprises à Angers" description="Découvrez nos offres d'accompagnement IA : setup d'agents, modération de communauté, outils sur mesure. Basés à Angers, pour les entreprises des Pays de la Loire.">
+  <!-- Hero -->
+  <section class="max-w-6xl mx-auto px-6 py-20 text-center">
+    <h1 class="text-4xl md:text-5xl font-extrabold tracking-tight mb-6">
+      Des agents IA,<br />
+      <span class="gradient-text">prêts à bosser pour vous</span>
+    </h1>
+    <p class="text-xl text-gray-400 max-w-2xl mx-auto">
+      On ne vend pas du rêve. On installe, on configure, on forme.
+      Vous repartez avec un agent IA opérationnel, adapté à votre métier.
+    </p>
+  </section>
+
+  <!-- Packs -->
+  <section class="max-w-6xl mx-auto px-6 py-12">
+    <div class="grid md:grid-cols-3 gap-8">
+      <!-- Agent Starter -->
+      <div class="bg-surface border border-white/5 rounded-2xl p-8 hover:border-accent/30 transition glow flex flex-col">
+        <div class="text-3xl mb-4">🚀</div>
+        <h2 class="text-2xl font-bold mb-2">Agent Starter</h2>
+        <p class="text-accent font-semibold text-lg mb-4">L'essentiel pour démarrer</p>
+        <p class="text-gray-400 mb-6 flex-1">
+          On met en place toute l'infrastructure pour que vous puissiez utiliser un agent IA.
+          De zéro à opérationnel, on s'occupe de tout.
+        </p>
+        <ul class="text-gray-300 text-sm space-y-3 mb-8">
+          <li class="flex gap-2"><span class="text-accent">✓</span> Création des comptes IA (Anthropic, OpenAI, Mistral, ElevenLabs)</li>
+          <li class="flex gap-2"><span class="text-accent">✓</span> Serveur dédié provisionné et sécurisé</li>
+          <li class="flex gap-2"><span class="text-accent">✓</span> Réseau sécurisé (Tailscale) pour la maintenance</li>
+          <li class="flex gap-2"><span class="text-accent">✓</span> Agent IA installé et connecté à votre messagerie</li>
+          <li class="flex gap-2"><span class="text-accent">✓</span> Premier canal configuré (Discord, Slack, Telegram…)</li>
+        </ul>
+        <a href="/contact" class="bg-accent hover:bg-accent-light text-white px-6 py-3 rounded-lg font-medium transition text-center" onclick="window.posthog && window.posthog.capture('cta_clicked', {location: 'services_starter', text: 'Démarrer'})">
+          Démarrer →
+        </a>
+      </div>
+
+      <!-- OpenClaw Setup -->
+      <div class="bg-surface border border-accent/30 rounded-2xl p-8 glow flex flex-col relative">
+        <div class="absolute -top-3 right-6 bg-accent text-white text-xs font-bold px-3 py-1 rounded-full">
+          Populaire
+        </div>
+        <div class="text-3xl mb-4">🧠</div>
+        <h2 class="text-2xl font-bold mb-2">Agent sur mesure</h2>
+        <p class="text-accent font-semibold text-lg mb-4">Votre assistant, votre style</p>
+        <p class="text-gray-400 mb-6 flex-1">
+          On configure un agent IA qui parle comme vous, connaît votre métier,
+          et fait ce dont vous avez besoin. Personnalité, compétences, tout est taillé sur mesure.
+        </p>
+        <ul class="text-gray-300 text-sm space-y-3 mb-8">
+          <li class="flex gap-2"><span class="text-accent">✓</span> Tout le pack Starter inclus</li>
+          <li class="flex gap-2"><span class="text-accent">✓</span> Personnalité adaptée à votre marque</li>
+          <li class="flex gap-2"><span class="text-accent">✓</span> Compétences métier installées</li>
+          <li class="flex gap-2"><span class="text-accent">✓</span> Automatisations et tâches périodiques</li>
+          <li class="flex gap-2"><span class="text-accent">✓</span> Session d'onboarding (30 min)</li>
+          <li class="flex gap-2"><span class="text-accent">✓</span> Support pendant 1 semaine</li>
+        </ul>
+        <a href="/contact" class="bg-accent hover:bg-accent-light text-white px-6 py-3 rounded-lg font-medium transition text-center" onclick="window.posthog && window.posthog.capture('cta_clicked', {location: 'services_custom', text: 'Configurer mon agent'})">
+          Configurer mon agent →
+        </a>
+      </div>
+
+      <!-- Moderation -->
+      <div class="bg-surface border border-white/5 rounded-2xl p-8 hover:border-accent/30 transition glow flex flex-col">
+        <div class="text-3xl mb-4">🛡️</div>
+        <h2 class="text-2xl font-bold mb-2">Modération IA</h2>
+        <p class="text-accent font-semibold text-lg mb-4">Votre communauté, protégée</p>
+        <p class="text-gray-400 mb-6 flex-1">
+          Un agent modérateur qui veille sur votre communauté Discord, Slack ou Telegram.
+          Il détecte, avertit, et escalade — 24h/24.
+        </p>
+        <ul class="text-gray-300 text-sm space-y-3 mb-8">
+          <li class="flex gap-2"><span class="text-accent">✓</span> Détection automatique : spam, toxicité, hors-sujet</li>
+          <li class="flex gap-2"><span class="text-accent">✓</span> Actions configurables (avertir, supprimer, escalader)</li>
+          <li class="flex gap-2"><span class="text-accent">✓</span> Règles adaptées à votre communauté</li>
+          <li class="flex gap-2"><span class="text-accent">✓</span> Rapports quotidiens de modération</li>
+          <li class="flex gap-2"><span class="text-accent">✓</span> Calibration pendant 1 semaine</li>
+        </ul>
+        <a href="/contact" class="bg-accent hover:bg-accent-light text-white px-6 py-3 rounded-lg font-medium transition text-center" onclick="window.posthog && window.posthog.capture('cta_clicked', {location: 'services_moderation', text: 'Protéger ma communauté'})">
+          Protéger ma communauté →
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Additional Skills -->
+  <section class="max-w-6xl mx-auto px-6 py-20">
+    <h2 class="text-3xl font-bold text-center mb-4">Et aussi…</h2>
+    <p class="text-gray-400 text-center max-w-xl mx-auto mb-12">
+      Des compétences supplémentaires à ajouter à votre agent, selon vos besoins.
+    </p>
+    <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div class="bg-surface border border-white/5 rounded-xl p-6">
+        <div class="text-2xl mb-3">💬</div>
+        <h3 class="font-semibold mb-2">Support client</h3>
+        <p class="text-gray-400 text-sm">FAQ automatisée, qualification des demandes, escalade vers un humain quand c'est nécessaire.</p>
+      </div>
+      <div class="bg-surface border border-white/5 rounded-xl p-6">
+        <div class="text-2xl mb-3">📊</div>
+        <h3 class="font-semibold mb-2">Rapports analytics</h3>
+        <p class="text-gray-400 text-sm">Rapports automatiques sur vos données : trafic, ventes, KPIs. Livrés dans votre canal, au rythme que vous voulez.</p>
+      </div>
+      <div class="bg-surface border border-white/5 rounded-xl p-6">
+        <div class="text-2xl mb-3">✍️</div>
+        <h3 class="font-semibold mb-2">Création de contenu</h3>
+        <p class="text-gray-400 text-sm">Articles de blog, posts LinkedIn, tweets — dans votre ton, avec votre style. Relecture humaine avant publication.</p>
+      </div>
+      <div class="bg-surface border border-white/5 rounded-xl p-6">
+        <div class="text-2xl mb-3">🎯</div>
+        <h3 class="font-semibold mb-2">Capture de leads</h3>
+        <p class="text-gray-400 text-sm">Détection et qualification automatique des prospects dans vos canaux. Notification immédiate, rien ne passe entre les mailles.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- How it works -->
+  <section class="max-w-4xl mx-auto px-6 py-20">
+    <h2 class="text-3xl font-bold text-center mb-12">Comment ça marche ?</h2>
+    <div class="space-y-8">
+      <div class="flex gap-6 items-start">
+        <div class="bg-accent/10 text-accent font-bold text-lg w-10 h-10 rounded-full flex items-center justify-center shrink-0">1</div>
+        <div>
+          <h3 class="font-semibold text-lg mb-1">On discute</h3>
+          <p class="text-gray-400">Vous nous expliquez votre activité et ce que vous aimeriez automatiser. 30 minutes suffisent.</p>
+        </div>
+      </div>
+      <div class="flex gap-6 items-start">
+        <div class="bg-accent/10 text-accent font-bold text-lg w-10 h-10 rounded-full flex items-center justify-center shrink-0">2</div>
+        <div>
+          <h3 class="font-semibold text-lg mb-1">On installe</h3>
+          <p class="text-gray-400">On met en place l'infrastructure et configure votre agent. Vous n'avez rien à faire côté technique.</p>
+        </div>
+      </div>
+      <div class="flex gap-6 items-start">
+        <div class="bg-accent/10 text-accent font-bold text-lg w-10 h-10 rounded-full flex items-center justify-center shrink-0">3</div>
+        <div>
+          <h3 class="font-semibold text-lg mb-1">On forme</h3>
+          <p class="text-gray-400">Session d'onboarding pour que vous et votre équipe soyez à l'aise avec l'agent.</p>
+        </div>
+      </div>
+      <div class="flex gap-6 items-start">
+        <div class="bg-accent/10 text-accent font-bold text-lg w-10 h-10 rounded-full flex items-center justify-center shrink-0">4</div>
+        <div>
+          <h3 class="font-semibold text-lg mb-1">On suit</h3>
+          <p class="text-gray-400">Suivi pendant une semaine pour calibrer et ajuster. Maintenance continue via accès sécurisé.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="max-w-4xl mx-auto px-6 py-20 text-center">
+    <div class="bg-surface border border-white/5 rounded-2xl p-12 glow">
+      <h2 class="text-3xl font-bold mb-4">Prêt à automatiser ?</h2>
+      <p class="text-gray-400 mb-8 max-w-lg mx-auto">
+        Décrivez-nous votre besoin. On revient vers vous avec une proposition adaptée à votre situation.
+      </p>
+      <a href="/contact" class="bg-accent hover:bg-accent-light text-white px-8 py-3 rounded-lg font-medium transition inline-block" onclick="window.posthog && window.posthog.capture('cta_clicked', {location: 'services_bottom', text: 'Nous contacter'})">
+        Nous contacter →
+      </a>
+    </div>
+  </section>
+</Base>
