@@ -16,6 +16,7 @@
     "@astrojs/node": "^9.5.2",
     "@astrojs/tailwind": "^6.0.2",
     "astro": "^5.17.1",
+    "resend": "^6.9.1",
     "tailwindcss": "^4.1.18"
   }
 }
