@@ -1,8 +1,15 @@
+@import "tailwindcss";
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap');
 
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@theme {
+  --color-primary: #0A0A0A;
+  --color-accent: #6366F1;
+  --color-accent-light: #818CF8;
+  --color-surface: #111111;
+  --color-muted: #888888;
+  --font-sans: "Inter", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", monospace;
+}
 
 @layer base {
   body {
