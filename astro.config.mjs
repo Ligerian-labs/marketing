@@ -5,7 +5,7 @@ import node from "@astrojs/node";
 
 export default defineConfig({
   site: "https://ligerianlabs.fr",
-  output: "static",
+  output: "server",
   adapter: node({ mode: "standalone" }),
   integrations: [mdx()],
   vite: {
