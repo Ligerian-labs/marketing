@@ -17,3 +17,13 @@ const { Content } = await post.render();
 <BlogPost frontmatter={post.data}>
   <Content />
 </BlogPost>
+
+<script is:inline define:vars={{ slug: post.slug, title: post.data.title, tags: post.data.tags || [] }}>
+  if (window.posthog) {
+    window.posthog.capture('blog_post_viewed', {
+      slug: slug,
+      title: title,
+      tags: tags
+    });
+  }
+</script>

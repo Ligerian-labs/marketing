@@ -1,6 +1,7 @@
 ---
 import Base from "../layouts/Base.astro";
 import { getCollection } from "astro:content";
+import HeroCTA from "../components/HeroCTA.astro";
 
 const posts = (await getCollection("blog"))
   .sort((a, b) => new Date(b.data.date).getTime() - new Date(a.data.date).getTime())
@@ -22,14 +23,7 @@ const posts = (await getCollection("blog"))
       les entreprises et acteurs locaux des Pays de la Loire dans leur transformation
       grâce à l'intelligence artificielle — concrètement, sans jargon.
     </p>
-    <div class="flex gap-4 justify-center flex-wrap">
-      <a href="/contact" class="bg-accent hover:bg-accent-light text-white px-8 py-3 rounded-lg font-medium transition">
-        Parlons de votre projet
-      </a>
-      <a href="/a-propos" class="border border-white/20 hover:border-white/40 text-white px-8 py-3 rounded-lg font-medium transition">
-        Découvrir le lab
-      </a>
-    </div>
+    <HeroCTA />
   </section>
 
   <!-- Pillars -->
@@ -110,7 +104,7 @@ const posts = (await getCollection("blog"))
         Que vous soyez une PME, un artisan ou une collectivité en Pays de la Loire —
         on vous aide à intégrer l'IA là où ça compte vraiment.
       </p>
-      <a href="/contact" class="bg-accent hover:bg-accent-light text-white px-8 py-3 rounded-lg font-medium transition inline-block">
+      <a href="/contact" class="bg-accent hover:bg-accent-light text-white px-8 py-3 rounded-lg font-medium transition inline-block" onclick="window.posthog && window.posthog.capture('cta_clicked', {location: 'homepage_bottom', text: 'Discutons ensemble'})">
         Discutons ensemble
       </a>
     </div>

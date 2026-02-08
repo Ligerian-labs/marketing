@@ -111,6 +111,15 @@ import Base from "../layouts/Base.astro";
 
     const data = Object.fromEntries(formData.entries());
 
+    // Track form submission
+    if ((window as any).posthog) {
+      (window as any).posthog.capture('contact_form_submitted', {
+        subject: data.subject,
+        has_company: !!data.company,
+        has_phone: !!data.phone
+      });
+    }
+
     try {
       const res = await fetch("/api/contact", {
         method: "POST",

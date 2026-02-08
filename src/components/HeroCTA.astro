@@ -1,0 +1,49 @@
+---
+// A/B tested hero CTA — variants managed via PostHog feature flags
+// Flag name: hero-cta-variant
+// Variants: "control" (default), "variant-a", "variant-b"
+---
+
+<div id="hero-cta" class="flex gap-4 justify-center flex-wrap">
+  <!-- Default (control) — shown immediately, swapped by JS if variant active -->
+  <a id="hero-primary-cta" href="/contact" class="bg-accent hover:bg-accent-light text-white px-8 py-3 rounded-lg font-medium transition">
+    Parlons de votre projet
+  </a>
+  <a href="/a-propos" class="border border-white/20 hover:border-white/40 text-white px-8 py-3 rounded-lg font-medium transition">
+    Découvrir le lab
+  </a>
+</div>
+
+<script is:inline>
+  // A/B test: swap hero CTA text based on PostHog feature flag
+  (function() {
+    function applyCTAVariant() {
+      if (!window.posthog) return;
+      
+      window.posthog.onFeatureFlags(function() {
+        var variant = window.posthog.getFeatureFlag('hero-cta-variant');
+        var cta = document.getElementById('hero-primary-cta');
+        if (!cta) return;
+        
+        var variants = {
+          'variant-a': { text: 'Boostez votre entreprise avec l\'IA', href: '/contact' },
+          'variant-b': { text: 'Demander un audit IA gratuit', href: '/contact' }
+        };
+
+        if (variant && variants[variant]) {
+          cta.textContent = variants[variant].text;
+          cta.href = variants[variant].href;
+        }
+
+        // Track which variant was shown
+        window.posthog.capture('hero_cta_viewed', { variant: variant || 'control' });
+      });
+    }
+
+    if (document.readyState === 'complete') {
+      applyCTAVariant();
+    } else {
+      window.addEventListener('load', applyCTAVariant);
+    }
+  })();
+</script>
