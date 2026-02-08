@@ -1,3 +1,4 @@
+export const prerender = false;
 import type { APIRoute } from "astro";
 import { writeFile, mkdir } from "node:fs/promises";
 import { join } from "node:path";
