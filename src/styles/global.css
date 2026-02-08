@@ -1,0 +1,33 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-primary text-white antialiased;
+  }
+}
+
+.gradient-text {
+  @apply bg-clip-text text-transparent bg-gradient-to-r from-accent to-purple-400;
+}
+
+.glow {
+  box-shadow: 0 0 40px rgba(99, 102, 241, 0.15);
+}
+
+/* Blog prose styles */
+.prose h1 { @apply text-4xl font-bold mb-6 mt-12; }
+.prose h2 { @apply text-2xl font-semibold mb-4 mt-10; }
+.prose h3 { @apply text-xl font-semibold mb-3 mt-8; }
+.prose p { @apply text-gray-300 leading-relaxed mb-6; }
+.prose a { @apply text-accent hover:text-accent-light underline; }
+.prose ul { @apply list-disc list-inside mb-6 text-gray-300; }
+.prose ol { @apply list-decimal list-inside mb-6 text-gray-300; }
+.prose code { @apply bg-surface px-2 py-0.5 rounded text-sm font-mono text-accent-light; }
+.prose pre { @apply bg-surface p-4 rounded-lg mb-6 overflow-x-auto; }
+.prose blockquote { @apply border-l-4 border-accent pl-4 italic text-gray-400 mb-6; }
+.prose img { @apply rounded-lg my-8; }
+.prose li { @apply mb-2; }

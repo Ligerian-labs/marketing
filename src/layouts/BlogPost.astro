@@ -1,0 +1,25 @@
+---
+import Base from "./Base.astro";
+
+const { frontmatter } = Astro.props;
+---
+
+<Base title={`${frontmatter.title} — The Lab`} description={frontmatter.excerpt}>
+  <article class="max-w-3xl mx-auto px-6 py-20">
+    <div class="mb-10">
+      <p class="text-sm text-muted mb-2">{frontmatter.date}</p>
+      <h1 class="text-4xl font-bold mb-4">{frontmatter.title}</h1>
+      {frontmatter.author && <p class="text-gray-400">By {frontmatter.author}</p>}
+      {frontmatter.tags && (
+        <div class="flex gap-2 mt-4">
+          {frontmatter.tags.map((tag: string) => (
+            <span class="text-xs bg-accent/10 text-accent px-2 py-0.5 rounded-full">{tag}</span>
+          ))}
+        </div>
+      )}
+    </div>
+    <div class="prose max-w-none">
+      <slot />
+    </div>
+  </article>
+</Base>
