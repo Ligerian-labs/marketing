@@ -4,105 +4,106 @@ import Base from "../layouts/Base.astro";
 ---
 
 <Base title="À propos — Ligerian Labs | Laboratoire IA à Angers" description="Découvrez Ligerian Labs, laboratoire d'innovation IA basé à Angers. Notre mission : rendre l'intelligence artificielle accessible aux entreprises des Pays de la Loire.">
-  <!-- Fondateur -->
-  <section class="max-w-4xl mx-auto px-6 pt-20 pb-12">
-    <h1 class="text-4xl font-bold mb-6">L'artisan derrière le labo</h1>
+  <!-- Story -->
+  <section class="max-w-5xl mx-auto px-6 py-24">
+    <p class="section-label mb-6">Notre histoire</p>
+    <h1 class="text-4xl md:text-6xl font-bold tracking-tight mb-8">L'artisan derrière le labo</h1>
 
-    <div class="space-y-6 text-gray-300 leading-relaxed text-lg">
+    <div class="max-w-3xl space-y-6 text-text-secondary text-lg leading-relaxed">
       <p>
-        <strong class="text-white">Je m'appelle Valentin.</strong>
+        <strong class="text-text">Je m'appelle Valentin.</strong>
         J'ai commencé à coder en autodidacte il y a 12 ans. Pas d'école d'ingé,
         pas de parcours fléché — juste de la curiosité, un terminal, et des nuits blanches.
       </p>
-
       <p>
         Depuis, j'ai occupé tous les postes : intégrateur front-end, développeur full-stack,
         lead technique, et CTO. À chaque étape, j'ai construit.
-        <strong class="text-white">Pas géré. Construit.</strong>
+        <strong class="text-text">Pas géré. Construit.</strong>
         Des produits, des équipes, des architectures — toujours les mains dans le code.
       </p>
-
       <p>
-        En parallèle, je suis mainteneur open source actif dans l'écosystème du gaming onchain.
-        Le genre de communauté où on pousse du code, pas des slides.
-        Où la valeur se prouve en production, pas en réunion.
-      </p>
-
-      <p>
-        J'ai toujours travaillé avec passion, souvent en indépendant.
-        Aujourd'hui, <strong class="text-white">je veux transmettre ce que j'ai appris</strong> —
+        Aujourd'hui, <strong class="text-text">je veux transmettre ce que j'ai appris</strong> —
         12 ans de métier compressés en outils concrets pour les entreprises locales qui veulent
         passer à la vitesse supérieure.
       </p>
     </div>
   </section>
 
-  <!-- Le labo -->
-  <section class="max-w-4xl mx-auto px-6 py-12">
-    <h2 class="text-3xl font-bold mb-6">Ligerian Labs</h2>
+  <!-- Values -->
+  <section class="bg-surface py-24">
+    <div class="max-w-6xl mx-auto px-6">
+      <p class="section-label mb-4">Nos valeurs</p>
+      <h2 class="text-3xl md:text-4xl font-bold mb-16">Ce qui nous guide</h2>
 
-    <div class="space-y-6 text-gray-300 leading-relaxed text-lg">
-      <p>
-        <strong class="text-white">Un labo d'artisanat numérique, basé à Angers.</strong>
-        Notre mission : rendre l'intelligence artificielle accessible aux entreprises
-        qui font tourner l'économie des Pays de la Loire au quotidien.
-      </p>
-
-      <p>
-        L'IA, ce n'est pas que pour les GAFAM. C'est un outil d'artisan —
-        comme le tour pour le menuisier ou le four pour le boulanger.
-        <strong class="text-white">Le bon outil, bien taillé, entre les bonnes mains,
-        transforme une TPE en machine de guerre.</strong>
-      </p>
-
-      <h3 class="text-2xl font-semibold text-white pt-8">Notre approche : l'artisanat du code</h3>
-
-      <p>
-        On ne vend pas du consulting PowerPoint. On fabrique des outils sur mesure,
-        ajustés à votre métier, testés sur le terrain. Chaque solution est taillée main —
-        pas de template générique, pas de copier-coller.
-      </p>
-
-      <div class="grid md:grid-cols-2 gap-6 py-8">
-        <div class="bg-surface border border-white/5 rounded-xl p-6">
-          <h4 class="font-semibold text-white mb-2">🔧 Sur mesure</h4>
-          <p class="text-gray-400 text-base">Chaque outil est façonné pour votre contexte. Pas d'usine, de l'artisanat.</p>
+      <div class="grid md:grid-cols-3 gap-8">
+        <div class="bg-white rounded-2xl p-8 border border-black/5">
+          <div class="w-12 h-12 bg-surface rounded-xl flex items-center justify-center mb-6">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M11.42 15.17l-5.384 3.175 1.037-5.995L2.688 8.21l6.027-.874L11.42 2l2.705 5.336 6.027.874-4.385 4.14 1.037 5.995z"/></svg>
+          </div>
+          <h3 class="text-xl font-bold mb-3">Pragmatisme</h3>
+          <p class="text-text-secondary">
+            On livre ce qui marche. Si ça ne résout pas un vrai problème, on ne le construit pas.
+            Pas de PowerPoint, du concret.
+          </p>
         </div>
-        <div class="bg-surface border border-white/5 rounded-xl p-6">
-          <h4 class="font-semibold text-white mb-2">⚡ Pragmatique</h4>
-          <p class="text-gray-400 text-base">On livre ce qui marche. Si ça ne résout pas un vrai problème, on ne le construit pas.</p>
+        <div class="bg-white rounded-2xl p-8 border border-black/5">
+          <div class="w-12 h-12 bg-surface rounded-xl flex items-center justify-center mb-6">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z"/></svg>
+          </div>
+          <h3 class="text-xl font-bold mb-3">Proximité</h3>
+          <p class="text-text-secondary">
+            On est à Angers, on travaille avec les acteurs locaux. On croit à l'empowerment
+            des territoires — l'innovation n'a pas besoin de Paris.
+          </p>
         </div>
-        <div class="bg-surface border border-white/5 rounded-xl p-6">
-          <h4 class="font-semibold text-white mb-2">📍 Ancré localement</h4>
-          <p class="text-gray-400 text-base">On croit à l'empowerment des territoires. L'innovation n'a pas besoin de Paris.</p>
-        </div>
-        <div class="bg-surface border border-white/5 rounded-xl p-6">
-          <h4 class="font-semibold text-white mb-2">🔓 Open source dans l'âme</h4>
-          <p class="text-gray-400 text-base">Le savoir grandit quand il circule. On partage nos apprentissages.</p>
+        <div class="bg-white rounded-2xl p-8 border border-black/5">
+          <div class="w-12 h-12 bg-surface rounded-xl flex items-center justify-center mb-6">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19.128a9.38 9.38 0 002.625.372 9.337 9.337 0 004.121-.952 4.125 4.125 0 00-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 018.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0111.964-3.07M12 6.375a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zm8.25 2.25a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z"/></svg>
+          </div>
+          <h3 class="text-xl font-bold mb-3">Accompagnement</h3>
+          <p class="text-text-secondary">
+            L'IA doit amplifier le savoir-faire, pas le remplacer.
+            On forme, on suit, on ajuste — jusqu'à ce que ça tourne.
+          </p>
         </div>
       </div>
-
-      <h3 class="text-2xl font-semibold text-white pt-4">Pourquoi "Ligerian" ?</h3>
-
-      <p>
-        <em>Ligérien</em> — du latin <em>Liger</em>, la Loire. C'est notre ancrage.
-        On est fiers d'être en Pays de la Loire et on veut que le territoire
-        soit à la pointe de la révolution IA. Pas besoin d'être à San Francisco
-        pour forger de bons outils.
-      </p>
-
-      <h3 class="text-2xl font-semibold text-white pt-4">L'IA comme outil d'artisan</h3>
-
-      <p>
-        L'IA doit amplifier le savoir-faire — pas le remplacer.
-        Comme un compagnon qui affûte ses outils pour mieux travailler,
-        on donne aux entreprises les moyens de faire plus, mieux, plus vite.
-        <strong class="text-white">12 ans de métier au service de votre croissance.</strong>
-      </p>
     </div>
+  </section>
 
-    <div class="mt-12">
-      <a href="/contact" class="bg-accent hover:bg-accent-light text-white px-8 py-3 rounded-lg font-medium transition inline-block">
+  <!-- Pourquoi Ligerian -->
+  <section class="max-w-5xl mx-auto px-6 py-24">
+    <div class="grid md:grid-cols-2 gap-16 items-center">
+      <div>
+        <p class="section-label mb-4">Pourquoi "Ligerian" ?</p>
+        <h2 class="text-3xl md:text-4xl font-bold mb-6">L'IA de la Loire</h2>
+        <p class="text-text-secondary text-lg leading-relaxed mb-6">
+          <em>Ligérien</em> — du latin <em>Liger</em>, la Loire. C'est notre ancrage.
+          On est fiers d'être en Pays de la Loire et on veut que le territoire
+          soit à la pointe de la révolution IA.
+        </p>
+        <p class="text-text-secondary text-lg leading-relaxed">
+          Pas besoin d'être à San Francisco pour forger de bons outils.
+          L'IA, c'est un outil d'artisan — comme le tour pour le menuisier
+          ou le four pour le boulanger. Le bon outil, bien taillé, entre les bonnes mains,
+          transforme une TPE en machine de guerre.
+        </p>
+      </div>
+      <div class="bg-surface rounded-2xl aspect-square flex items-center justify-center">
+        <svg class="w-32 h-32 text-muted/20" viewBox="0 0 52 52" fill="currentColor">
+          <path d="M0 20c5-2 12 2 20 5 10 3 18-5 28-7 10-2 17 4 24 10 6 5 8 10 8 17l0 7c-2-4-8-10-15-14-9-5-17-10-27-8-10 2-18 8-26 5-6-2-10-7-12-10z"/>
+        </svg>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="bg-accent text-white py-24 my-20 mx-6 md:mx-auto max-w-6xl rounded-2xl">
+    <div class="max-w-3xl mx-auto px-6 text-center">
+      <h2 class="text-3xl md:text-4xl font-bold mb-4">Envie d'en savoir plus ?</h2>
+      <p class="text-white/70 mb-8 max-w-lg mx-auto text-lg">
+        12 ans de métier au service de votre croissance. Discutons de votre projet.
+      </p>
+      <a href="/contact" class="bg-white text-accent hover:bg-white/90 px-8 py-3 rounded-lg font-medium transition inline-block">
         Discutons de votre projet →
       </a>
     </div>
