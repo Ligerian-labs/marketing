@@ -4,16 +4,17 @@ import Base from "./Base.astro";
 const { frontmatter } = Astro.props;
 ---
 
-<Base title={`${frontmatter.title} — The Lab`} description={frontmatter.excerpt}>
-  <article class="max-w-3xl mx-auto px-6 py-20">
+<Base title={`${frontmatter.title} — Ligerian Labs`} description={frontmatter.excerpt}>
+  <article class="max-w-3xl mx-auto px-6 py-24">
     <div class="mb-10">
-      <p class="text-sm text-muted mb-2">{frontmatter.date}</p>
-      <h1 class="text-4xl font-bold mb-4">{frontmatter.title}</h1>
-      {frontmatter.author && <p class="text-gray-400">By {frontmatter.author}</p>}
+      <a href="/blog" class="text-sm text-muted hover:text-text transition mb-6 inline-block">← Retour au blog</a>
+      <p class="text-sm text-muted mb-3">{frontmatter.date}</p>
+      <h1 class="text-4xl font-bold mb-4 text-text">{frontmatter.title}</h1>
+      {frontmatter.author && <p class="text-text-secondary">Par {frontmatter.author}</p>}
       {frontmatter.tags && (
         <div class="flex gap-2 mt-4">
           {frontmatter.tags.map((tag: string) => (
-            <span class="text-xs bg-accent/10 text-accent px-2 py-0.5 rounded-full">{tag}</span>
+            <span class="text-xs bg-surface text-text-secondary px-2 py-0.5 rounded-full">{tag}</span>
           ))}
         </div>
       )}

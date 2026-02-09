@@ -1,48 +1,47 @@
 @import "tailwindcss";
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
 
 @theme {
-  --color-primary: #0A0A0A;
-  --color-accent: #6366F1;
-  --color-accent-light: #818CF8;
-  --color-surface: #111111;
+  --color-primary: #FFFFFF;
+  --color-primary-alt: #F5F5F5;
+  --color-primary-muted: #FAFAFA;
+  --color-surface: #F5F5F5;
+  --color-accent: #000000;
+  --color-accent-light: #333333;
   --color-muted: #888888;
+  --color-text: #000000;
+  --color-text-secondary: #666666;
   --font-sans: "Inter", system-ui, sans-serif;
-  --font-mono: "JetBrains Mono", monospace;
 }
 
 @layer base {
   body {
-    @apply bg-primary text-white antialiased;
+    @apply bg-primary text-text antialiased font-sans;
   }
 }
 
-.gradient-text {
-  @apply bg-clip-text text-transparent bg-gradient-to-r from-accent to-purple-400;
-}
-
-.glow {
-  box-shadow: 0 0 40px rgba(99, 102, 241, 0.15);
+.section-label {
+  @apply uppercase font-semibold text-muted tracking-[3px] text-xs;
 }
 
 /* Blog prose styles */
-.prose h1 { @apply text-4xl font-bold mb-6 mt-12; }
-.prose h2 { @apply text-2xl font-semibold mb-4 mt-10; }
-.prose h3 { @apply text-xl font-semibold mb-3 mt-8; }
-.prose p { @apply text-gray-300 leading-relaxed mb-6; }
-.prose a { @apply text-accent hover:text-accent-light underline; }
-.prose ul { @apply list-disc list-inside mb-6 text-gray-300; }
-.prose ol { @apply list-decimal list-inside mb-6 text-gray-300; }
-.prose code { @apply bg-surface px-2 py-0.5 rounded text-sm font-mono text-accent-light; }
+.prose h1 { @apply text-4xl font-bold mb-6 mt-12 text-text; }
+.prose h2 { @apply text-2xl font-semibold mb-4 mt-10 text-text; }
+.prose h3 { @apply text-xl font-semibold mb-3 mt-8 text-text; }
+.prose p { @apply text-text-secondary leading-relaxed mb-6; }
+.prose a { @apply text-text underline hover:text-accent-light; }
+.prose ul { @apply list-disc list-inside mb-6 text-text-secondary; }
+.prose ol { @apply list-decimal list-inside mb-6 text-text-secondary; }
+.prose code { @apply bg-surface px-2 py-0.5 rounded text-sm text-text; }
 .prose pre { @apply bg-surface p-4 rounded-lg mb-6 overflow-x-auto; }
-.prose blockquote { @apply border-l-4 border-accent pl-4 italic text-gray-400 mb-6; }
+.prose blockquote { @apply border-l-4 border-text pl-4 italic text-text-secondary mb-6; }
 .prose img { @apply rounded-lg my-8; }
 .prose li { @apply mb-2; }
 
 /* Form styles */
 .form-input {
-  @apply w-full bg-surface border border-white/10 rounded-lg px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent transition;
+  @apply w-full bg-white border border-black/10 rounded-lg px-4 py-3 text-text placeholder-muted focus:outline-none focus:border-text focus:ring-1 focus:ring-text transition;
 }
 .form-label {
-  @apply block text-sm font-medium text-gray-300 mb-2;
+  @apply block text-xs font-semibold uppercase tracking-[3px] text-muted mb-2;
 }

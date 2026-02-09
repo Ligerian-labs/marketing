@@ -1,17 +1,45 @@
-<header class="border-b border-white/10">
+---
+import Logo from "./Logo.astro";
+---
+
+<header class="border-b border-black/5 bg-white sticky top-0 z-50">
   <nav class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
-    <a href="/" class="text-xl font-bold tracking-tight">
-      <span class="gradient-text">Ligerian Labs</span>
-    </a>
-    <div class="flex items-center gap-8 text-sm">
-      <a href="/" class="text-gray-400 hover:text-white transition">Accueil</a>
-      <a href="/services" class="text-gray-400 hover:text-white transition">Offres</a>
-      <a href="/a-propos" class="text-gray-400 hover:text-white transition">À propos</a>
-      <a href="/blog" class="text-gray-400 hover:text-white transition">Blog</a>
-      <a href="/contact" class="text-gray-400 hover:text-white transition">Contact</a>
-      <a href="/dashboard" class="bg-accent hover:bg-accent-light text-white px-4 py-2 rounded-lg text-sm font-medium transition">
-        Espace client
-      </a>
+    <Logo />
+
+    <!-- Mobile menu button -->
+    <button id="mobile-menu-btn" class="md:hidden p-2" aria-label="Menu">
+      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+      </svg>
+    </button>
+
+    <!-- Desktop nav -->
+    <div class="hidden md:flex items-center gap-8 text-sm">
+      <a href="/services" class="text-text-secondary hover:text-text transition">Offres</a>
+      <a href="/a-propos" class="text-text-secondary hover:text-text transition">À propos</a>
+      <a href="/blog" class="text-text-secondary hover:text-text transition">Blog</a>
+      <a href="/contact" class="text-text-secondary hover:text-text transition">Contact</a>
     </div>
+
+    <a href="/contact" class="hidden md:inline-block bg-accent hover:bg-accent-light text-white px-5 py-2.5 rounded-lg text-sm font-medium transition">
+      Parlons de votre projet
+    </a>
   </nav>
+
+  <!-- Mobile nav -->
+  <div id="mobile-menu" class="hidden md:hidden border-t border-black/5 bg-white px-6 py-4 space-y-3">
+    <a href="/services" class="block text-text-secondary hover:text-text transition">Offres</a>
+    <a href="/a-propos" class="block text-text-secondary hover:text-text transition">À propos</a>
+    <a href="/blog" class="block text-text-secondary hover:text-text transition">Blog</a>
+    <a href="/contact" class="block text-text-secondary hover:text-text transition">Contact</a>
+    <a href="/contact" class="block bg-accent text-white px-5 py-2.5 rounded-lg text-sm font-medium text-center mt-2">
+      Parlons de votre projet
+    </a>
+  </div>
 </header>
+
+<script is:inline>
+  document.getElementById('mobile-menu-btn')?.addEventListener('click', function() {
+    document.getElementById('mobile-menu')?.classList.toggle('hidden');
+  });
+</script>
