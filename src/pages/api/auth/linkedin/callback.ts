@@ -1,7 +1,7 @@
 import type { APIRoute } from "astro";
 
-const CLIENT_ID = import.meta.env.LINKEDIN_CLIENT_ID || "";
-const CLIENT_SECRET = import.meta.env.LINKEDIN_CLIENT_SECRET || "";
+const CLIENT_ID = process.env.LINKEDIN_CLIENT_ID || import.meta.env.LINKEDIN_CLIENT_ID || "";
+const CLIENT_SECRET = process.env.LINKEDIN_CLIENT_SECRET || import.meta.env.LINKEDIN_CLIENT_SECRET || "";
 const REDIRECT_URI = "https://ligerianlabs.fr/api/auth/linkedin/callback";
 
 export const GET: APIRoute = async ({ url }) => {
