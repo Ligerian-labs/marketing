@@ -5,9 +5,6 @@ import { createCheckoutSession, type PackId, PACKS } from "../../../lib/stripe";
 
 export const POST: APIRoute = async ({ request, cookies, url, redirect }) => {
   const user = getAuthenticatedUser(cookies);
-  if (!user) {
-    return redirect(`/auth/login?redirect=${encodeURIComponent(url.pathname)}`);
-  }
 
   // Support both JSON and form data
   const contentType = request.headers.get("content-type") || "";
@@ -38,8 +35,8 @@ export const POST: APIRoute = async ({ request, cookies, url, redirect }) => {
 
   const checkoutUrl = await createCheckoutSession(
     packId as PackId,
-    user.email,
-    user.id,
+    user?.email || null, // Let Stripe collect email if not logged in
+    user?.id || null,     // No user ID for post-payment flow
     `${url.origin}/formations/?payment=success`,
     `${url.origin}/formations/?payment=cancelled`
   );

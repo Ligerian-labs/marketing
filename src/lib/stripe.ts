@@ -61,8 +61,8 @@ export type PackId = keyof typeof PACKS;
 
 export async function createCheckoutSession(
   packId: PackId,
-  customerEmail: string,
-  userId: string,
+  customerEmail: string | null,
+  userId: string | null,
   successUrl: string,
   cancelUrl: string
 ): Promise<string | null> {
@@ -72,9 +72,8 @@ export async function createCheckoutSession(
   const pack = PACKS[packId];
   if (!pack.price_cents) return null; // Custom quote packs
 
-  const session = await stripe.checkout.sessions.create({
+  const sessionData: any = {
     payment_method_types: ["card"],
-    customer_email: customerEmail,
     line_items: [
       {
         price_data: {
@@ -93,9 +92,20 @@ export async function createCheckoutSession(
     cancel_url: cancelUrl,
     metadata: {
       pack_id: packId,
-      user_id: userId,
     },
-  });
+  };
+
+  // Only set customer_email if provided (let Stripe collect it otherwise)
+  if (customerEmail) {
+    sessionData.customer_email = customerEmail;
+  }
+
+  // Only set user_id in metadata if provided
+  if (userId) {
+    sessionData.metadata.user_id = userId;
+  }
+
+  const session = await stripe.checkout.sessions.create(sessionData);
 
   return session.url;
 }

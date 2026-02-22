@@ -3,6 +3,8 @@ import type { APIRoute } from "astro";
 import { getStripe } from "../../../lib/stripe";
 import { createSubscription } from "../../../lib/subscriptions";
 import { createPurchase } from "../../../lib/formations";
+import { getUserByEmail, createUserWithoutPassword, createPasswordToken } from "../../../lib/auth";
+import { sendPasswordSetupEmail } from "../../../lib/email";
 
 export const POST: APIRoute = async ({ request }) => {
   const stripe = getStripe();
@@ -32,16 +34,53 @@ export const POST: APIRoute = async ({ request }) => {
       const packId = session.metadata?.pack_id;
       const userId = session.metadata?.user_id;
       const stripeCustomerId = session.customer as string;
+      
+      // For post-payment flow: get customer details from session
+      const customerEmail = session.customer_email || session.customer_details?.email;
+      const customerName = session.customer_details?.name;
 
-      if (packId && userId) {
-        console.log(`[STRIPE] Checkout completed: pack=${packId}, user=${userId}`);
+      if (packId) {
+        console.log(`[STRIPE] Checkout completed: pack=${packId}, user=${userId || 'new'}, email=${customerEmail}`);
         
         if (packId.startsWith('formation-')) {
           // Handle formation purchase
-          createPurchase(userId, packId, session.id);
+          let finalUserId = userId;
+          
+          if (!userId && customerEmail) {
+            // Post-payment flow: check if user exists by email
+            let user = getUserByEmail(customerEmail);
+            
+            if (!user) {
+              // Create new user without password
+              const newUser = createUserWithoutPassword(
+                customerEmail,
+                customerName || 'Client Ligerian Labs'
+              );
+              finalUserId = newUser.id;
+              console.log(`[STRIPE] Created new user: ${newUser.id} (${customerEmail})`);
+              
+              // Generate password setup token and send email
+              try {
+                const token = createPasswordToken(newUser.id);
+                await sendPasswordSetupEmail(customerEmail, newUser.name, token);
+                console.log(`[STRIPE] Sent password setup email to ${customerEmail}`);
+              } catch (emailErr) {
+                console.error(`[STRIPE] Failed to send setup email to ${customerEmail}:`, emailErr);
+              }
+            } else {
+              finalUserId = user.id;
+              console.log(`[STRIPE] Found existing user: ${user.id} (${customerEmail})`);
+            }
+          }
+          
+          if (finalUserId) {
+            createPurchase(finalUserId, packId, session.id);
+          }
         } else {
-          // Handle subscription
-          createSubscription(userId, packId, stripeCustomerId);
+          // Handle subscription (existing flow)
+          if (userId) {
+            createSubscription(userId, packId, stripeCustomerId);
+          }
         }
       }
       break;
