@@ -37,48 +37,52 @@ const formations = [
   {
     id: 'formation-starter',
     name: 'IA pour les PME',
-    description: 'Guide pratique pour intégrer l\'IA dans votre PME',
-    price: '49€',
+    label: 'Starter',
+    description: 'Comprendre l\'IA et lancer votre premier projet en 30 jours.',
+    price: 49,
     tier_dir: '01-guide-pme',
+    popular: false,
+    chapters: 6,
     features: [
-      'Comprendre l\'IA sans jargon technique',
+      'Comprendre l\'IA sans jargon',
       'Cas d\'usage concrets pour PME',
-      'Outils no-code recommandés', 
-      'Votre premier projet IA',
+      'Outils no-code recommandés',
+      'Premier projet IA pas à pas',
       'Erreurs à éviter',
-      'Ressources et accompagnement'
     ]
   },
   {
     id: 'formation-intermediate',
     name: 'Automatiser son Business',
-    description: 'Workflows et automatisations IA pour votre entreprise',
-    price: '99€',
+    label: 'Intermédiaire',
+    description: 'Construire des workflows IA qui tournent en continu.',
+    price: 99,
     tier_dir: '02-automatiser',
+    popular: true,
+    chapters: 8,
     features: [
-      'Mindset et stratégie d\'automatisation',
-      'Stack IA moderne',
-      'Automatiser marketing, ops et ventes',
-      'Construire des workflows robustes',
-      'Métriques et optimisation',
-      'Plan d\'action personnalisé'
+      'Tout le contenu Starter inclus',
+      'Stack IA moderne (LLMs, APIs, RAG)',
+      'Automatiser marketing & ventes',
+      'Workflows Make.com & n8n',
+      'Plan d\'action 90 jours',
     ]
   },
   {
-    id: 'formation-premium', 
+    id: 'formation-premium',
     name: 'Déployer l\'IA en Entreprise',
-    description: 'Stratégie et architecture IA pour grandes organisations',
-    price: '149€',
+    label: 'Premium',
+    description: 'Architecture, gouvernance et mise en production à l\'échelle.',
+    price: 149,
     tier_dir: '03-deployer',
+    popular: false,
+    chapters: 9,
     features: [
-      'Stratégie IA d\'entreprise',
-      'Architecture technique avancée', 
-      'LLM en production',
-      'Data governance et sécurité',
-      'Équipes et compétences',
-      'Éthique et conformité',
-      'Cas d\'études détaillés',
-      'Feuille de route complète'
+      'Tout le contenu précédent inclus',
+      'Architecture technique avancée',
+      'LLMs en production',
+      'Gouvernance, sécurité & EU AI Act',
+      '5 cas d\'études détaillés',
     ]
   }
 ];
@@ -113,68 +117,84 @@ const hasPurchased = (formationId: string) => {
 
   <!-- Formations Grid -->
   <section class="bg-surface py-24">
-    <div class="max-w-6xl mx-auto px-6">
-      <div class="grid md:grid-cols-3 gap-8">
+    <div class="max-w-5xl mx-auto px-6">
+      <div class="grid md:grid-cols-3 gap-6 items-stretch">
         {formations.map((formation) => {
           const purchased = hasPurchased(formation.id);
           return (
-            <div class="bg-white rounded-2xl p-8 border border-black/5 hover:shadow-lg transition">
-              <div class="flex items-center justify-between mb-6">
-                <h3 class="text-2xl font-bold">{formation.name}</h3>
-                <span class="text-2xl font-bold text-accent">{formation.price}</span>
-              </div>
-              
-              <p class="text-text-secondary mb-6 leading-relaxed">
-                {formation.description}
-              </p>
-              
-              <ul class="space-y-3 mb-8">
-                {formation.features.map((feature) => (
-                  <li class="flex items-center gap-3">
-                    <svg class="w-5 h-5 text-green-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
-                      <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
-                    </svg>
-                    <span class="text-sm">{feature}</span>
-                  </li>
-                ))}
-              </ul>
-              
-              {purchased ? (
-                <a 
-                  href={`/formations/${formation.tier_dir}/`}
-                  class="block w-full bg-green-600 text-white text-center py-3 px-6 rounded-lg font-medium hover:bg-green-700 transition"
-                >
-                  Accéder au contenu →
-                </a>
-              ) : user ? (
-                <form action="/api/stripe/checkout" method="POST" class="w-full">
-                  <input type="hidden" name="pack" value={formation.id} />
-                  <button 
-                    type="submit"
-                    class="w-full bg-accent text-white py-3 px-6 rounded-lg font-medium hover:accent-light transition"
-                  >
-                    Acheter maintenant
-                  </button>
-                </form>
-              ) : (
-                <a 
-                  href={`/auth/register?redirect=${encodeURIComponent(`/formations/?buy=${formation.id}`)}`}
-                  class="block w-full bg-accent text-white text-center py-3 px-6 rounded-lg font-medium hover:accent-light transition"
-                >
-                  Créer un compte et acheter
-                </a>
+            <div class={`bg-white rounded-2xl flex flex-col relative ${formation.popular ? 'ring-2 ring-black shadow-xl md:-my-4 md:py-2' : 'border border-black/8'}`}>
+              {formation.popular && (
+                <div class="absolute -top-3.5 left-1/2 -translate-x-1/2">
+                  <span class="bg-black text-white text-xs font-semibold px-4 py-1.5 rounded-full">
+                    Le plus populaire
+                  </span>
+                </div>
               )}
+
+              <div class="p-8 pb-0">
+                <p class="text-xs font-semibold uppercase tracking-widest text-text-secondary mb-3">{formation.label}</p>
+                <h3 class="text-xl font-bold mb-2">{formation.name}</h3>
+                <p class="text-text-secondary text-sm mb-6 leading-relaxed">{formation.description}</p>
+
+                <div class="flex items-baseline gap-1 mb-8">
+                  <span class="text-4xl font-bold">{formation.price}</span>
+                  <span class="text-text-secondary text-lg">€</span>
+                  <span class="text-text-secondary text-sm ml-1">· {formation.chapters} chapitres</span>
+                </div>
+              </div>
+
+              <div class="px-8 flex-grow">
+                <div class="border-t border-black/5 pt-6">
+                  <ul class="space-y-3">
+                    {formation.features.map((feature) => (
+                      <li class="flex items-start gap-3">
+                        <svg class="w-4 h-4 mt-0.5 text-black shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5">
+                          <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/>
+                        </svg>
+                        <span class="text-sm text-text-secondary">{feature}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+
+              <div class="p-8 pt-8 mt-auto">
+                {purchased ? (
+                  <a
+                    href={`/formations/${formation.tier_dir}/`}
+                    class="block w-full text-center py-3 px-6 rounded-xl font-medium bg-black text-white hover:bg-black/80 transition"
+                  >
+                    Accéder au contenu →
+                  </a>
+                ) : user ? (
+                  <form action="/api/stripe/checkout" method="POST" class="w-full">
+                    <input type="hidden" name="pack" value={formation.id} />
+                    <button
+                      type="submit"
+                      class={`w-full py-3 px-6 rounded-xl font-medium transition ${formation.popular ? 'bg-black text-white hover:bg-black/80' : 'bg-white text-black border-2 border-black hover:bg-black hover:text-white'}`}
+                    >
+                      Acheter — {formation.price}€
+                    </button>
+                  </form>
+                ) : (
+                  <a
+                    href={`/auth/register?redirect=${encodeURIComponent(`/formations/?buy=${formation.id}`)}`}
+                    class={`block w-full text-center py-3 px-6 rounded-xl font-medium transition ${formation.popular ? 'bg-black text-white hover:bg-black/80' : 'bg-white text-black border-2 border-black hover:bg-black hover:text-white'}`}
+                  >
+                    Acheter — {formation.price}€
+                  </a>
+                )}
+              </div>
             </div>
           )
         })}
       </div>
-      
+
       {!user && (
-        <div class="mt-12 text-center">
-          <p class="text-text-secondary">
-            Déjà un compte ? <a href="/auth/login?redirect=/formations/" class="text-accent font-medium hover:underline">Se connecter pour accéder à vos formations</a>
-          </p>
-        </div>
+        <p class="text-center text-sm text-text-secondary mt-10">
+          Déjà un compte ?
+          <a href="/auth/login?redirect=/formations/" class="text-black font-medium hover:underline ml-1">Se connecter</a>
+        </p>
       )}
     </div>
   </section>
