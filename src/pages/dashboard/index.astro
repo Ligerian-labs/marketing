@@ -2,9 +2,10 @@
 export const prerender = false;
 import Base from "../../layouts/Base.astro";
 import { getAuthenticatedUser } from "../../lib/auth";
+import { getUserPurchases, FORMATION_TIERS } from "../../lib/formations";
 import db from "../../lib/db";
 
-const user = getAuthenticatedUser(Astro.cookies);
+const user = await getAuthenticatedUser(Astro);
 if (!user) {
   return Astro.redirect("/auth/login");
 }
@@ -12,6 +13,8 @@ if (!user) {
 const subscriptions = db.prepare(
   "SELECT * FROM subscriptions WHERE user_id = ? ORDER BY created_at DESC"
 ).all(user.id) as any[];
+
+const purchases = getUserPurchases(user.id);
 ---
 
 <Base title="Espace client — Ligerian Labs">
@@ -26,68 +29,116 @@ const subscriptions = db.prepare(
       </a>
     </div>
 
-    {subscriptions.length === 0 ? (
+    {subscriptions.length === 0 && purchases.length === 0 ? (
       <div class="bg-surface border border-white/5 rounded-xl p-12 text-center">
-        <h2 class="text-xl font-semibold mb-3">Pas encore d'abonnement</h2>
-        <p class="text-muted mb-6">Découvrez nos offres et commencez à automatiser votre entreprise.</p>
-        <a href="/services" class="bg-accent hover:bg-accent-light text-white px-6 py-3 rounded-lg font-medium transition inline-block">
-          Voir les offres →
-        </a>
+        <h2 class="text-xl font-semibold mb-3">Pas encore d'abonnement ou de formation</h2>
+        <p class="text-muted mb-6">Découvrez nos offres et formations pour commencer votre transformation IA.</p>
+        <div class="flex gap-4 justify-center">
+          <a href="/services" class="bg-accent hover:bg-accent-light text-white px-6 py-3 rounded-lg font-medium transition inline-block">
+            Voir les services →
+          </a>
+          <a href="/formations" class="bg-primary hover:bg-primary/90 text-white px-6 py-3 rounded-lg font-medium transition inline-block">
+            Voir les formations →
+          </a>
+        </div>
       </div>
     ) : (
-      <div class="space-y-6">
-        <h2 class="text-xl font-semibold">Vos services</h2>
-        {subscriptions.map((sub: any) => (
-          <a href={`/dashboard/${sub.id}`} class="block bg-surface border border-white/5 rounded-xl p-6 hover:border-accent/30 transition">
-            <div class="flex items-center justify-between">
-              <div>
-                <h3 class="font-semibold text-lg">{sub.pack}</h3>
-                <p class="text-muted text-sm mt-1">
-                  Souscrit le {new Date(sub.created_at).toLocaleDateString('fr-FR')}
-                </p>
-              </div>
-              <span class={`text-sm px-3 py-1 rounded-full ${
-                sub.status === 'active' ? 'bg-green-900/30 text-green-400' :
-                sub.status === 'provisioning' ? 'bg-yellow-900/30 text-yellow-400' :
-                sub.status === 'pending' ? 'bg-blue-900/30 text-blue-400' :
-                'bg-gray-900/30 text-gray-400'
-              }`}>
-                {sub.status === 'active' ? '✅ Actif' :
-                 sub.status === 'provisioning' ? '⚙️ En cours' :
-                 sub.status === 'pending' ? '⏳ En attente' :
-                 sub.status}
-              </span>
-            </div>
-            {sub.server_ip && (
-              <div class="mt-4 pt-4 border-t border-white/5 grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
+      <div class="space-y-8">
+        {/* Formations */}
+        {purchases.length > 0 && (
+          <div class="space-y-4">
+            <h2 class="text-xl font-semibold">Vos formations</h2>
+            {purchases.map((purchase: any) => {
+              const formation = FORMATION_TIERS[purchase.pack as keyof typeof FORMATION_TIERS];
+              const tierDir = formation?.tier_dir || purchase.pack.replace('formation-', '');
+              
+              return (
+                <div class="bg-surface border border-white/5 rounded-xl p-6">
+                  <div class="flex items-center justify-between">
+                    <div>
+                      <h3 class="font-semibold text-lg">{formation?.name || purchase.pack}</h3>
+                      <p class="text-muted text-sm mt-1">
+                        Achetée le {new Date(purchase.created_at).toLocaleDateString('fr-FR')}
+                      </p>
+                    </div>
+                    <div class="flex items-center gap-3">
+                      <span class="text-sm px-3 py-1 rounded-full bg-green-900/30 text-green-400">
+                        ✅ Accès complet
+                      </span>
+                      <a 
+                        href={`/formations/${tierDir}/`}
+                        class="bg-primary hover:bg-primary/90 text-white px-4 py-2 rounded-lg font-medium transition text-sm"
+                      >
+                        Accéder →
+                      </a>
+                    </div>
+                  </div>
+                  {formation?.description && (
+                    <p class="text-muted text-sm mt-3">{formation.description}</p>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        )}
+
+        {/* Services/Subscriptions */}
+        {subscriptions.length > 0 && (
+          <div class="space-y-4">
+            <h2 class="text-xl font-semibold">Vos services</h2>
+            {subscriptions.map((sub: any) => (
+              <a href={`/dashboard/${sub.id}`} class="block bg-surface border border-white/5 rounded-xl p-6 hover:border-accent/30 transition">
+                <div class="flex items-center justify-between">
+                  <div>
+                    <h3 class="font-semibold text-lg">{sub.pack}</h3>
+                    <p class="text-muted text-sm mt-1">
+                      Souscrit le {new Date(sub.created_at).toLocaleDateString('fr-FR')}
+                    </p>
+                  </div>
+                  <span class={`text-sm px-3 py-1 rounded-full ${
+                    sub.status === 'active' ? 'bg-green-900/30 text-green-400' :
+                    sub.status === 'provisioning' ? 'bg-yellow-900/30 text-yellow-400' :
+                    sub.status === 'pending' ? 'bg-blue-900/30 text-blue-400' :
+                    'bg-gray-900/30 text-gray-400'
+                  }`}>
+                    {sub.status === 'active' ? '✅ Actif' :
+                     sub.status === 'provisioning' ? '⚙️ En cours' :
+                     sub.status === 'pending' ? '⏳ En attente' :
+                     sub.status}
+                  </span>
+                </div>
                 {sub.server_ip && (
-                  <div>
-                    <span class="text-muted">Serveur</span>
-                    <p class="text-white font-mono text-xs mt-1">{sub.server_ip}</p>
+                  <div class="mt-4 pt-4 border-t border-white/5 grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
+                    {sub.server_ip && (
+                      <div>
+                        <span class="text-muted">Serveur</span>
+                        <p class="text-white font-mono text-xs mt-1">{sub.server_ip}</p>
+                      </div>
+                    )}
+                    {sub.server_provider && (
+                      <div>
+                        <span class="text-muted">Provider</span>
+                        <p class="text-white mt-1">{sub.server_provider}</p>
+                      </div>
+                    )}
+                    {sub.tailscale_hostname && (
+                      <div>
+                        <span class="text-muted">Tailscale</span>
+                        <p class="text-white font-mono text-xs mt-1">{sub.tailscale_hostname}</p>
+                      </div>
+                    )}
+                    {sub.openclaw_version && (
+                      <div>
+                        <span class="text-muted">OpenClaw</span>
+                        <p class="text-white mt-1">v{sub.openclaw_version}</p>
+                      </div>
+                    )}
                   </div>
                 )}
-                {sub.server_provider && (
-                  <div>
-                    <span class="text-muted">Provider</span>
-                    <p class="text-white mt-1">{sub.server_provider}</p>
-                  </div>
-                )}
-                {sub.tailscale_hostname && (
-                  <div>
-                    <span class="text-muted">Tailscale</span>
-                    <p class="text-white font-mono text-xs mt-1">{sub.tailscale_hostname}</p>
-                  </div>
-                )}
-                {sub.openclaw_version && (
-                  <div>
-                    <span class="text-muted">OpenClaw</span>
-                    <p class="text-white mt-1">v{sub.openclaw_version}</p>
-                  </div>
-                )}
-              </div>
-            )}
-          </a>
-        ))}
+              </a>
+            ))}
+          </div>
+        )}
       </div>
     )}
   </section>

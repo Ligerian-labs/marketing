@@ -2,6 +2,7 @@ export const prerender = false;
 import type { APIRoute } from "astro";
 import { stripe, STRIPE_WEBHOOK_SECRET } from "../../../lib/stripe";
 import { createSubscription } from "../../../lib/subscriptions";
+import { createPurchase } from "../../../lib/formations";
 
 export const POST: APIRoute = async ({ request }) => {
   if (!stripe) {
@@ -32,7 +33,14 @@ export const POST: APIRoute = async ({ request }) => {
 
       if (packId && userId) {
         console.log(`[STRIPE] Checkout completed: pack=${packId}, user=${userId}`);
-        createSubscription(userId, packId, stripeCustomerId);
+        
+        if (packId.startsWith('formation-')) {
+          // Handle formation purchase
+          createPurchase(userId, packId, session.id);
+        } else {
+          // Handle subscription
+          createSubscription(userId, packId, stripeCustomerId);
+        }
       }
       break;
     }

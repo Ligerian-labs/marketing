@@ -58,10 +58,20 @@ db.exec(`
     created_at TEXT DEFAULT (datetime('now'))
   );
 
+  CREATE TABLE IF NOT EXISTS purchases (
+    id TEXT PRIMARY KEY,
+    user_id TEXT NOT NULL REFERENCES users(id),
+    pack TEXT NOT NULL,
+    stripe_session_id TEXT,
+    status TEXT NOT NULL DEFAULT 'completed',
+    created_at TEXT DEFAULT (datetime('now'))
+  );
+
   CREATE INDEX IF NOT EXISTS idx_sessions_user ON sessions(user_id);
   CREATE INDEX IF NOT EXISTS idx_sessions_expires ON sessions(expires_at);
   CREATE INDEX IF NOT EXISTS idx_subscriptions_user ON subscriptions(user_id);
   CREATE INDEX IF NOT EXISTS idx_resources_sub ON resources(subscription_id);
+  CREATE INDEX IF NOT EXISTS idx_purchases_user ON purchases(user_id);
 `);
 
 export default db;
