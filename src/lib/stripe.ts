@@ -31,6 +31,24 @@ export const PACKS = {
     price_cents: null, // custom quote
     mode: "payment" as const,
   },
+  "formation-starter": {
+    name: "IA pour les PME",
+    description: "Guide pratique pour intégrer l'IA dans votre PME",
+    price_cents: 4900, // 49€
+    mode: "payment" as const, // one-time
+  },
+  "formation-intermediate": {
+    name: "Automatiser son Business",
+    description: "Workflows et automatisations IA pour votre entreprise",
+    price_cents: 9900, // 99€
+    mode: "payment" as const, // one-time
+  },
+  "formation-premium": {
+    name: "Déployer l'IA en Entreprise",
+    description: "Stratégie et architecture IA pour grandes organisations",
+    price_cents: 14900, // 149€
+    mode: "payment" as const, // one-time
+  },
 } as const;
 
 export type PackId = keyof typeof PACKS;

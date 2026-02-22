@@ -20,6 +20,7 @@
     "better-sqlite3": "^12.6.2",
     "cookie": "^1.1.1",
     "jsonwebtoken": "^9.0.3",
+    "marked": "^17.0.3",
     "resend": "^6.9.1",
     "stripe": "^20.3.1",
     "tailwindcss": "^4.1.18"

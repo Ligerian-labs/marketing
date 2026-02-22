@@ -1,0 +1,122 @@
+---
+export const prerender = false;
+import Base from "../../../layouts/Base.astro";
+import { getAuthenticatedUser } from "../../../lib/auth";
+import { hasAccess, getFormationChapters, FORMATION_TIERS, getPackFromTier } from "../../../lib/formations";
+
+const { tier } = Astro.params;
+
+if (!tier || !(tier in FORMATION_TIERS)) {
+  return Astro.redirect("/formations/", 302);
+}
+
+const user = await getAuthenticatedUser(Astro);
+
+if (!user) {
+  return Astro.redirect(`/auth/login?redirect=/formations/${tier}/`);
+}
+
+if (!hasAccess(user.id, tier)) {
+  // User doesn't have access - redirect to formations page with purchase option
+  return Astro.redirect("/formations/");
+}
+
+const formation = FORMATION_TIERS[tier as keyof typeof FORMATION_TIERS];
+const chapters = await getFormationChapters(tier);
+
+// Fallback if chapters can't be read from README.md - use file listing
+if (chapters.length === 0) {
+  // Scan directory for markdown files
+  import { readdirSync } from "node:fs";
+  import { join } from "node:path";
+  
+  try {
+    const contentPath = join(process.cwd(), 'src', 'formations', tier);
+    const files = readdirSync(contentPath)
+      .filter(file => file.endsWith('.md') && file !== 'README.md')
+      .sort()
+      .map(file => {
+        const slug = file.replace('.md', '');
+        const title = slug.replace(/^\d+-/, '').replace(/-/g, ' ')
+          .replace(/\b\w/g, l => l.toUpperCase());
+        return { slug, title };
+      });
+    chapters.push(...files);
+  } catch (error) {
+    console.error('Error reading chapter files:', error);
+  }
+}
+---
+
+<Base title={`${formation.name} — Formation IA | Ligerian Labs`} description={formation.description}>
+  <div class="max-w-4xl mx-auto px-6 py-16">
+    <!-- Breadcrumb -->
+    <nav class="mb-8">
+      <a href="/formations/" class="text-primary hover:underline">Formations</a>
+      <span class="mx-2 text-text-secondary">›</span>
+      <span class="text-text-secondary">{formation.name}</span>
+    </nav>
+
+    <!-- Header -->
+    <div class="mb-12">
+      <h1 class="text-4xl md:text-5xl font-bold tracking-tight mb-4">
+        {formation.name}
+      </h1>
+      <p class="text-xl text-text-secondary leading-relaxed">
+        {formation.description}
+      </p>
+    </div>
+
+    <!-- Chapters -->
+    <div class="bg-surface rounded-2xl p-8 border border-white/5">
+      <h2 class="text-2xl font-bold mb-6">Sommaire</h2>
+      
+      {chapters.length > 0 ? (
+        <div class="space-y-4">
+          {chapters.map((chapter, index) => (
+            <a 
+              href={`/formations/${tier}/${chapter.slug}`}
+              class="block p-4 bg-white rounded-lg border border-black/5 hover:shadow-lg hover:border-primary/20 transition group"
+            >
+              <div class="flex items-center gap-4">
+                <span class="w-8 h-8 bg-primary/10 text-primary font-bold rounded-full flex items-center justify-center text-sm">
+                  {index + 1}
+                </span>
+                <div>
+                  <h3 class="font-medium group-hover:text-primary transition">
+                    {chapter.title}
+                  </h3>
+                </div>
+                <svg class="w-5 h-5 text-text-secondary group-hover:text-primary ml-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"/>
+                </svg>
+              </div>
+            </a>
+          ))}
+        </div>
+      ) : (
+        <div class="text-center py-12">
+          <div class="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <svg class="w-8 h-8 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126ZM12 15.75h.007v.008H12v-.008Z"/>
+            </svg>
+          </div>
+          <h3 class="text-xl font-medium mb-2">Contenu en cours de préparation</h3>
+          <p class="text-text-secondary">
+            Les chapitres de cette formation seront disponibles très bientôt.
+          </p>
+        </div>
+      )}
+    </div>
+
+    <!-- Back to formations -->
+    <div class="mt-12 text-center">
+      <a 
+        href="/formations/"
+        class="inline-flex items-center gap-2 text-primary hover:underline"
+      >
+        ← Retour aux formations
+      </a>
+    </div>
+  </div>
+</Base>

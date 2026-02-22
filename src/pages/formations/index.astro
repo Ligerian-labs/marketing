@@ -1,0 +1,147 @@
+---
+export const prerender = false;
+import Base from "../../layouts/Base.astro";
+import { getAuthenticatedUser } from "../../lib/auth";
+import { getUserPurchases } from "../../lib/formations";
+import { createCheckoutSession } from "../../lib/stripe";
+
+const user = await getAuthenticatedUser(Astro);
+const purchases = user ? getUserPurchases(user.id) : [];
+
+const formations = [
+  {
+    id: 'formation-starter',
+    name: 'IA pour les PME',
+    description: 'Guide pratique pour intégrer l\'IA dans votre PME',
+    price: '49€',
+    tier_dir: '01-guide-pme',
+    features: [
+      'Comprendre l\'IA sans jargon technique',
+      'Cas d\'usage concrets pour PME',
+      'Outils no-code recommandés', 
+      'Votre premier projet IA',
+      'Erreurs à éviter',
+      'Ressources et accompagnement'
+    ]
+  },
+  {
+    id: 'formation-intermediate',
+    name: 'Automatiser son Business',
+    description: 'Workflows et automatisations IA pour votre entreprise',
+    price: '99€',
+    tier_dir: '02-automatiser',
+    features: [
+      'Mindset et stratégie d\'automatisation',
+      'Stack IA moderne',
+      'Automatiser marketing, ops et ventes',
+      'Construire des workflows robustes',
+      'Métriques et optimisation',
+      'Plan d\'action personnalisé'
+    ]
+  },
+  {
+    id: 'formation-premium', 
+    name: 'Déployer l\'IA en Entreprise',
+    description: 'Stratégie et architecture IA pour grandes organisations',
+    price: '149€',
+    tier_dir: '03-deployer',
+    features: [
+      'Stratégie IA d\'entreprise',
+      'Architecture technique avancée', 
+      'LLM en production',
+      'Data governance et sécurité',
+      'Équipes et compétences',
+      'Éthique et conformité',
+      'Cas d\'études détaillés',
+      'Feuille de route complète'
+    ]
+  }
+];
+
+const hasPurchased = (formationId: string) => {
+  return purchases.some(p => p.pack === formationId && p.status === 'completed');
+};
+---
+
+<Base title="Formations IA — Ligerian Labs" description="Formations pratiques pour maîtriser l'Intelligence Artificielle dans votre entreprise">
+  <!-- Hero -->
+  <section class="max-w-5xl mx-auto px-6 py-28 md:py-36 text-center">
+    <p class="section-label mb-8">Formations IA pratiques</p>
+    <h1 class="text-5xl md:text-7xl font-bold tracking-tight mb-6 leading-[1.1]">
+      Maîtrisez l'IA<br />pour votre entreprise
+    </h1>
+    <p class="text-xl text-text-secondary max-w-2xl mx-auto mb-12 leading-relaxed">
+      Formations pratiques et concrètes pour intégrer l'Intelligence Artificielle
+      dans votre activité. Du débutant à l'expert.
+    </p>
+  </section>
+
+  <!-- Formations Grid -->
+  <section class="bg-surface py-24">
+    <div class="max-w-6xl mx-auto px-6">
+      <div class="grid md:grid-cols-3 gap-8">
+        {formations.map((formation) => {
+          const purchased = hasPurchased(formation.id);
+          return (
+            <div class="bg-white rounded-2xl p-8 border border-black/5 hover:shadow-lg transition">
+              <div class="flex items-center justify-between mb-6">
+                <h3 class="text-2xl font-bold">{formation.name}</h3>
+                <span class="text-2xl font-bold text-primary">{formation.price}</span>
+              </div>
+              
+              <p class="text-text-secondary mb-6 leading-relaxed">
+                {formation.description}
+              </p>
+              
+              <ul class="space-y-3 mb-8">
+                {formation.features.map((feature) => (
+                  <li class="flex items-center gap-3">
+                    <svg class="w-5 h-5 text-green-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
+                    </svg>
+                    <span class="text-sm">{feature}</span>
+                  </li>
+                ))}
+              </ul>
+              
+              {purchased ? (
+                <a 
+                  href={`/formations/${formation.tier_dir}/`}
+                  class="block w-full bg-green-600 text-white text-center py-3 px-6 rounded-lg font-medium hover:bg-green-700 transition"
+                >
+                  Accéder au contenu →
+                </a>
+              ) : user ? (
+                <form action="/api/stripe/checkout" method="POST" class="w-full">
+                  <input type="hidden" name="pack_id" value={formation.id} />
+                  <input type="hidden" name="redirect" value="/formations/" />
+                  <button 
+                    type="submit"
+                    class="w-full bg-primary text-white py-3 px-6 rounded-lg font-medium hover:bg-primary/90 transition"
+                  >
+                    Acheter maintenant
+                  </button>
+                </form>
+              ) : (
+                <a 
+                  href={`/auth/login?redirect=/formations/`}
+                  class="block w-full bg-primary text-white text-center py-3 px-6 rounded-lg font-medium hover:bg-primary/90 transition"
+                >
+                  Se connecter pour acheter
+                </a>
+              )}
+            </div>
+          )
+        })}
+      </div>
+      
+      {!user && (
+        <div class="mt-12 text-center">
+          <p class="text-text-secondary mb-4">
+            Déjà un compte ? <a href="/auth/login" class="text-primary font-medium hover:underline">Se connecter</a>
+          </p>
+        </div>
+      )}
+    </div>
+  </section>
+</Base>
