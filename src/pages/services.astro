@@ -136,6 +136,117 @@ import Base from "../layouts/Base.astro";
     </div>
   </section>
 
+  <!-- Formations en ligne -->
+  <section class="bg-surface py-20">
+    <div class="max-w-6xl mx-auto px-6">
+      <div class="text-center mb-16">
+        <p class="section-label mb-4">Formations en ligne</p>
+        <h2 class="text-3xl md:text-4xl font-bold mb-6">Apprenez à votre rythme</h2>
+        <p class="text-text-secondary text-lg max-w-2xl mx-auto">
+          Nos guides pratiques pour intégrer l'IA dans votre entreprise. Du débutant à l'expert, chaque formation est conçue pour passer à l'action immédiatement.
+        </p>
+      </div>
+
+      <div class="grid md:grid-cols-3 gap-8">
+        <!-- Starter -->
+        <div class="bg-white rounded-2xl p-8 flex flex-col border border-transparent hover:border-accent/20 transition">
+          <p class="text-sm font-medium text-accent mb-2">Starter</p>
+          <h3 class="text-xl font-bold mb-2">IA pour les PME</h3>
+          <p class="text-text-secondary text-sm mb-6 flex-grow">
+            Guide pratique pour comprendre l'IA et l'intégrer dans votre PME. Cas d'usage concrets, outils no-code, premier projet en 30 jours.
+          </p>
+          <ul class="space-y-2 mb-8 text-sm text-text-secondary">
+            <li class="flex items-center gap-2">
+              <svg class="w-4 h-4 text-accent shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
+              6 chapitres détaillés
+            </li>
+            <li class="flex items-center gap-2">
+              <svg class="w-4 h-4 text-accent shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
+              Templates et prompts prêts à l'emploi
+            </li>
+            <li class="flex items-center gap-2">
+              <svg class="w-4 h-4 text-accent shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
+              Plan d'action sur 4 semaines
+            </li>
+          </ul>
+          <div class="mt-auto">
+            <p class="text-3xl font-bold mb-4">49 <span class="text-lg font-normal text-text-secondary">€</span></p>
+            <a href="/formations/" class="block text-center bg-accent hover:bg-accent-light text-white px-6 py-3 rounded-lg font-medium transition" onclick="window.posthog && window.posthog.capture('cta_clicked', {location: 'services_formation_starter', text: 'Accéder à la formation'})">
+              Accéder à la formation →
+            </a>
+          </div>
+        </div>
+
+        <!-- Intermediate -->
+        <div class="bg-white rounded-2xl p-8 flex flex-col border-2 border-accent relative">
+          <span class="absolute -top-3 left-1/2 -translate-x-1/2 bg-accent text-white text-xs font-bold px-3 py-1 rounded-full">Populaire</span>
+          <p class="text-sm font-medium text-accent mb-2">Intermédiaire</p>
+          <h3 class="text-xl font-bold mb-2">Automatiser son Business</h3>
+          <p class="text-text-secondary text-sm mb-6 flex-grow">
+            Construisez de vrais workflows d'automatisation IA. Marketing, opérations, ventes — des systèmes qui tournent en continu.
+          </p>
+          <ul class="space-y-2 mb-8 text-sm text-text-secondary">
+            <li class="flex items-center gap-2">
+              <svg class="w-4 h-4 text-accent shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
+              8 chapitres avancés
+            </li>
+            <li class="flex items-center gap-2">
+              <svg class="w-4 h-4 text-accent shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
+              Workflows Make.com & n8n complets
+            </li>
+            <li class="flex items-center gap-2">
+              <svg class="w-4 h-4 text-accent shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
+              Plan d'action 90 jours
+            </li>
+            <li class="flex items-center gap-2">
+              <svg class="w-4 h-4 text-accent shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
+              Inclut la formation Starter
+            </li>
+          </ul>
+          <div class="mt-auto">
+            <p class="text-3xl font-bold mb-4">99 <span class="text-lg font-normal text-text-secondary">€</span></p>
+            <a href="/formations/" class="block text-center bg-accent hover:bg-accent-light text-white px-6 py-3 rounded-lg font-medium transition" onclick="window.posthog && window.posthog.capture('cta_clicked', {location: 'services_formation_intermediate', text: 'Accéder à la formation'})">
+              Accéder à la formation →
+            </a>
+          </div>
+        </div>
+
+        <!-- Premium -->
+        <div class="bg-white rounded-2xl p-8 flex flex-col border border-transparent hover:border-accent/20 transition">
+          <p class="text-sm font-medium text-accent mb-2">Premium</p>
+          <h3 class="text-xl font-bold mb-2">Déployer l'IA en Entreprise</h3>
+          <p class="text-text-secondary text-sm mb-6 flex-grow">
+            Architecture, gouvernance, sécurité, équipes. Tout ce qu'un CTO ou tech lead doit savoir pour déployer l'IA en production.
+          </p>
+          <ul class="space-y-2 mb-8 text-sm text-text-secondary">
+            <li class="flex items-center gap-2">
+              <svg class="w-4 h-4 text-accent shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
+              9 chapitres expert
+            </li>
+            <li class="flex items-center gap-2">
+              <svg class="w-4 h-4 text-accent shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
+              5 cas d'études réels détaillés
+            </li>
+            <li class="flex items-center gap-2">
+              <svg class="w-4 h-4 text-accent shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
+              Templates RFP, grilles d'évaluation
+            </li>
+            <li class="flex items-center gap-2">
+              <svg class="w-4 h-4 text-accent shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
+              Inclut toutes les formations
+            </li>
+          </ul>
+          <div class="mt-auto">
+            <p class="text-3xl font-bold mb-4">149 <span class="text-lg font-normal text-text-secondary">€</span></p>
+            <a href="/formations/" class="block text-center bg-accent hover:bg-accent-light text-white px-6 py-3 rounded-lg font-medium transition" onclick="window.posthog && window.posthog.capture('cta_clicked', {location: 'services_formation_premium', text: 'Accéder à la formation'})">
+              Accéder à la formation →
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <!-- CTA -->
   <section class="bg-accent text-white py-24 my-20 mx-6 md:mx-auto max-w-6xl rounded-2xl">
     <div class="max-w-3xl mx-auto px-6 text-center">
