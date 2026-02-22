@@ -173,7 +173,7 @@ const hasPurchased = (formationId: string) => {
                       type="submit"
                       class={`w-full py-3 px-6 rounded-xl font-medium transition ${formation.popular ? 'bg-black text-white hover:bg-black/80' : 'bg-white text-black border-2 border-black hover:bg-black hover:text-white'}`}
                     >
-                      Acheter — {formation.price}€
+                      Acheter
                     </button>
                   </form>
                 ) : (
@@ -181,7 +181,7 @@ const hasPurchased = (formationId: string) => {
                     href={`/auth/register?redirect=${encodeURIComponent(`/formations/?buy=${formation.id}`)}`}
                     class={`block w-full text-center py-3 px-6 rounded-xl font-medium transition ${formation.popular ? 'bg-black text-white hover:bg-black/80' : 'bg-white text-black border-2 border-black hover:bg-black hover:text-white'}`}
                   >
-                    Acheter — {formation.price}€
+                    Acheter
                   </a>
                 )}
               </div>
