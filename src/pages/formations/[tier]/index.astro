@@ -31,7 +31,7 @@ if (chapters.length === 0) {
   import { join } from "node:path";
   
   try {
-    const contentPath = join(process.cwd(), 'src', 'content', 'formations', tier);
+    const contentPath = join(process.cwd(), 'src', 'formations', tier);
     const files = readdirSync(contentPath)
       .filter(file => file.endsWith('.md') && file !== 'README.md')
       .sort()

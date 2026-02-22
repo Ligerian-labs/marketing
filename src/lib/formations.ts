@@ -97,7 +97,7 @@ export function hasAccess(userId: string, formationSlug: string): boolean {
 
 export function getFormationContent(tier: string, chapter: string): string | null {
   try {
-    const contentPath = join(process.cwd(), 'src', 'content', 'formations', tier, `${chapter}.md`);
+    const contentPath = join(process.cwd(), 'src', 'formations', tier, `${chapter}.md`);
     
     if (!existsSync(contentPath)) {
       console.warn(`Formation content not found: ${contentPath}`);
@@ -113,7 +113,7 @@ export function getFormationContent(tier: string, chapter: string): string | nul
 
 export function getFormationChapters(tier: string): Array<{slug: string, title: string}> {
   try {
-    const contentPath = join(process.cwd(), 'src', 'content', 'formations', tier);
+    const contentPath = join(process.cwd(), 'src', 'formations', tier);
     
     if (!existsSync(contentPath)) {
       return [];
