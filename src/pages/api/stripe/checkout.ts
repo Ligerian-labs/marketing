@@ -3,20 +3,33 @@ import type { APIRoute } from "astro";
 import { getAuthenticatedUser } from "../../../lib/auth";
 import { createCheckoutSession, type PackId, PACKS } from "../../../lib/stripe";
 
-export const POST: APIRoute = async ({ request, cookies, url }) => {
+export const POST: APIRoute = async ({ request, cookies, url, redirect }) => {
   const user = getAuthenticatedUser(cookies);
   if (!user) {
-    return new Response(JSON.stringify({ error: "Non authentifié" }), { status: 401 });
+    return redirect(`/auth/login?redirect=${encodeURIComponent(url.pathname)}`);
   }
 
-  const body = await request.json();
-  const packId = body.pack as PackId;
+  // Support both JSON and form data
+  const contentType = request.headers.get("content-type") || "";
+  let packId: string;
+  let isForm = false;
 
-  if (!packId || !PACKS[packId]) {
+  if (contentType.includes("application/x-www-form-urlencoded") || contentType.includes("multipart/form-data")) {
+    const formData = await request.formData();
+    packId = formData.get("pack") as string;
+    isForm = true;
+  } else {
+    const body = await request.json();
+    packId = body.pack;
+  }
+
+  if (!packId || !PACKS[packId as PackId]) {
+    if (isForm) return redirect("/formations/?error=invalid_pack");
     return new Response(JSON.stringify({ error: "Pack invalide" }), { status: 400 });
   }
 
-  if (!PACKS[packId].price_cents) {
+  if (!PACKS[packId as PackId].price_cents) {
+    if (isForm) return redirect("/contact");
     return new Response(
       JSON.stringify({ error: "Ce pack nécessite un devis. Contactez-nous." }),
       { status: 400 }
@@ -24,19 +37,21 @@ export const POST: APIRoute = async ({ request, cookies, url }) => {
   }
 
   const checkoutUrl = await createCheckoutSession(
-    packId,
+    packId as PackId,
     user.email,
     user.id,
-    `${url.origin}/dashboard?payment=success`,
-    `${url.origin}/services?payment=cancelled`
+    `${url.origin}/formations/?payment=success`,
+    `${url.origin}/formations/?payment=cancelled`
   );
 
   if (!checkoutUrl) {
+    if (isForm) return redirect("/formations/?error=stripe");
     return new Response(
       JSON.stringify({ error: "Stripe non configuré" }),
       { status: 500 }
     );
   }
 
+  if (isForm) return redirect(checkoutUrl);
   return new Response(JSON.stringify({ url: checkoutUrl }), { status: 200 });
 };

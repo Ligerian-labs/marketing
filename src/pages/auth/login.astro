@@ -3,12 +3,14 @@ export const prerender = false;
 import Base from "../../layouts/Base.astro";
 import { getUserByEmail, verifyPassword, createSession, setSessionCookie } from "../../lib/auth";
 
+const redirectTo = Astro.url.searchParams.get("redirect") || "/dashboard";
 let error = "";
 
 if (Astro.request.method === "POST") {
   const formData = await Astro.request.formData();
   const email = formData.get("email") as string;
   const password = formData.get("password") as string;
+  const redirect = formData.get("redirect") as string || redirectTo;
 
   if (!email || !password) {
     error = "Email et mot de passe requis.";
@@ -19,7 +21,7 @@ if (Astro.request.method === "POST") {
     } else {
       const sessionId = createSession(user.id);
       setSessionCookie(Astro.cookies, sessionId);
-      return Astro.redirect("/dashboard");
+      return Astro.redirect(redirect);
     }
   }
 }
@@ -37,6 +39,7 @@ if (Astro.request.method === "POST") {
     )}
 
     <form method="POST" class="space-y-5">
+      <input type="hidden" name="redirect" value={redirectTo} />
       <div>
         <label for="email" class="form-label">Email</label>
         <input type="email" id="email" name="email" required class="form-input" placeholder="votre@email.fr" />
@@ -51,7 +54,7 @@ if (Astro.request.method === "POST") {
     </form>
 
     <p class="text-center text-sm text-muted mt-6">
-      Pas encore client ? <a href="/contact" class="text-accent hover:text-accent-light">Contactez-nous</a>
+      Pas encore de compte ? <a href={`/auth/register${redirectTo !== '/dashboard' ? `?redirect=${encodeURIComponent(redirectTo)}` : ''}`} class="text-accent hover:text-accent-light">Créer un compte</a>
     </p>
   </section>
 </Base>
