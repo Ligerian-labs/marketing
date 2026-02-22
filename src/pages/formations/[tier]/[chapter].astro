@@ -22,7 +22,7 @@ if (!hasAccess(user.id, tier)) {
 }
 
 const formation = FORMATION_TIERS[tier as keyof typeof FORMATION_TIERS];
-const content = getFormationContent(tier, chapter);
+const content = await getFormationContent(tier, chapter);
 
 if (!content) {
   return Astro.redirect(`/formations/${tier}/`);

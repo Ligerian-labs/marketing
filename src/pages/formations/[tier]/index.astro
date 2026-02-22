@@ -22,7 +22,7 @@ if (!hasAccess(user.id, tier)) {
 }
 
 const formation = FORMATION_TIERS[tier as keyof typeof FORMATION_TIERS];
-const chapters = getFormationChapters(tier);
+const chapters = await getFormationChapters(tier);
 
 // Fallback if chapters can't be read from README.md - use file listing
 if (chapters.length === 0) {
