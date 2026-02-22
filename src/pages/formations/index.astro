@@ -170,7 +170,7 @@ const hasPurchased = (formationId: string) => {
                   >
                     Accéder au contenu →
                   </a>
-                ) : user ? (
+                ) : (
                   <form action="/api/stripe/checkout" method="POST" class="w-full">
                     <input type="hidden" name="pack" value={formation.id} />
                     <button
@@ -180,13 +180,6 @@ const hasPurchased = (formationId: string) => {
                       Acheter
                     </button>
                   </form>
-                ) : (
-                  <a
-                    href={`/auth/register?redirect=${encodeURIComponent(`/formations/?buy=${formation.id}`)}`}
-                    class={`block w-full text-center py-3 px-6 rounded-xl font-medium transition ${formation.popular ? 'bg-black text-white hover:bg-black/80' : 'bg-white text-black border-2 border-black hover:bg-black hover:text-white'}`}
-                  >
-                    Acheter
-                  </a>
                 )}
               </div>
             </div>
