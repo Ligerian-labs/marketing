@@ -3,10 +3,35 @@ export const prerender = false;
 import Base from "../../layouts/Base.astro";
 import { getAuthenticatedUser } from "../../lib/auth";
 import { getUserPurchases } from "../../lib/formations";
-import { createCheckoutSession } from "../../lib/stripe";
+import type { PackId } from "../../lib/stripe";
 
-const user = await getAuthenticatedUser(Astro);
+const user = getAuthenticatedUser(Astro.cookies);
 const purchases = user ? getUserPurchases(user.id) : [];
+
+// Handle ?buy= param — redirect to register/login then checkout
+const buyPack = Astro.url.searchParams.get("buy");
+if (buyPack && ["formation-starter", "formation-intermediate", "formation-premium"].includes(buyPack)) {
+  if (!user) {
+    // Not logged in → register first, then come back to buy
+    return Astro.redirect(`/auth/register?redirect=${encodeURIComponent(`/formations/?buy=${buyPack}`)}`);
+  }
+  // Already purchased? Go to content
+  const alreadyOwned = purchases.some(p => p.pack === buyPack && p.status === "completed");
+  if (alreadyOwned) {
+    const tierDirs: Record<string, string> = { "formation-starter": "01-guide-pme", "formation-intermediate": "02-automatiser", "formation-premium": "03-deployer" };
+    return Astro.redirect(`/formations/${tierDirs[buyPack]}/`);
+  }
+  // Logged in → go to Stripe checkout
+  const { createCheckoutSession: checkout } = await import("../../lib/stripe");
+  const checkoutUrl = await checkout(
+    buyPack as any,
+    user.email,
+    user.id,
+    `${Astro.url.origin}/formations/?payment=success`,
+    `${Astro.url.origin}/formations/?payment=cancelled`
+  );
+  if (checkoutUrl) return Astro.redirect(checkoutUrl);
+}
 
 const formations = [
   {
@@ -64,6 +89,16 @@ const hasPurchased = (formationId: string) => {
 ---
 
 <Base title="Formations IA — Ligerian Labs" description="Formations pratiques pour maîtriser l'Intelligence Artificielle dans votre entreprise">
+  {Astro.url.searchParams.get("payment") === "success" && (
+    <div class="bg-green-50 border-b border-green-200 text-green-800 text-center py-3 px-6 text-sm font-medium">
+      ✅ Paiement réussi ! Votre formation est maintenant accessible ci-dessous.
+    </div>
+  )}
+  {Astro.url.searchParams.get("payment") === "cancelled" && (
+    <div class="bg-yellow-50 border-b border-yellow-200 text-yellow-800 text-center py-3 px-6 text-sm font-medium">
+      Paiement annulé. Vous pouvez réessayer quand vous le souhaitez.
+    </div>
+  )}
   <!-- Hero -->
   <section class="max-w-5xl mx-auto px-6 py-28 md:py-36 text-center">
     <p class="section-label mb-8">Formations IA pratiques</p>
@@ -113,8 +148,7 @@ const hasPurchased = (formationId: string) => {
                 </a>
               ) : user ? (
                 <form action="/api/stripe/checkout" method="POST" class="w-full">
-                  <input type="hidden" name="pack_id" value={formation.id} />
-                  <input type="hidden" name="redirect" value="/formations/" />
+                  <input type="hidden" name="pack" value={formation.id} />
                   <button 
                     type="submit"
                     class="w-full bg-primary text-white py-3 px-6 rounded-lg font-medium hover:bg-primary/90 transition"
@@ -124,10 +158,10 @@ const hasPurchased = (formationId: string) => {
                 </form>
               ) : (
                 <a 
-                  href={`/auth/login?redirect=/formations/`}
+                  href={`/auth/register?redirect=${encodeURIComponent(`/formations/?buy=${formation.id}`)}`}
                   class="block w-full bg-primary text-white text-center py-3 px-6 rounded-lg font-medium hover:bg-primary/90 transition"
                 >
-                  Se connecter pour acheter
+                  Créer un compte et acheter
                 </a>
               )}
             </div>
@@ -137,8 +171,8 @@ const hasPurchased = (formationId: string) => {
       
       {!user && (
         <div class="mt-12 text-center">
-          <p class="text-text-secondary mb-4">
-            Déjà un compte ? <a href="/auth/login" class="text-primary font-medium hover:underline">Se connecter</a>
+          <p class="text-text-secondary">
+            Déjà un compte ? <a href="/auth/login?redirect=/formations/" class="text-primary font-medium hover:underline">Se connecter pour accéder à vos formations</a>
           </p>
         </div>
       )}
