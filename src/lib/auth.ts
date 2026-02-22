@@ -98,3 +98,48 @@ export function getAuthenticatedUser(cookies: AstroCookies): User | undefined {
   if (!session) return undefined;
   return getUserById(session.user_id);
 }
+
+// --- Post-Payment User Creation ---
+
+export function createUserWithoutPassword(email: string, name: string, company?: string): User {
+  const id = randomUUID();
+  // Create an unguessable random bcrypt hash (effectively no password)
+  const password_hash = bcrypt.hashSync(randomUUID(), 12);
+
+  db.prepare(
+    "INSERT INTO users (id, email, password_hash, name, company) VALUES (?, ?, ?, ?, ?)"
+  ).run(id, email.toLowerCase().trim(), password_hash, name, company || null);
+
+  return { id, email: email.toLowerCase().trim(), name, company: company || null, created_at: new Date().toISOString() };
+}
+
+export function createPasswordToken(userId: string): string {
+  const id = randomUUID();
+  const token = randomUUID();
+  const expires = new Date(Date.now() + 48 * 60 * 60 * 1000).toISOString(); // 48h from now
+
+  db.prepare(
+    "INSERT INTO password_tokens (id, user_id, token, expires_at) VALUES (?, ?, ?, ?)"
+  ).run(id, userId, token, expires);
+
+  return token;
+}
+
+export function getValidPasswordToken(token: string): { id: string; user_id: string } | undefined {
+  return db.prepare(
+    "SELECT id, user_id FROM password_tokens WHERE token = ? AND expires_at > datetime('now') AND used = 0"
+  ).get(token) as any;
+}
+
+export function setPassword(userId: string, password: string): void {
+  const password_hash = bcrypt.hashSync(password, 12);
+  db.prepare(
+    "UPDATE users SET password_hash = ?, updated_at = datetime('now') WHERE id = ?"
+  ).run(password_hash, userId);
+}
+
+export function markTokenUsed(tokenId: string): void {
+  db.prepare(
+    "UPDATE password_tokens SET used = 1 WHERE id = ?"
+  ).run(tokenId);
+}

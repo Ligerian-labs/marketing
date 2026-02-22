@@ -8,25 +8,24 @@ import type { PackId } from "../../lib/stripe";
 const user = getAuthenticatedUser(Astro.cookies);
 const purchases = user ? getUserPurchases(user.id) : [];
 
-// Handle ?buy= param — redirect to register/login then checkout
+// Handle ?buy= param — direct to Stripe checkout (no auth required)
 const buyPack = Astro.url.searchParams.get("buy");
 if (buyPack && ["formation-starter", "formation-intermediate", "formation-premium"].includes(buyPack)) {
-  if (!user) {
-    // Not logged in → register first, then come back to buy
-    return Astro.redirect(`/auth/register?redirect=${encodeURIComponent(`/formations/?buy=${buyPack}`)}`);
+  // If logged in and already purchased, go to content
+  if (user) {
+    const alreadyOwned = purchases.some(p => p.pack === buyPack && p.status === "completed");
+    if (alreadyOwned) {
+      const tierDirs: Record<string, string> = { "formation-starter": "01-guide-pme", "formation-intermediate": "02-automatiser", "formation-premium": "03-deployer" };
+      return Astro.redirect(`/formations/${tierDirs[buyPack]}/`);
+    }
   }
-  // Already purchased? Go to content
-  const alreadyOwned = purchases.some(p => p.pack === buyPack && p.status === "completed");
-  if (alreadyOwned) {
-    const tierDirs: Record<string, string> = { "formation-starter": "01-guide-pme", "formation-intermediate": "02-automatiser", "formation-premium": "03-deployer" };
-    return Astro.redirect(`/formations/${tierDirs[buyPack]}/`);
-  }
-  // Logged in → go to Stripe checkout
+  
+  // Create Stripe checkout session (works for authenticated and non-authenticated users)
   const { createCheckoutSession: checkout } = await import("../../lib/stripe");
   const checkoutUrl = await checkout(
     buyPack as any,
-    user.email,
-    user.id,
+    user?.email || null,  // Let Stripe collect email if not logged in
+    user?.id || null,     // No user ID for post-payment flow
     `${Astro.url.origin}/formations/?payment=success`,
     `${Astro.url.origin}/formations/?payment=cancelled`
   );
@@ -96,6 +95,11 @@ const hasPurchased = (formationId: string) => {
   {Astro.url.searchParams.get("payment") === "success" && (
     <div class="bg-green-50 border-b border-green-200 text-green-800 text-center py-3 px-6 text-sm font-medium">
       ✅ Paiement réussi ! Votre formation est maintenant accessible ci-dessous.
+    </div>
+  )}
+  {Astro.url.searchParams.get("setup") === "success" && (
+    <div class="bg-green-50 border-b border-green-200 text-green-800 text-center py-3 px-6 text-sm font-medium">
+      🎉 Compte configuré avec succès ! Bienvenue chez Ligerian Labs. Vos formations vous attendent ci-dessous.
     </div>
   )}
   {Astro.url.searchParams.get("payment") === "cancelled" && (

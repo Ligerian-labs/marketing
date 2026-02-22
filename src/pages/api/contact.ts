@@ -5,7 +5,7 @@ import { join } from "node:path";
 import { Resend } from "resend";
 
 const LEADS_DIR = join(process.cwd(), "leads");
-const resend = new Resend(import.meta.env.RESEND_API_KEY);
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 const NOTIFY_TO = "bonjour@ligerianlabs.fr";
 const FROM_EMAIL = "leads@ligerianlabs.fr";
