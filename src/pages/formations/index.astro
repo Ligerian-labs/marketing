@@ -121,7 +121,7 @@ const hasPurchased = (formationId: string) => {
             <div class="bg-white rounded-2xl p-8 border border-black/5 hover:shadow-lg transition">
               <div class="flex items-center justify-between mb-6">
                 <h3 class="text-2xl font-bold">{formation.name}</h3>
-                <span class="text-2xl font-bold text-primary">{formation.price}</span>
+                <span class="text-2xl font-bold text-accent">{formation.price}</span>
               </div>
               
               <p class="text-text-secondary mb-6 leading-relaxed">
@@ -151,7 +151,7 @@ const hasPurchased = (formationId: string) => {
                   <input type="hidden" name="pack" value={formation.id} />
                   <button 
                     type="submit"
-                    class="w-full bg-primary text-white py-3 px-6 rounded-lg font-medium hover:bg-primary/90 transition"
+                    class="w-full bg-accent text-white py-3 px-6 rounded-lg font-medium hover:accent-light transition"
                   >
                     Acheter maintenant
                   </button>
@@ -159,7 +159,7 @@ const hasPurchased = (formationId: string) => {
               ) : (
                 <a 
                   href={`/auth/register?redirect=${encodeURIComponent(`/formations/?buy=${formation.id}`)}`}
-                  class="block w-full bg-primary text-white text-center py-3 px-6 rounded-lg font-medium hover:bg-primary/90 transition"
+                  class="block w-full bg-accent text-white text-center py-3 px-6 rounded-lg font-medium hover:accent-light transition"
                 >
                   Créer un compte et acheter
                 </a>
@@ -172,7 +172,7 @@ const hasPurchased = (formationId: string) => {
       {!user && (
         <div class="mt-12 text-center">
           <p class="text-text-secondary">
-            Déjà un compte ? <a href="/auth/login?redirect=/formations/" class="text-primary font-medium hover:underline">Se connecter pour accéder à vos formations</a>
+            Déjà un compte ? <a href="/auth/login?redirect=/formations/" class="text-accent font-medium hover:underline">Se connecter pour accéder à vos formations</a>
           </p>
         </div>
       )}
