@@ -1,10 +1,11 @@
 export const prerender = false;
 import type { APIRoute } from "astro";
-import { stripe, STRIPE_WEBHOOK_SECRET } from "../../../lib/stripe";
+import { getStripe } from "../../../lib/stripe";
 import { createSubscription } from "../../../lib/subscriptions";
 import { createPurchase } from "../../../lib/formations";
 
 export const POST: APIRoute = async ({ request }) => {
+  const stripe = getStripe();
   if (!stripe) {
     return new Response("Stripe not configured", { status: 500 });
   }
@@ -16,9 +17,10 @@ export const POST: APIRoute = async ({ request }) => {
     return new Response("Missing signature", { status: 400 });
   }
 
+  const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET || "";
   let event;
   try {
-    event = stripe.webhooks.constructEvent(body, signature, STRIPE_WEBHOOK_SECRET);
+    event = stripe.webhooks.constructEvent(body, signature, webhookSecret);
   } catch (err) {
     console.error("[STRIPE WEBHOOK] Signature verification failed:", err);
     return new Response("Invalid signature", { status: 400 });

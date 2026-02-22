@@ -1,16 +1,22 @@
 import Stripe from "stripe";
 
-const STRIPE_SECRET_KEY = import.meta.env.STRIPE_SECRET_KEY;
+// Use process.env for runtime secrets (not baked at build time)
+const getStripeKey = () => process.env.STRIPE_SECRET_KEY || "";
+const getWebhookSecret = () => process.env.STRIPE_WEBHOOK_SECRET || "";
 
-if (!STRIPE_SECRET_KEY) {
-  console.warn("[STRIPE] No STRIPE_SECRET_KEY set — Stripe features disabled");
+let _stripe: Stripe | null = null;
+export function getStripe(): Stripe | null {
+  const key = getStripeKey();
+  if (!key) return null;
+  if (!_stripe) {
+    _stripe = new Stripe(key, { apiVersion: "2025-01-27.acacia" as any });
+  }
+  return _stripe;
 }
 
-export const stripe = STRIPE_SECRET_KEY
-  ? new Stripe(STRIPE_SECRET_KEY, { apiVersion: "2025-01-27.acacia" as any })
-  : null;
-
-export const STRIPE_WEBHOOK_SECRET = import.meta.env.STRIPE_WEBHOOK_SECRET || "";
+// Keep backward compat
+export const stripe = null as Stripe | null; // lazy, use getStripe()
+export const STRIPE_WEBHOOK_SECRET = ""; // use getWebhookSecret()
 
 export const PACKS = {
   "agent-starter": {
@@ -60,6 +66,7 @@ export async function createCheckoutSession(
   successUrl: string,
   cancelUrl: string
 ): Promise<string | null> {
+  const stripe = getStripe();
   if (!stripe) return null;
 
   const pack = PACKS[packId];
