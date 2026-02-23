@@ -3,8 +3,8 @@ import type { APIRoute } from "astro";
 import { getStripe } from "../../../lib/stripe";
 import { createSubscription } from "../../../lib/subscriptions";
 import { createPurchase } from "../../../lib/formations";
-import { getUserByEmail, createUserWithoutPassword, createPasswordToken } from "../../../lib/auth";
-import { sendPasswordSetupEmail } from "../../../lib/email";
+import { getUserByEmail, getUserById, createUserWithoutPassword, createPasswordToken } from "../../../lib/auth";
+import { sendPurchaseConfirmationEmail } from "../../../lib/email";
 
 export const POST: APIRoute = async ({ request }) => {
   const stripe = getStripe();
@@ -45,36 +45,54 @@ export const POST: APIRoute = async ({ request }) => {
         if (packId.startsWith('formation-')) {
           // Handle formation purchase
           let finalUserId = userId;
+          let emailTo = customerEmail;
+          let userName = customerName || 'Client Ligerian Labs';
+          let passwordSetupToken: string | undefined;
+          let isNewUser = false;
           
-          if (!userId && customerEmail) {
+          if (userId) {
+            // Logged-in user: resolve their email for confirmation
+            const existingUser = getUserById(userId);
+            if (existingUser) {
+              emailTo = existingUser.email;
+              userName = existingUser.name;
+            }
+          } else if (customerEmail) {
             // Post-payment flow: check if user exists by email
-            let user = getUserByEmail(customerEmail);
+            const user = getUserByEmail(customerEmail);
             
             if (!user) {
               // Create new user without password
-              const newUser = createUserWithoutPassword(
-                customerEmail,
-                customerName || 'Client Ligerian Labs'
-              );
+              const newUser = createUserWithoutPassword(customerEmail, userName);
               finalUserId = newUser.id;
+              isNewUser = true;
               console.log(`[STRIPE] Created new user: ${newUser.id} (${customerEmail})`);
               
-              // Generate password setup token and send email
-              try {
-                const token = createPasswordToken(newUser.id);
-                await sendPasswordSetupEmail(customerEmail, newUser.name, token);
-                console.log(`[STRIPE] Sent password setup email to ${customerEmail}`);
-              } catch (emailErr) {
-                console.error(`[STRIPE] Failed to send setup email to ${customerEmail}:`, emailErr);
-              }
+              // Generate password setup token
+              passwordSetupToken = createPasswordToken(newUser.id);
             } else {
               finalUserId = user.id;
+              userName = user.name;
               console.log(`[STRIPE] Found existing user: ${user.id} (${customerEmail})`);
             }
           }
           
           if (finalUserId) {
             createPurchase(finalUserId, packId, session.id);
+          }
+          
+          // Always send confirmation email after purchase
+          if (emailTo) {
+            try {
+              await sendPurchaseConfirmationEmail(emailTo, userName, packId, {
+                passwordSetupToken,
+              });
+              console.log(`[STRIPE] Sent purchase confirmation to ${emailTo} (new=${isNewUser})`);
+            } catch (emailErr) {
+              console.error(`[STRIPE] Failed to send confirmation to ${emailTo}:`, emailErr);
+            }
+          } else {
+            console.error(`[STRIPE] No email available for purchase confirmation! pack=${packId}, user=${finalUserId}`);
           }
         } else {
           // Handle subscription (existing flow)
