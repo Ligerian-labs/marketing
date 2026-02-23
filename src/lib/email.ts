@@ -11,9 +11,9 @@ export async function sendPurchaseConfirmationEmail(
 ) {
   const pack = PACKS[packId as PackId];
   const packName = pack?.name || packId;
-  const loginUrl = "https://ligerianlabs.fr/auth/login";
+  const loginUrl = "https://ligerianlabs.fr/auth/connexion";
   const setupUrl = options?.passwordSetupToken
-    ? `https://ligerianlabs.fr/auth/setup-password?token=${options.passwordSetupToken}`
+    ? `https://ligerianlabs.fr/auth/configurer-mot-de-passe?token=${options.passwordSetupToken}`
     : null;
 
   const ctaBlock = setupUrl
@@ -79,8 +79,54 @@ export async function sendPurchaseConfirmationEmail(
   });
 }
 
+export async function sendPasswordResetEmail(to: string, name: string, token: string) {
+  const resetUrl = `https://ligerianlabs.fr/auth/configurer-mot-de-passe?token=${token}`;
+
+  await resend.emails.send({
+    from: "Ligerian Labs <bonjour@ligerianlabs.fr>",
+    to,
+    subject: "Réinitialisation de mot de passe — Ligerian Labs",
+    html: `
+      <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; padding: 40px 20px;">
+        <div style="text-align: center; margin-bottom: 40px;">
+          <h1 style="color: #1a1a1a; font-size: 24px; margin: 0;">Ligerian Labs</h1>
+        </div>
+        
+        <div style="background: #f8fafc; border-radius: 12px; padding: 32px; margin-bottom: 32px;">
+          <h2 style="color: #1a1a1a; margin: 0 0 16px 0; font-size: 20px;">Bonjour ${name},</h2>
+          <p style="color: #374151; line-height: 1.6; margin: 0 0 24px 0;">
+            Vous avez demandé à réinitialiser votre mot de passe. Cliquez sur le bouton ci-dessous :
+          </p>
+          
+          <div style="text-align: center;">
+            <a href="${resetUrl}" 
+               style="display: inline-block; background: #3b82f6; color: white; text-decoration: none; padding: 12px 24px; border-radius: 8px; font-weight: 500;">
+              Réinitialiser mon mot de passe
+            </a>
+          </div>
+        </div>
+        
+        <div style="border-left: 4px solid #fbbf24; background: #fffbeb; padding: 16px; margin-bottom: 32px; border-radius: 0 8px 8px 0;">
+          <p style="color: #92400e; margin: 0; font-size: 14px;">
+            <strong>Important :</strong> Ce lien expire dans 48 heures. Si vous n'avez pas fait cette demande, ignorez cet email.
+          </p>
+        </div>
+        
+        <hr style="border: none; border-top: 1px solid #e5e7eb; margin: 32px 0;">
+        
+        <div style="text-align: center; color: #9ca3af; font-size: 14px;">
+          <p>
+            Ligerian Labs<br>
+            <a href="https://ligerianlabs.fr" style="color: #3b82f6; text-decoration: none;">ligerianlabs.fr</a>
+          </p>
+        </div>
+      </div>
+    `,
+  });
+}
+
 export async function sendPasswordSetupEmail(to: string, name: string, token: string) {
-  const setupUrl = `https://ligerianlabs.fr/auth/setup-password?token=${token}`;
+  const setupUrl = `https://ligerianlabs.fr/auth/configurer-mot-de-passe?token=${token}`;
   
   await resend.emails.send({
     from: "Ligerian Labs <bonjour@ligerianlabs.fr>",

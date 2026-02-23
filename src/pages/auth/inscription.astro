@@ -79,7 +79,7 @@ if (Astro.request.method === "POST") {
     </form>
 
     <p class="text-center text-sm text-muted mt-6">
-      Déjà un compte ? <a href={`/auth/login${redirectTo !== '/dashboard' ? `?redirect=${encodeURIComponent(redirectTo)}` : ''}`} class="text-accent hover:text-accent-light">Se connecter</a>
+      Déjà un compte ? <a href={`/auth/connexion${redirectTo !== '/dashboard' ? `?redirect=${encodeURIComponent(redirectTo)}` : ''}`} class="text-accent hover:text-accent-light">Se connecter</a>
     </p>
   </section>
 </Base>

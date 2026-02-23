@@ -53,8 +53,12 @@ if (Astro.request.method === "POST") {
       </button>
     </form>
 
-    <p class="text-center text-sm text-muted mt-6">
-      Pas encore de compte ? <a href={`/auth/register${redirectTo !== '/dashboard' ? `?redirect=${encodeURIComponent(redirectTo)}` : ''}`} class="text-accent hover:text-accent-light">Créer un compte</a>
+    <p class="text-center text-sm text-muted mt-4">
+      <a href="/auth/mot-de-passe-oublie" class="text-accent hover:text-accent-light">Mot de passe oublié ?</a>
+    </p>
+
+    <p class="text-center text-sm text-muted mt-2">
+      Pas encore de compte ? <a href={`/auth/inscription${redirectTo !== '/dashboard' ? `?redirect=${encodeURIComponent(redirectTo)}` : ''}`} class="text-accent hover:text-accent-light">Créer un compte</a>
     </p>
   </section>
 </Base>
