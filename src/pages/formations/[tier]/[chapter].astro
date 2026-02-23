@@ -57,15 +57,20 @@ while ((match = headingRegex.exec(content)) !== null) {
   tocEntries.push({ id, text, level });
 }
 
-// Custom renderer to inject matching IDs on headings
-const renderer = new marked.Renderer();
-renderer.heading = function(text: string, level: number) {
-  const clean = text.replace(/<[^>]+>/g, '').replace(/\*\*/g, '');
-  const id = slugify(clean);
-  return `<h${level} id="${id}">${text}</h${level}>`;
-};
+// Custom renderer to inject matching IDs on headings (marked v17+ API)
+marked.use({
+  renderer: {
+    heading({ tokens, depth }: { tokens: any[]; depth: number }) {
+      // @ts-ignore — marked internal parser
+      const text = (this as any).parser.parseInline(tokens);
+      const clean = text.replace(/<[^>]+>/g, '').replace(/\*\*/g, '');
+      const id = slugify(clean);
+      return `<h${depth} id="${id}">${text}</h${depth}>\n`;
+    }
+  }
+});
 
-const htmlContent = marked(content, { breaks: true, gfm: true, renderer });
+const htmlContent = marked(content, { breaks: true, gfm: true });
 
 // Extract title
 let title = chapter.replace(/^\d+-/, '').replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
