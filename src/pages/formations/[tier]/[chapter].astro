@@ -2,16 +2,17 @@
 export const prerender = false;
 import Base from "../../../layouts/Base.astro";
 import { getAuthenticatedUser } from "../../../lib/auth";
-import { hasAccess, getFormationContent, FORMATION_TIERS } from "../../../lib/formations";
+import { hasAccess, getFormationContent, FORMATION_TIERS, resolveFormationTier } from "../../../lib/formations";
 import { marked } from 'marked';
 
 const { tier, chapter } = Astro.params;
+const resolvedTier = tier ? resolveFormationTier(tier) : null;
 
-if (!tier || !chapter || !(tier in FORMATION_TIERS)) {
+if (!resolvedTier || !chapter) {
   return Astro.redirect("/formations/", 302);
 }
 
-const formation = FORMATION_TIERS[tier as keyof typeof FORMATION_TIERS];
+const formation = FORMATION_TIERS[resolvedTier];
 
 const user = await getAuthenticatedUser(Astro);
 

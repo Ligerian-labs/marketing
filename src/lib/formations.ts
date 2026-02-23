@@ -190,3 +190,14 @@ export function getPackFromTier(tier: string): FormationTier | null {
   const entry = Object.entries(TIER_MAPPING).find(([_, tierDir]) => tierDir === tier);
   return entry ? entry[0] as FormationTier : null;
 }
+
+/**
+ * Resolve a URL tier param to a valid FORMATION_TIERS key.
+ * Accepts both pack names (formation-starter) and tier dirs (01-guide-pme).
+ */
+export function resolveFormationTier(param: string): FormationTier | null {
+  // Direct match on pack name
+  if (param in FORMATION_TIERS) return param as FormationTier;
+  // Match on tier directory name
+  return getPackFromTier(param);
+}
