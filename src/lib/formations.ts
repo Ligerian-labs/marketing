@@ -6,7 +6,7 @@ import db from "./db";
 // --- Private repo config ---
 const CONTENT_REPO = "Ligerian-labs/ai-learning-content";
 const CONTENT_BRANCH = "main";
-const GITHUB_TOKEN = import.meta.env.GITHUB_CONTENT_TOKEN || "";
+const GITHUB_TOKEN = process.env.GITHUB_CONTENT_TOKEN || "";
 const CACHE_DIR = join(process.cwd(), "data", "formations-cache");
 const CACHE_TTL_MS = 60 * 60 * 1000; // 1 hour
 
