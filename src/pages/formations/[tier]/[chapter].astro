@@ -11,18 +11,18 @@ if (!tier || !chapter || !(tier in FORMATION_TIERS)) {
   return Astro.redirect("/formations/", 302);
 }
 
+const formation = FORMATION_TIERS[tier as keyof typeof FORMATION_TIERS];
+
 const user = await getAuthenticatedUser(Astro);
 
 if (!user) {
   return Astro.redirect(`/auth/connexion?redirect=/formations/${tier}/${chapter}`);
 }
 
-if (!hasAccess(user.id, tier)) {
+if (!hasAccess(user.id, formation.tier_dir)) {
   return Astro.redirect("/formations/");
 }
-
-const formation = FORMATION_TIERS[tier as keyof typeof FORMATION_TIERS];
-const content = await getFormationContent(tier, chapter);
+const content = await getFormationContent(formation.tier_dir, chapter);
 
 if (!content) {
   return Astro.redirect(`/formations/${tier}/`);
