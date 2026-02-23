@@ -2,7 +2,7 @@
 export const prerender = false;
 import Base from "../../layouts/Base.astro";
 import { getAuthenticatedUser } from "../../lib/auth";
-import { getUserPurchases, FORMATION_TIERS } from "../../lib/formations";
+import { getUserPurchases, FORMATION_TIERS, type FormationTier } from "../../lib/formations";
 import db from "../../lib/db";
 
 const user = await getAuthenticatedUser(Astro.cookies);
@@ -15,128 +15,152 @@ const subscriptions = db.prepare(
 ).all(user.id) as any[];
 
 const purchases = getUserPurchases(user.id);
+
+// Deduplicate purchases — keep only latest per pack
+const uniquePurchases = Object.values(
+  purchases.reduce((acc: Record<string, any>, p) => {
+    if (!acc[p.pack] || new Date(p.created_at) > new Date(acc[p.pack].created_at)) {
+      acc[p.pack] = p;
+    }
+    return acc;
+  }, {})
+) as typeof purchases;
+
+// Sort: premium > intermediate > starter
+const tierOrder = ['formation-premium', 'formation-intermediate', 'formation-starter'];
+uniquePurchases.sort((a, b) => tierOrder.indexOf(a.pack) - tierOrder.indexOf(b.pack));
+
+const tierIcons: Record<string, string> = {
+  'formation-starter': '🚀',
+  'formation-intermediate': '⚡',
+  'formation-premium': '💎',
+};
+
+const tierColors: Record<string, { bg: string; border: string; badge: string }> = {
+  'formation-starter': { bg: 'bg-blue-50', border: 'border-blue-100', badge: 'bg-blue-100 text-blue-700' },
+  'formation-intermediate': { bg: 'bg-purple-50', border: 'border-purple-100', badge: 'bg-purple-100 text-purple-700' },
+  'formation-premium': { bg: 'bg-amber-50', border: 'border-amber-100', badge: 'bg-amber-100 text-amber-700' },
+};
 ---
 
-<Base title="Espace client — Ligerian Labs">
-  <section class="max-w-5xl mx-auto px-6 py-20">
-    <div class="flex items-center justify-between mb-10">
-      <div>
-        <h1 class="text-3xl font-bold">Bonjour, {user.name} 👋</h1>
-        <p class="text-muted mt-1">{user.email}{user.company ? ` · ${user.company}` : ''}</p>
-      </div>
-      <a href="/api/auth/logout" class="text-sm text-gray-400 hover:text-white transition">
-        Déconnexion →
-      </a>
+<Base title="Mon espace — Ligerian Labs">
+  <section class="max-w-4xl mx-auto px-6 py-16">
+    <!-- Header -->
+    <div class="mb-12">
+      <h1 class="text-3xl font-bold text-gray-900">Bonjour, {user.name} 👋</h1>
+      <p class="text-gray-500 mt-1">{user.email}{user.company ? ` · ${user.company}` : ''}</p>
     </div>
 
-    {subscriptions.length === 0 && purchases.length === 0 ? (
-      <div class="bg-surface border border-white/5 rounded-xl p-12 text-center">
-        <h2 class="text-xl font-semibold mb-3">Pas encore d'abonnement ou de formation</h2>
-        <p class="text-muted mb-6">Découvrez nos offres et formations pour commencer votre transformation IA.</p>
-        <div class="flex gap-4 justify-center">
-          <a href="/services" class="bg-accent hover:bg-accent-light text-white px-6 py-3 rounded-lg font-medium transition inline-block">
-            Voir les services →
-          </a>
-          <a href="/formations" class="bg-primary hover:bg-primary/90 text-white px-6 py-3 rounded-lg font-medium transition inline-block">
-            Voir les formations →
-          </a>
+    {uniquePurchases.length === 0 && subscriptions.length === 0 ? (
+      <div class="bg-white rounded-2xl border border-gray-100 p-12 text-center">
+        <div class="w-16 h-16 bg-blue-50 rounded-full flex items-center justify-center mx-auto mb-4 text-2xl">
+          📚
         </div>
+        <h2 class="text-xl font-semibold text-gray-900 mb-2">Pas encore de formation</h2>
+        <p class="text-gray-500 mb-8 max-w-md mx-auto">
+          Découvrez nos formations pour intégrer l'IA dans votre entreprise.
+        </p>
+        <a href="/formations" class="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium transition">
+          Voir les formations →
+        </a>
       </div>
     ) : (
-      <div class="space-y-8">
+      <div class="space-y-10">
         {/* Formations */}
-        {purchases.length > 0 && (
-          <div class="space-y-4">
-            <h2 class="text-xl font-semibold">Vos formations</h2>
-            {purchases.map((purchase: any) => {
-              const formation = FORMATION_TIERS[purchase.pack as keyof typeof FORMATION_TIERS];
-              const tierDir = formation?.tier_dir || purchase.pack.replace('formation-', '');
-              
-              return (
-                <div class="bg-surface border border-white/5 rounded-xl p-6">
-                  <div class="flex items-center justify-between">
-                    <div>
-                      <h3 class="font-semibold text-lg">{formation?.name || purchase.pack}</h3>
-                      <p class="text-muted text-sm mt-1">
-                        Achetée le {new Date(purchase.created_at).toLocaleDateString('fr-FR')}
-                      </p>
+        {uniquePurchases.length > 0 && (
+          <div>
+            <h2 class="text-lg font-semibold text-gray-900 mb-4">Vos formations</h2>
+            <div class="space-y-3">
+              {uniquePurchases.map((purchase: any) => {
+                const formation = FORMATION_TIERS[purchase.pack as FormationTier];
+                const tierDir = formation?.tier_dir || purchase.pack.replace('formation-', '');
+                const icon = tierIcons[purchase.pack] || '📖';
+                const colors = tierColors[purchase.pack] || { bg: 'bg-gray-50', border: 'border-gray-100', badge: 'bg-gray-100 text-gray-700' };
+                
+                return (
+                  <a 
+                    href={`/formations/${tierDir}/`}
+                    class={`block rounded-xl border ${colors.border} hover:shadow-md transition-all duration-200 group overflow-hidden`}
+                  >
+                    <div class="flex items-center gap-5 p-5">
+                      <div class={`flex-shrink-0 w-12 h-12 ${colors.bg} rounded-xl flex items-center justify-center text-xl`}>
+                        {icon}
+                      </div>
+                      <div class="flex-1 min-w-0">
+                        <h3 class="font-semibold text-gray-900 group-hover:text-blue-600 transition">
+                          {formation?.name || purchase.pack}
+                        </h3>
+                        <p class="text-sm text-gray-500 mt-0.5">
+                          {formation?.description}
+                        </p>
+                      </div>
+                      <div class="flex items-center gap-3 flex-shrink-0">
+                        <span class={`text-xs font-medium px-2.5 py-1 rounded-full ${colors.badge}`}>
+                          Accès complet
+                        </span>
+                        <svg class="w-5 h-5 text-gray-300 group-hover:text-blue-500 group-hover:translate-x-1 transition-all" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                          <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"/>
+                        </svg>
+                      </div>
                     </div>
-                    <div class="flex items-center gap-3">
-                      <span class="text-sm px-3 py-1 rounded-full bg-green-900/30 text-green-400">
-                        ✅ Accès complet
-                      </span>
-                      <a 
-                        href={`/formations/${tierDir}/`}
-                        class="bg-primary hover:bg-primary/90 text-white px-4 py-2 rounded-lg font-medium transition text-sm"
-                      >
-                        Accéder →
-                      </a>
-                    </div>
-                  </div>
-                  {formation?.description && (
-                    <p class="text-muted text-sm mt-3">{formation.description}</p>
-                  )}
-                </div>
-              );
-            })}
+                  </a>
+                );
+              })}
+            </div>
+            
+            <div class="mt-4 text-center">
+              <a href="/formations" class="text-sm text-gray-400 hover:text-blue-600 transition">
+                Voir toutes les formations →
+              </a>
+            </div>
           </div>
         )}
 
         {/* Services/Subscriptions */}
         {subscriptions.length > 0 && (
-          <div class="space-y-4">
-            <h2 class="text-xl font-semibold">Vos services</h2>
-            {subscriptions.map((sub: any) => (
-              <a href={`/dashboard/${sub.id}`} class="block bg-surface border border-white/5 rounded-xl p-6 hover:border-accent/30 transition">
-                <div class="flex items-center justify-between">
-                  <div>
-                    <h3 class="font-semibold text-lg">{sub.pack}</h3>
-                    <p class="text-muted text-sm mt-1">
-                      Souscrit le {new Date(sub.created_at).toLocaleDateString('fr-FR')}
-                    </p>
+          <div>
+            <h2 class="text-lg font-semibold text-gray-900 mb-4">Vos services</h2>
+            <div class="space-y-3">
+              {subscriptions.map((sub: any) => (
+                <a href={`/dashboard/${sub.id}`} class="block bg-white rounded-xl border border-gray-100 p-5 hover:shadow-md transition-all group">
+                  <div class="flex items-center justify-between">
+                    <div>
+                      <h3 class="font-semibold text-gray-900">{sub.pack}</h3>
+                      <p class="text-sm text-gray-500 mt-0.5">
+                        Souscrit le {new Date(sub.created_at).toLocaleDateString('fr-FR')}
+                      </p>
+                    </div>
+                    <span class={`text-xs font-medium px-2.5 py-1 rounded-full ${
+                      sub.status === 'active' ? 'bg-green-100 text-green-700' :
+                      sub.status === 'provisioning' ? 'bg-yellow-100 text-yellow-700' :
+                      sub.status === 'pending' ? 'bg-blue-100 text-blue-700' :
+                      'bg-gray-100 text-gray-700'
+                    }`}>
+                      {sub.status === 'active' ? '✅ Actif' :
+                       sub.status === 'provisioning' ? '⚙️ En cours' :
+                       sub.status === 'pending' ? '⏳ En attente' :
+                       sub.status}
+                    </span>
                   </div>
-                  <span class={`text-sm px-3 py-1 rounded-full ${
-                    sub.status === 'active' ? 'bg-green-900/30 text-green-400' :
-                    sub.status === 'provisioning' ? 'bg-yellow-900/30 text-yellow-400' :
-                    sub.status === 'pending' ? 'bg-blue-900/30 text-blue-400' :
-                    'bg-gray-900/30 text-gray-400'
-                  }`}>
-                    {sub.status === 'active' ? '✅ Actif' :
-                     sub.status === 'provisioning' ? '⚙️ En cours' :
-                     sub.status === 'pending' ? '⏳ En attente' :
-                     sub.status}
-                  </span>
-                </div>
-                {sub.server_ip && (
-                  <div class="mt-4 pt-4 border-t border-white/5 grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
-                    {sub.server_ip && (
-                      <div>
-                        <span class="text-muted">Serveur</span>
-                        <p class="text-white font-mono text-xs mt-1">{sub.server_ip}</p>
-                      </div>
-                    )}
-                    {sub.server_provider && (
-                      <div>
-                        <span class="text-muted">Provider</span>
-                        <p class="text-white mt-1">{sub.server_provider}</p>
-                      </div>
-                    )}
-                    {sub.tailscale_hostname && (
-                      <div>
-                        <span class="text-muted">Tailscale</span>
-                        <p class="text-white font-mono text-xs mt-1">{sub.tailscale_hostname}</p>
-                      </div>
-                    )}
-                    {sub.openclaw_version && (
-                      <div>
-                        <span class="text-muted">OpenClaw</span>
-                        <p class="text-white mt-1">v{sub.openclaw_version}</p>
-                      </div>
-                    )}
-                  </div>
-                )}
-              </a>
-            ))}
+                  {sub.server_ip && (
+                    <div class="mt-4 pt-4 border-t border-gray-50 grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
+                      {sub.server_ip && (
+                        <div>
+                          <span class="text-gray-400 text-xs">Serveur</span>
+                          <p class="text-gray-900 font-mono text-xs mt-0.5">{sub.server_ip}</p>
+                        </div>
+                      )}
+                      {sub.server_provider && (
+                        <div>
+                          <span class="text-gray-400 text-xs">Provider</span>
+                          <p class="text-gray-900 text-xs mt-0.5">{sub.server_provider}</p>
+                        </div>
+                      )}
+                    </div>
+                  )}
+                </a>
+              ))}
+            </div>
           </div>
         )}
       </div>
