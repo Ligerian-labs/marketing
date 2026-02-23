@@ -36,6 +36,16 @@ const currentIndex = chapters.findIndex(c => c.slug === chapter);
 const prevChapter = currentIndex > 0 ? chapters[currentIndex - 1] : null;
 const nextChapter = currentIndex < chapters.length - 1 ? chapters[currentIndex + 1] : null;
 
+// Slugify helper — consistent between TOC and renderer
+function slugify(text: string): string {
+  return text.toLowerCase()
+    .replace(/\*\*/g, '')
+    .replace(/[^a-zà-ÿ0-9\s-]/g, '')
+    .replace(/\s+/g, '-')
+    .replace(/-+/g, '-')
+    .replace(/(^-|-$)/g, '');
+}
+
 // Extract TOC from h2/h3 headings
 const tocEntries: Array<{ id: string; text: string; level: number }> = [];
 const headingRegex = /^(#{2,3})\s+(.+)$/gm;
@@ -43,13 +53,19 @@ let match;
 while ((match = headingRegex.exec(content)) !== null) {
   const level = match[1].length;
   const text = match[2].replace(/\*\*/g, '');
-  const id = 'heading-' + text.toLowerCase().replace(/[^a-zà-ÿ0-9]+/g, '-').replace(/(^-|-$)/g, '');
+  const id = slugify(text);
   tocEntries.push({ id, text, level });
 }
 
-// Configure marked
-marked.setOptions({ breaks: true, gfm: true, headerIds: true, headerPrefix: 'heading-' });
-const htmlContent = marked(content);
+// Custom renderer to inject matching IDs on headings
+const renderer = new marked.Renderer();
+renderer.heading = function(text: string, level: number) {
+  const clean = text.replace(/<[^>]+>/g, '').replace(/\*\*/g, '');
+  const id = slugify(clean);
+  return `<h${level} id="${id}">${text}</h${level}>`;
+};
+
+const htmlContent = marked(content, { breaks: true, gfm: true, renderer });
 
 // Extract title
 let title = chapter.replace(/^\d+-/, '').replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
@@ -78,6 +94,28 @@ const readingTime = Math.max(1, Math.ceil(wordCount / 200));
     </nav>
 
     <div class="flex gap-12">
+      <!-- Sidebar TOC (desktop only, left side) -->
+      {tocEntries.length > 2 && (
+        <aside class="hidden xl:block w-64 flex-shrink-0">
+          <div class="sticky top-24">
+            <p class="text-xs font-semibold uppercase tracking-widest text-gray-400 mb-4">Sur cette page</p>
+            <nav class="space-y-1 max-h-[calc(100vh-8rem)] overflow-y-auto">
+              {tocEntries.map((entry) => (
+                <a 
+                  href={`#${entry.id}`}
+                  class={`block text-sm py-1 transition hover:text-blue-600 ${
+                    entry.level === 2 ? 'text-gray-600 font-medium' : 'text-gray-400 pl-3'
+                  }`}
+                  data-toc-link={entry.id}
+                >
+                  {entry.text}
+                </a>
+              ))}
+            </nav>
+          </div>
+        </aside>
+      )}
+
       <!-- Main content -->
       <article class="flex-1 min-w-0 max-w-3xl">
         <!-- Chapter header -->
@@ -140,27 +178,6 @@ const readingTime = Math.max(1, Math.ceil(wordCount / 200));
         </nav>
       </article>
 
-      <!-- Sidebar TOC (desktop only) -->
-      {tocEntries.length > 2 && (
-        <aside class="hidden xl:block w-64 flex-shrink-0">
-          <div class="sticky top-24">
-            <p class="text-xs font-semibold uppercase tracking-widest text-gray-400 mb-4">Sur cette page</p>
-            <nav class="space-y-1">
-              {tocEntries.map((entry) => (
-                <a 
-                  href={`#${entry.id}`}
-                  class={`block text-sm py-1 transition hover:text-blue-600 ${
-                    entry.level === 2 ? 'text-gray-600 font-medium' : 'text-gray-400 pl-3'
-                  }`}
-                  data-toc-link={entry.id}
-                >
-                  {entry.text}
-                </a>
-              ))}
-            </nav>
-          </div>
-        </aside>
-      )}
     </div>
   </div>
 
