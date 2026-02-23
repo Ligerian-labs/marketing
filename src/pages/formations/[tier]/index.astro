@@ -60,64 +60,87 @@ if (chapters.length === 0) {
 
     <!-- Header -->
     <div class="mb-12">
+      <div class="inline-flex items-center gap-2 px-3 py-1 bg-blue-50 text-blue-700 rounded-full text-sm font-medium mb-4">
+        📚 Formation
+      </div>
       <h1 class="text-4xl md:text-5xl font-bold tracking-tight mb-4">
         {formation.name}
       </h1>
-      <p class="text-xl text-text-secondary leading-relaxed">
+      <p class="text-xl text-text-secondary leading-relaxed mb-6">
         {formation.description}
       </p>
-    </div>
-
-    <!-- Chapters -->
-    <div class="bg-surface rounded-2xl p-8 border border-white/5">
-      <h2 class="text-2xl font-bold mb-6">Sommaire</h2>
-      
-      {chapters.length > 0 ? (
-        <div class="space-y-4">
-          {chapters.map((chapter, index) => (
-            <a 
-              href={`/formations/${tier}/${chapter.slug}`}
-              class="block p-4 bg-white rounded-lg border border-black/5 hover:shadow-lg hover:border-primary/20 transition group"
-            >
-              <div class="flex items-center gap-4">
-                <span class="w-8 h-8 bg-primary/10 text-primary font-bold rounded-full flex items-center justify-center text-sm">
-                  {index + 1}
-                </span>
-                <div>
-                  <h3 class="font-medium group-hover:text-primary transition">
-                    {chapter.title}
-                  </h3>
-                </div>
-                <svg class="w-5 h-5 text-text-secondary group-hover:text-primary ml-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"/>
-                </svg>
-              </div>
-            </a>
-          ))}
-        </div>
-      ) : (
-        <div class="text-center py-12">
-          <div class="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
-            <svg class="w-8 h-8 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126ZM12 15.75h.007v.008H12v-.008Z"/>
+      {chapters.length > 0 && (
+        <div class="flex items-center gap-6 text-sm text-text-secondary">
+          <span class="flex items-center gap-1.5">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.042A8.967 8.967 0 0 0 6 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 0 1 6 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 0 1 6-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0 0 18 18a8.967 8.967 0 0 0-6 2.292m0-14.25v14.25"/>
             </svg>
-          </div>
-          <h3 class="text-xl font-medium mb-2">Contenu en cours de préparation</h3>
-          <p class="text-text-secondary">
-            Les chapitres de cette formation seront disponibles très bientôt.
-          </p>
+            {chapters.length} chapitres
+          </span>
+          <span class="flex items-center gap-1.5">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/>
+            </svg>
+            ~{chapters.length * 10} min de lecture
+          </span>
         </div>
       )}
     </div>
 
+    <!-- Chapters -->
+    {chapters.length > 0 ? (
+      <div class="space-y-3">
+        {chapters.map((chapter, index) => (
+          <a 
+            href={`/formations/${tier}/${chapter.slug}`}
+            class="block p-5 bg-white rounded-xl border border-gray-100 hover:shadow-md hover:border-blue-200 transition-all duration-200 group"
+          >
+            <div class="flex items-center gap-5">
+              <div class="flex-shrink-0 w-10 h-10 bg-gradient-to-br from-blue-500 to-blue-600 text-white font-bold rounded-xl flex items-center justify-center text-sm shadow-sm">
+                {index + 1}
+              </div>
+              <div class="flex-1 min-w-0">
+                <h3 class="font-semibold text-gray-900 group-hover:text-blue-600 transition">
+                  {chapter.title}
+                </h3>
+              </div>
+              <svg class="w-5 h-5 text-gray-300 group-hover:text-blue-500 group-hover:translate-x-1 transition-all flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"/>
+              </svg>
+            </div>
+          </a>
+        ))}
+      </div>
+    ) : (
+      <div class="bg-white rounded-2xl border border-gray-100 p-12 text-center">
+        <div class="w-16 h-16 bg-amber-50 rounded-full flex items-center justify-center mx-auto mb-4">
+          <svg class="w-8 h-8 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/>
+          </svg>
+        </div>
+        <h3 class="text-xl font-semibold text-gray-900 mb-2">Contenu en cours de préparation</h3>
+        <p class="text-gray-500 max-w-md mx-auto">
+          Les chapitres de cette formation seront disponibles très bientôt. Vous serez notifié par email dès leur publication.
+        </p>
+      </div>
+    )}
+
     <!-- Back to formations -->
-    <div class="mt-12 text-center">
+    <div class="mt-12 flex justify-between items-center">
       <a 
         href="/formations/"
-        class="inline-flex items-center gap-2 text-primary hover:underline"
+        class="inline-flex items-center gap-2 text-gray-500 hover:text-blue-600 transition font-medium"
       >
-        ← Retour aux formations
+        ← Toutes les formations
       </a>
+      {chapters.length > 0 && (
+        <a 
+          href={`/formations/${tier}/${chapters[0].slug}`}
+          class="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-5 py-2.5 rounded-lg font-medium transition shadow-sm"
+        >
+          Commencer la formation →
+        </a>
+      )}
     </div>
   </div>
 </Base>
