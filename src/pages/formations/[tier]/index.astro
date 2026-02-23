@@ -13,7 +13,7 @@ if (!resolvedTier) {
 
 const formation = FORMATION_TIERS[resolvedTier];
 
-const user = await getAuthenticatedUser(Astro);
+const user = await getAuthenticatedUser(Astro.cookies);
 
 if (!user) {
   return Astro.redirect(`/auth/connexion?redirect=/formations/${tier}/`);
