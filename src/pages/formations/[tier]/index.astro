@@ -10,19 +10,19 @@ if (!tier || !(tier in FORMATION_TIERS)) {
   return Astro.redirect("/formations/", 302);
 }
 
+const formation = FORMATION_TIERS[tier as keyof typeof FORMATION_TIERS];
+
 const user = await getAuthenticatedUser(Astro);
 
 if (!user) {
   return Astro.redirect(`/auth/connexion?redirect=/formations/${tier}/`);
 }
 
-if (!hasAccess(user.id, tier)) {
+if (!hasAccess(user.id, formation.tier_dir)) {
   // User doesn't have access - redirect to formations page with purchase option
   return Astro.redirect("/formations/");
 }
-
-const formation = FORMATION_TIERS[tier as keyof typeof FORMATION_TIERS];
-const chapters = await getFormationChapters(tier);
+const chapters = await getFormationChapters(formation.tier_dir);
 
 // Fallback if chapters can't be read from README.md - use file listing
 if (chapters.length === 0) {
