@@ -7,7 +7,7 @@ import db from "../../lib/db";
 
 const user = await getAuthenticatedUser(Astro);
 if (!user) {
-  return Astro.redirect("/auth/login");
+  return Astro.redirect("/auth/connexion");
 }
 
 const subscriptions = db.prepare(

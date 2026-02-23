@@ -14,7 +14,7 @@ if (!tier || !chapter || !(tier in FORMATION_TIERS)) {
 const user = await getAuthenticatedUser(Astro);
 
 if (!user) {
-  return Astro.redirect(`/auth/login?redirect=/formations/${tier}/${chapter}`);
+  return Astro.redirect(`/auth/connexion?redirect=/formations/${tier}/${chapter}`);
 }
 
 if (!hasAccess(user.id, tier)) {

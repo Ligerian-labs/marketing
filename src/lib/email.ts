@@ -11,9 +11,9 @@ export async function sendPurchaseConfirmationEmail(
 ) {
   const pack = PACKS[packId as PackId];
   const packName = pack?.name || packId;
-  const loginUrl = "https://ligerianlabs.fr/auth/login";
+  const loginUrl = "https://ligerianlabs.fr/auth/connexion";
   const setupUrl = options?.passwordSetupToken
-    ? `https://ligerianlabs.fr/auth/setup-password?token=${options.passwordSetupToken}`
+    ? `https://ligerianlabs.fr/auth/configurer-mot-de-passe?token=${options.passwordSetupToken}`
     : null;
 
   const ctaBlock = setupUrl
@@ -80,7 +80,7 @@ export async function sendPurchaseConfirmationEmail(
 }
 
 export async function sendPasswordResetEmail(to: string, name: string, token: string) {
-  const resetUrl = `https://ligerianlabs.fr/auth/setup-password?token=${token}`;
+  const resetUrl = `https://ligerianlabs.fr/auth/configurer-mot-de-passe?token=${token}`;
 
   await resend.emails.send({
     from: "Ligerian Labs <bonjour@ligerianlabs.fr>",
@@ -126,7 +126,7 @@ export async function sendPasswordResetEmail(to: string, name: string, token: st
 }
 
 export async function sendPasswordSetupEmail(to: string, name: string, token: string) {
-  const setupUrl = `https://ligerianlabs.fr/auth/setup-password?token=${token}`;
+  const setupUrl = `https://ligerianlabs.fr/auth/configurer-mot-de-passe?token=${token}`;
   
   await resend.emails.send({
     from: "Ligerian Labs <bonjour@ligerianlabs.fr>",
