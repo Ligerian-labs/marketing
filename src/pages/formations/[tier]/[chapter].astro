@@ -2,7 +2,7 @@
 export const prerender = false;
 import Base from "../../../layouts/Base.astro";
 import { getAuthenticatedUser } from "../../../lib/auth";
-import { hasAccess, getFormationContent, FORMATION_TIERS, resolveFormationTier } from "../../../lib/formations";
+import { hasAccess, getFormationContent, getFormationChapters, FORMATION_TIERS, resolveFormationTier } from "../../../lib/formations";
 import { marked } from 'marked';
 
 const { tier, chapter } = Astro.params;
@@ -23,140 +23,239 @@ if (!user) {
 if (!hasAccess(user.id, formation.tier_dir)) {
   return Astro.redirect("/formations/");
 }
+
 const content = await getFormationContent(formation.tier_dir, chapter);
 
 if (!content) {
   return Astro.redirect(`/formations/${tier}/`);
 }
 
-// Configure marked for better HTML output
-marked.setOptions({
-  breaks: true,
-  gfm: true,
-  headerIds: true,
-  headerPrefix: 'heading-'
-});
+// Get all chapters for prev/next navigation
+const chapters = await getFormationChapters(formation.tier_dir);
+const currentIndex = chapters.findIndex(c => c.slug === chapter);
+const prevChapter = currentIndex > 0 ? chapters[currentIndex - 1] : null;
+const nextChapter = currentIndex < chapters.length - 1 ? chapters[currentIndex + 1] : null;
 
+// Extract TOC from h2/h3 headings
+const tocEntries: Array<{ id: string; text: string; level: number }> = [];
+const headingRegex = /^(#{2,3})\s+(.+)$/gm;
+let match;
+while ((match = headingRegex.exec(content)) !== null) {
+  const level = match[1].length;
+  const text = match[2].replace(/\*\*/g, '');
+  const id = 'heading-' + text.toLowerCase().replace(/[^a-zà-ÿ0-9]+/g, '-').replace(/(^-|-$)/g, '');
+  tocEntries.push({ id, text, level });
+}
+
+// Configure marked
+marked.setOptions({ breaks: true, gfm: true, headerIds: true, headerPrefix: 'heading-' });
 const htmlContent = marked(content);
 
-// Extract title from the first heading in markdown or use filename
-let title = chapter.replace(/^\d+-/, '').replace(/-/g, ' ')
-  .replace(/\b\w/g, l => l.toUpperCase());
-
+// Extract title
+let title = chapter.replace(/^\d+-/, '').replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
 const titleMatch = content.match(/^#\s+(.+)$/m);
-if (titleMatch) {
-  title = titleMatch[1];
-}
+if (titleMatch) title = titleMatch[1];
+
+// Estimate reading time (~200 words/min for French)
+const wordCount = content.split(/\s+/).length;
+const readingTime = Math.max(1, Math.ceil(wordCount / 200));
 ---
 
 <Base title={`${title} — ${formation.name} | Ligerian Labs`} description={`Chapitre "${title}" de la formation "${formation.name}"`}>
-  <div class="max-w-4xl mx-auto px-6 py-16">
+  <!-- Reading progress bar -->
+  <div id="progress-bar" class="fixed top-0 left-0 h-0.5 bg-blue-600 z-[100] transition-all duration-150" style="width: 0%"></div>
+
+  <div class="max-w-7xl mx-auto px-6 py-12">
     <!-- Breadcrumb -->
-    <nav class="mb-8">
-      <a href="/formations/" class="text-primary hover:underline">Formations</a>
-      <span class="mx-2 text-text-secondary">›</span>
-      <a href={`/formations/${tier}/`} class="text-primary hover:underline">{formation.name}</a>
-      <span class="mx-2 text-text-secondary">›</span>
-      <span class="text-text-secondary">{title}</span>
+    <nav class="mb-8 text-sm">
+      <div class="flex items-center gap-2 text-gray-400">
+        <a href="/formations/" class="hover:text-blue-600 transition">Formations</a>
+        <span>›</span>
+        <a href={`/formations/${tier}/`} class="hover:text-blue-600 transition">{formation.name}</a>
+        <span>›</span>
+        <span class="text-gray-600">{title}</span>
+      </div>
     </nav>
 
-    <!-- Chapter Content -->
-    <article class="prose prose-lg prose-gray max-w-none">
-      <Fragment set:html={htmlContent} />
-    </article>
+    <div class="flex gap-12">
+      <!-- Main content -->
+      <article class="flex-1 min-w-0 max-w-3xl">
+        <!-- Chapter header -->
+        <header class="mb-10 pb-8 border-b border-gray-100">
+          {chapters.length > 0 && (
+            <p class="text-sm font-medium text-blue-600 mb-3">
+              Chapitre {currentIndex + 1} sur {chapters.length}
+            </p>
+          )}
+          <h1 class="text-3xl md:text-4xl font-bold text-gray-900 leading-tight mb-4">
+            {title}
+          </h1>
+          <div class="flex items-center gap-4 text-sm text-gray-400">
+            <span class="flex items-center gap-1.5">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/>
+              </svg>
+              {readingTime} min de lecture
+            </span>
+            <span class="flex items-center gap-1.5">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z"/>
+              </svg>
+              {wordCount.toLocaleString('fr-FR')} mots
+            </span>
+          </div>
+        </header>
 
-    <!-- Navigation -->
-    <div class="mt-16 pt-8 border-t border-white/5 flex justify-between items-center">
-      <a 
-        href={`/formations/${tier}/`}
-        class="inline-flex items-center gap-2 text-primary hover:underline font-medium"
-      >
-        ← Retour au sommaire
-      </a>
-      
-      <a 
-        href="/formations/"
-        class="inline-flex items-center gap-2 text-text-secondary hover:text-primary font-medium"
-      >
-        Toutes les formations →
-      </a>
+        <!-- Article body -->
+        <div class="prose">
+          <Fragment set:html={htmlContent} />
+        </div>
+
+        <!-- Prev / Next navigation -->
+        <nav class="mt-16 pt-8 border-t border-gray-100">
+          <div class="grid grid-cols-2 gap-4">
+            {prevChapter ? (
+              <a href={`/formations/${tier}/${prevChapter.slug}`} class="group p-4 rounded-xl border border-gray-100 hover:border-blue-200 hover:shadow-sm transition-all">
+                <p class="text-xs text-gray-400 mb-1">← Précédent</p>
+                <p class="font-medium text-gray-900 group-hover:text-blue-600 transition text-sm">{prevChapter.title}</p>
+              </a>
+            ) : (
+              <a href={`/formations/${tier}/`} class="group p-4 rounded-xl border border-gray-100 hover:border-blue-200 hover:shadow-sm transition-all">
+                <p class="text-xs text-gray-400 mb-1">←</p>
+                <p class="font-medium text-gray-900 group-hover:text-blue-600 transition text-sm">Sommaire</p>
+              </a>
+            )}
+            {nextChapter ? (
+              <a href={`/formations/${tier}/${nextChapter.slug}`} class="group p-4 rounded-xl border border-gray-100 hover:border-blue-200 hover:shadow-sm transition-all text-right">
+                <p class="text-xs text-gray-400 mb-1">Suivant →</p>
+                <p class="font-medium text-gray-900 group-hover:text-blue-600 transition text-sm">{nextChapter.title}</p>
+              </a>
+            ) : (
+              <a href={`/formations/${tier}/`} class="group p-4 rounded-xl border border-green-100 bg-green-50/50 hover:shadow-sm transition-all text-right">
+                <p class="text-xs text-green-600 mb-1">🎉 Terminé !</p>
+                <p class="font-medium text-green-700 text-sm">Retour au sommaire</p>
+              </a>
+            )}
+          </div>
+        </nav>
+      </article>
+
+      <!-- Sidebar TOC (desktop only) -->
+      {tocEntries.length > 2 && (
+        <aside class="hidden xl:block w-64 flex-shrink-0">
+          <div class="sticky top-24">
+            <p class="text-xs font-semibold uppercase tracking-widest text-gray-400 mb-4">Sur cette page</p>
+            <nav class="space-y-1">
+              {tocEntries.map((entry) => (
+                <a 
+                  href={`#${entry.id}`}
+                  class={`block text-sm py-1 transition hover:text-blue-600 ${
+                    entry.level === 2 ? 'text-gray-600 font-medium' : 'text-gray-400 pl-3'
+                  }`}
+                  data-toc-link={entry.id}
+                >
+                  {entry.text}
+                </a>
+              ))}
+            </nav>
+          </div>
+        </aside>
+      )}
     </div>
   </div>
 
   <style>
-    /* Custom prose styles for dark theme */
     .prose {
-      color: #1f2937;
+      color: #374151;
       max-width: none;
+      font-size: 1.0625rem;
+      line-height: 1.8;
     }
     
-    .prose h1, .prose h2, .prose h3, .prose h4, .prose h5, .prose h6 {
-      color: #111827;
-      font-weight: 700;
-    }
-    
-    .prose h1 {
-      font-size: 2.25rem;
-      line-height: 1.2;
-      margin-bottom: 1rem;
-      margin-top: 0;
-    }
+    .prose h1 { display: none; } /* Hidden — shown in header instead */
     
     .prose h2 {
-      font-size: 1.875rem;
+      color: #111827;
+      font-weight: 700;
+      font-size: 1.625rem;
       line-height: 1.3;
-      margin-top: 2rem;
+      margin-top: 2.5rem;
       margin-bottom: 1rem;
       padding-bottom: 0.5rem;
-      border-bottom: 1px solid #e5e7eb;
+      border-bottom: 1px solid #f3f4f6;
     }
     
     .prose h3 {
-      font-size: 1.5rem;
-      margin-top: 1.5rem;
+      color: #1f2937;
+      font-weight: 600;
+      font-size: 1.25rem;
+      margin-top: 2rem;
       margin-bottom: 0.75rem;
+    }
+    
+    .prose h4 {
+      color: #374151;
+      font-weight: 600;
+      font-size: 1.1rem;
+      margin-top: 1.5rem;
+      margin-bottom: 0.5rem;
     }
     
     .prose p {
       margin-bottom: 1.25rem;
-      line-height: 1.7;
     }
     
+    .prose > p:first-of-type {
+      font-size: 1.125rem;
+      color: #6b7280;
+    }
+    
+    .prose strong { color: #111827; }
+    
     .prose ul, .prose ol {
-      margin-bottom: 1.25rem;
-      padding-left: 1.625rem;
+      margin-bottom: 1.5rem;
+      padding-left: 1.5rem;
     }
     
     .prose li {
-      margin-bottom: 0.5rem;
-      line-height: 1.6;
+      margin-bottom: 0.375rem;
+      line-height: 1.7;
+    }
+    
+    .prose li::marker {
+      color: #9ca3af;
     }
     
     .prose blockquote {
-      border-left: 4px solid #6366f1;
-      background: #f8fafc;
+      border-left: 3px solid #3b82f6;
+      background: #eff6ff;
       padding: 1rem 1.5rem;
       margin: 1.5rem 0;
-      border-radius: 0.5rem;
-      font-style: italic;
+      border-radius: 0 0.5rem 0.5rem 0;
+      font-style: normal;
+      color: #1e40af;
     }
+    
+    .prose blockquote p { margin-bottom: 0; color: inherit; }
     
     .prose code {
       background: #f1f5f9;
-      padding: 0.125rem 0.375rem;
+      padding: 0.15rem 0.4rem;
       border-radius: 0.25rem;
       font-size: 0.875em;
-      font-weight: 600;
-      color: #1e293b;
+      font-weight: 500;
+      color: #0f172a;
     }
     
     .prose pre {
-      background: #1e293b;
+      background: #0f172a;
       color: #e2e8f0;
-      padding: 1.5rem;
-      border-radius: 0.5rem;
+      padding: 1.25rem 1.5rem;
+      border-radius: 0.75rem;
       overflow-x: auto;
       margin: 1.5rem 0;
+      font-size: 0.875rem;
+      line-height: 1.7;
     }
     
     .prose pre code {
@@ -167,43 +266,84 @@ if (titleMatch) {
     }
     
     .prose a {
-      color: #6366f1;
+      color: #2563eb;
       text-decoration: underline;
-      text-decoration-color: transparent;
+      text-underline-offset: 2px;
+      text-decoration-color: #93c5fd;
       transition: text-decoration-color 0.2s;
     }
     
     .prose a:hover {
-      text-decoration-color: currentColor;
+      text-decoration-color: #2563eb;
     }
     
     .prose img {
-      margin: 1.5rem 0;
-      border-radius: 0.5rem;
-      box-shadow: 0 10px 25px -10px rgba(0, 0, 0, 0.1);
+      margin: 2rem 0;
+      border-radius: 0.75rem;
+      box-shadow: 0 4px 20px -4px rgba(0, 0, 0, 0.08);
     }
     
     .prose table {
       width: 100%;
       border-collapse: collapse;
       margin: 1.5rem 0;
+      font-size: 0.9375rem;
     }
     
     .prose th, .prose td {
       border: 1px solid #e5e7eb;
-      padding: 0.75rem 1rem;
+      padding: 0.625rem 1rem;
       text-align: left;
     }
     
     .prose th {
       background: #f9fafb;
       font-weight: 600;
+      color: #111827;
     }
     
     .prose hr {
       border: none;
-      border-top: 1px solid #e5e7eb;
-      margin: 2rem 0;
+      border-top: 1px solid #f3f4f6;
+      margin: 2.5rem 0;
+    }
+
+    /* Active TOC link */
+    [data-toc-link].active {
+      color: #2563eb;
     }
   </style>
+
+  <script is:inline>
+    // Reading progress bar
+    const bar = document.getElementById('progress-bar');
+    if (bar) {
+      window.addEventListener('scroll', () => {
+        const h = document.documentElement;
+        const pct = (h.scrollTop / (h.scrollHeight - h.clientHeight)) * 100;
+        bar.style.width = Math.min(100, pct) + '%';
+      }, { passive: true });
+    }
+
+    // Highlight active TOC link on scroll
+    const tocLinks = document.querySelectorAll('[data-toc-link]');
+    if (tocLinks.length > 0) {
+      const headings = Array.from(tocLinks).map(link => {
+        const id = link.getAttribute('data-toc-link');
+        return { link, el: document.getElementById(id) };
+      }).filter(h => h.el);
+      
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            tocLinks.forEach(l => l.classList.remove('active'));
+            const match = headings.find(h => h.el === entry.target);
+            if (match) match.link.classList.add('active');
+          }
+        });
+      }, { rootMargin: '-80px 0px -70% 0px' });
+      
+      headings.forEach(h => observer.observe(h.el));
+    }
+  </script>
 </Base>
