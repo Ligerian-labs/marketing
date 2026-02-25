@@ -2,13 +2,12 @@ import type { APIRoute } from "astro";
 
 const POSTHOG_HOST = "https://eu.i.posthog.com";
 
-export const ALL: APIRoute = async ({ params, request }) => {
+const handler: APIRoute = async ({ params, request }) => {
   const path = params.path || "";
   const url = new URL(request.url);
   const targetUrl = `${POSTHOG_HOST}/${path}${url.search}`;
 
   const headers = new Headers();
-  // Forward relevant headers
   for (const [key, value] of request.headers.entries()) {
     if (
       key.toLowerCase() !== "host" &&
@@ -34,7 +33,6 @@ export const ALL: APIRoute = async ({ params, request }) => {
         responseHeaders.set(key, value);
       }
     }
-    // Allow CORS
     responseHeaders.set("Access-Control-Allow-Origin", "*");
 
     return new Response(response.body, {
@@ -44,4 +42,17 @@ export const ALL: APIRoute = async ({ params, request }) => {
   } catch (e) {
     return new Response("Proxy error", { status: 502 });
   }
+};
+
+export const GET = handler;
+export const POST = handler;
+export const OPTIONS: APIRoute = async () => {
+  return new Response(null, {
+    status: 204,
+    headers: {
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
+      "Access-Control-Allow-Headers": "Content-Type",
+    },
+  });
 };
