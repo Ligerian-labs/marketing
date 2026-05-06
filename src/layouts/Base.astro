@@ -7,12 +7,69 @@ import { getAuthenticatedUser } from "../lib/auth";
 interface Props {
   title: string;
   description?: string;
+  structuredData?: Record<string, unknown> | Record<string, unknown>[];
 }
 
 const {
   title,
-  description = "Ligerian Labs — Laboratoire d'IA agentique à Angers. Nous accompagnons les entreprises des Pays de la Loire avec des agents IA et l'intelligence artificielle."
+  description = "Ligerian Labs — agence IA à Angers pour PME et TPE. Audit, automatisation, agents IA sur mesure et formation en Pays de la Loire.",
+  structuredData = []
 } = Astro.props;
+
+const canonicalUrl = new URL(Astro.url.pathname, Astro.site ?? "https://ligerianlabs.fr").href;
+const schemaGraph = [
+  {
+    "@context": "https://schema.org",
+    "@type": ["LocalBusiness", "ProfessionalService"],
+    "@id": "https://ligerianlabs.fr/#business",
+    "name": "Ligerian Labs",
+    "url": "https://ligerianlabs.fr",
+    "email": "bonjour@ligerianlabs.fr",
+    "description": "Agence IA à Angers pour PME, TPE, artisans et entreprises des Pays de la Loire.",
+    "image": "https://ligerianlabs.fr/favicon.svg",
+    "priceRange": "€€",
+    "address": {
+      "@type": "PostalAddress",
+      "addressLocality": "Angers",
+      "addressRegion": "Pays de la Loire",
+      "addressCountry": "FR"
+    },
+    "geo": {
+      "@type": "GeoCoordinates",
+      "latitude": 47.4784,
+      "longitude": -0.5632
+    },
+    "areaServed": [
+      { "@type": "City", "name": "Angers" },
+      { "@type": "AdministrativeArea", "name": "Maine-et-Loire" },
+      { "@type": "AdministrativeArea", "name": "Pays de la Loire" }
+    ],
+    "knowsAbout": [
+      "intelligence artificielle",
+      "IA pour PME",
+      "agents IA",
+      "automatisation IA",
+      "formation IA",
+      "audit IA"
+    ],
+    "sameAs": [
+      "https://github.com/Ligerian-labs",
+      "https://x.com/LigerianLabs",
+      "https://www.tiktok.com/@ligerianlabs",
+      "https://www.instagram.com/ligerianlabs"
+    ]
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "@id": "https://ligerianlabs.fr/#website",
+    "name": "Ligerian Labs",
+    "url": "https://ligerianlabs.fr",
+    "inLanguage": "fr-FR",
+    "publisher": { "@id": "https://ligerianlabs.fr/#business" }
+  },
+  ...(Array.isArray(structuredData) ? structuredData : [structuredData])
+].filter(Boolean);
 
 let user = null;
 try {
@@ -26,6 +83,7 @@ try {
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content={description} />
+    <meta name="robots" content="index, follow, max-image-preview:large" />
 
     <!-- SEO Geo targeting -->
     <meta name="geo.region" content="FR-PDL" />
@@ -38,9 +96,12 @@ try {
     <meta property="og:description" content={description} />
     <meta property="og:locale" content="fr_FR" />
     <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonicalUrl} />
+    <meta property="og:site_name" content="Ligerian Labs" />
+    <meta name="twitter:card" content="summary" />
 
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <link rel="canonical" href={Astro.url.href} />
+    <link rel="canonical" href={canonicalUrl} />
     <title>{title}</title>
 
     <!-- PostHog Analytics & A/B Testing -->
@@ -57,29 +118,7 @@ try {
     </script>
 
     <!-- JSON-LD Structured Data -->
-    <script type="application/ld+json" set:html={JSON.stringify({
-      "@context": "https://schema.org",
-      "@type": "Organization",
-      "name": "Ligerian Labs",
-      "url": "https://ligerianlabs.fr",
-      "email": "bonjour@ligerianlabs.fr",
-      "description": "Laboratoire d'innovation IA à Angers, accompagnant les entreprises des Pays de la Loire",
-      "address": {
-        "@type": "PostalAddress",
-        "addressLocality": "Angers",
-        "addressRegion": "Pays de la Loire",
-        "addressCountry": "FR"
-      },
-      "areaServed": {
-        "@type": "GeoCircle",
-        "geoMidpoint": {
-          "@type": "GeoCoordinates",
-          "latitude": 47.4784,
-          "longitude": -0.5632
-        },
-        "geoRadius": "100000"
-      }
-    })} />
+    <script type="application/ld+json" set:html={JSON.stringify(schemaGraph.length === 1 ? schemaGraph[0] : { "@context": "https://schema.org", "@graph": schemaGraph })} />
   </head>
   <body class="min-h-screen flex flex-col">
     <Header user={user} />
