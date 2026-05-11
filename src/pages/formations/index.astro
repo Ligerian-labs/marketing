@@ -3,33 +3,14 @@ export const prerender = false;
 import Base from "../../layouts/Base.astro";
 import { getAuthenticatedUser } from "../../lib/auth";
 import { getUserPurchases } from "../../lib/formations";
-import type { PackId } from "../../lib/stripe";
-
 const user = getAuthenticatedUser(Astro.cookies);
 const purchases = user ? getUserPurchases(user.id) : [];
 
-// Handle ?buy= param — direct to Stripe checkout (no auth required)
+// Never start checkout from a GET URL: crawlers can follow links and create
+// unwanted Stripe sessions. Checkout starts from POST /api/stripe/checkout.
 const buyPack = Astro.url.searchParams.get("buy");
 if (buyPack && ["formation-starter", "formation-intermediate", "formation-premium"].includes(buyPack)) {
-  // If logged in and already purchased, go to content
-  if (user) {
-    const alreadyOwned = purchases.some(p => p.pack === buyPack && p.status === "completed");
-    if (alreadyOwned) {
-      const tierDirs: Record<string, string> = { "formation-starter": "01-guide-pme", "formation-intermediate": "02-automatiser", "formation-premium": "03-deployer" };
-      return Astro.redirect(`/formations/${tierDirs[buyPack]}/`);
-    }
-  }
-  
-  // Create Stripe checkout session (works for authenticated and non-authenticated users)
-  const { createCheckoutSession: checkout } = await import("../../lib/stripe");
-  const checkoutUrl = await checkout(
-    buyPack as any,
-    user?.email || null,  // Let Stripe collect email if not logged in
-    user?.id || null,     // No user ID for post-payment flow
-    `${Astro.url.origin}/formations/?payment=success`,
-    `${Astro.url.origin}/formations/?payment=cancelled`
-  );
-  if (checkoutUrl) return Astro.redirect(checkoutUrl);
+  return Astro.redirect("/formations/", 301);
 }
 
 const formations = [
