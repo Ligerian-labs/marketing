@@ -4,20 +4,33 @@ import Base from "../layouts/Base.astro";
 Astro.response.status = 404;
 ---
 
-<Base title="404 — Page introuvable | Ligerian Labs">
-  <section class="max-w-2xl mx-auto px-6 py-32 text-center">
-    <p class="text-8xl font-bold text-text mb-6">404</p>
-    <h1 class="text-2xl font-semibold mb-4">Cette page n'existe pas</h1>
-    <p class="text-muted text-lg mb-10">
-      L'artisan a cherché partout dans l'atelier, mais cette page reste introuvable.
-    </p>
-    <div class="flex items-center justify-center gap-4">
-      <a href="/" class="bg-accent hover:bg-accent-light text-white px-6 py-3 rounded-lg font-medium transition">
-        Retour à l'accueil
-      </a>
-      <a href="/contact" class="text-text-secondary hover:text-text transition px-6 py-3">
-        Nous contacter
-      </a>
+<Base title="404 — Page introuvable | Ligerian Labs" robots="noindex, follow">
+  <section class="ll-sec">
+    <div class="ll-wrap ll-hero">
+      <div class="ll-hero__main" style="gap:22px">
+        <div class="ll-mono" style="font-size:12px;letter-spacing:.16em">Erreur 404</div>
+        <h1 class="ll-display">Cette page<br />n'existe pas</h1>
+        <p class="ll-lede">
+          Le lien est peut-être ancien, ou la page a été déplacée pendant la refonte. Les quatre
+          offres et le blog, eux, sont toujours là.
+        </p>
+        <div class="ll-btn-row" style="margin-top:6px">
+          <a href="/" class="ll-btn ll-btn--lg">Retour à l'accueil →</a>
+          <a href="/offres" class="ll-btn ll-btn--lg ll-btn--ghost">Voir les offres</a>
+        </div>
+      </div>
+      <div class="ll-hero__aside ll-hero__aside--cobalt">
+        <div class="ll-mono" style="color:inherit">Raccourcis</div>
+        <div class="ll-stack" style="gap:11px">
+          <a href="/approche" style="color:var(--cream);font-weight:700;font-size:15.5px">Notre approche →</a>
+          <a href="/blog" style="color:var(--cream);font-weight:700;font-size:15.5px">Notes d'ingénierie →</a>
+          <a href="/a-propos" style="color:var(--cream);font-weight:700;font-size:15.5px">À propos →</a>
+          <a href="/contact" style="color:var(--cream);font-weight:700;font-size:15.5px">Contact →</a>
+        </div>
+        <div style="font-family:var(--font-mono);font-size:11px;line-height:1.7;opacity:.85">
+          ANGERS · PAYS DE LA LOIRE<br />47.4784 N · −0.5632 E
+        </div>
+      </div>
     </div>
   </section>
 </Base>

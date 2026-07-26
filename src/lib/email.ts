@@ -1,7 +1,17 @@
 import { Resend } from "resend";
 import { PACKS, type PackId } from "./stripe";
 
-const resend = new Resend(process.env.RESEND_API_KEY); // USE process.env, NOT import.meta.env
+// Built on demand: the Resend constructor throws when the key is missing, so
+// creating it at module load takes down every page that imports this file.
+// USE process.env, NOT import.meta.env
+let client: Resend | null = null;
+function resendClient(): Resend {
+  if (!process.env.RESEND_API_KEY) {
+    throw new Error("RESEND_API_KEY is not set — cannot send email");
+  }
+  client ??= new Resend(process.env.RESEND_API_KEY);
+  return client;
+}
 
 export async function sendPurchaseConfirmationEmail(
   to: string,
@@ -43,7 +53,7 @@ export async function sendPurchaseConfirmationEmail(
             </a>
           </div>`;
 
-  await resend.emails.send({
+  await resendClient().emails.send({
     from: "Ligerian Labs <bonjour@ligerianlabs.fr>",
     to,
     subject: `Confirmation d'achat — ${packName}`,
@@ -82,7 +92,7 @@ export async function sendPurchaseConfirmationEmail(
 export async function sendPasswordResetEmail(to: string, name: string, token: string) {
   const resetUrl = `https://ligerianlabs.fr/auth/configurer-mot-de-passe?token=${token}`;
 
-  await resend.emails.send({
+  await resendClient().emails.send({
     from: "Ligerian Labs <bonjour@ligerianlabs.fr>",
     to,
     subject: "Réinitialisation de mot de passe — Ligerian Labs",
@@ -128,7 +138,7 @@ export async function sendPasswordResetEmail(to: string, name: string, token: st
 export async function sendPasswordSetupEmail(to: string, name: string, token: string) {
   const setupUrl = `https://ligerianlabs.fr/auth/configurer-mot-de-passe?token=${token}`;
   
-  await resend.emails.send({
+  await resendClient().emails.send({
     from: "Ligerian Labs <bonjour@ligerianlabs.fr>",
     to,
     subject: "Configurez votre accès — Ligerian Labs",

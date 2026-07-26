@@ -1,0 +1,20 @@
+---
+import { stages } from "../data/offers";
+---
+
+<div class="ll-diag">
+  {stages.map((stage) => (
+    <div class:list={["ll-diag__row", stage.common && "ll-diag__row--on"]}>
+      <div class="ll-diag__stage">
+        <span class="ll-diag__code">{stage.code.toUpperCase()}</span>
+        <span class="ll-diag__name">{stage.name}</span>
+      </div>
+      <div class="ll-diag__desc"><p>{stage.description}</p></div>
+      <a href={`/offres#${stage.go}`} class="ll-diag__go">
+        <span class="ll-diag__kicker">Commencez par</span>
+        <b>{stage.goLabel}</b>
+        <span class="ll-diag__arrow">→ l'offre</span>
+      </a>
+    </div>
+  ))}
+</div>

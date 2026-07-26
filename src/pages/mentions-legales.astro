@@ -1,100 +1,153 @@
 ---
+export const prerender = true;
 import Base from "../layouts/Base.astro";
+
+const toc = [
+  { id: "editeur", label: "01 — Éditeur" },
+  { id: "hebergement", label: "02 — Hébergement" },
+  { id: "propriete", label: "03 — Propriété intellectuelle" },
+  { id: "donnees", label: "04 — Données personnelles" },
+  { id: "cookies", label: "05 — Cookies & mesure d'audience" },
+  { id: "responsabilite", label: "06 — Responsabilité" },
+  { id: "droit", label: "07 — Droit applicable" },
+];
 ---
 
-<Base title="Mentions légales & Politique de confidentialité — Ligerian Labs" description="Mentions légales, politique de confidentialité et conditions d'utilisation de Ligerian Labs.">
-  <div class="max-w-3xl mx-auto px-6 py-20 prose">
-    <h1>Mentions légales</h1>
+<Base
+  title="Mentions légales | Ligerian Labs"
+  description="Mentions légales, éditeur, hébergement, données personnelles et cookies du site ligerianlabs.fr."
+  robots="index, follow"
+  ogImage="og-accueil"
+>
+  <header class="ll-sec">
+    <div class="ll-wrap ll-pad" style="display:flex;flex-direction:column;gap:16px">
+      <div class="ll-mono" style="font-size:12px;letter-spacing:.16em">Informations légales</div>
+      <h1 class="ll-h1">Mentions légales</h1>
+      <p class="ll-mono ll-mono--plain" style="font-size:11.5px">
+        Dernière mise à jour : 26 juillet 2026
+      </p>
+    </div>
+  </header>
 
-    <h2>Éditeur du site</h2>
-    <p>
-      <strong>Ligerian Labs</strong><br>
-      Siège social : Angers, Pays de la Loire, France<br>
-      Email : <a href="mailto:bonjour@ligerianlabs.fr">bonjour@ligerianlabs.fr</a><br>
-      Responsable de la publication : Valentin Dosimont
-    </p>
+  <section class="ll-sec">
+    <div class="ll-wrap">
+      <div class="ll-sheet">
+        <nav class="ll-sheet__nav" aria-label="Sommaire">
+          <div class="ll-label">Sommaire</div>
+          {toc.map((item) => <a href={`#${item.id}`}>{item.label}</a>)}
+        </nav>
 
-    <h2>Hébergement</h2>
-    <p>
-      Ce site est hébergé par Hostinger International Ltd.<br>
-      61 Lordou Vironos Street, 6023 Larnaca, Chypre.
-    </p>
+        <div class="ll-sheet__body">
+          <div class="ll-sheet__part" id="editeur">
+            <h2>01 — Éditeur du site</h2>
+            <dl class="ll-defs">
+              <dt>Raison sociale</dt>
+              <dd>Ligerian Labs</dd>
+              <dt>Directeur de publication</dt>
+              <dd>Valentin Dosimont</dd>
+              <dt>Siège</dt>
+              <dd>Angers, Pays de la Loire, France</dd>
+              <dt>Contact</dt>
+              <dd><a href="mailto:bonjour@ligerianlabs.fr">bonjour@ligerianlabs.fr</a></dd>
+            </dl>
+          </div>
 
-    <hr>
+          <div class="ll-sheet__part" id="hebergement">
+            <h2>02 — Hébergement</h2>
+            <p>
+              Le site est hébergé par Hostinger International Ltd., 61 Lordou Vironos Street, 6023
+              Larnaca, Chypre. Les données du formulaire de contact sont traitées au sein de l'Union
+              européenne.
+            </p>
+          </div>
 
-    <h1>Politique de confidentialité</h1>
-    <p><em>Dernière mise à jour : 9 février 2026</em></p>
+          <div class="ll-sheet__part" id="propriete">
+            <h2>03 — Propriété intellectuelle</h2>
+            <p>
+              L'ensemble des contenus de ce site — textes, mise en page, identité visuelle, code —
+              est la propriété de Ligerian Labs, sauf mention contraire. Toute reproduction ou
+              représentation, totale ou partielle, sans autorisation écrite est interdite.
+            </p>
+            <p>
+              Les projets open source publiés par Ligerian Labs sont régis par leurs licences
+              respectives, consultables sur
+              <a href="https://github.com/Ligerian-labs" rel="noopener" target="_blank">
+                github.com/Ligerian-labs</a
+              >. Les éléments de marque mis à disposition dans le
+              <a href="/kit-presse">kit presse</a> sont libres d'usage éditorial.
+            </p>
+          </div>
 
-    <h2>1. Responsable du traitement</h2>
-    <p>
-      Ligerian Labs, représenté par Valentin Dosimont, est responsable du traitement des données personnelles collectées sur ce site conformément au Règlement Général sur la Protection des Données (RGPD).
-    </p>
+          <div class="ll-sheet__part" id="donnees">
+            <h2>04 — Données personnelles</h2>
+            <p>
+              Les informations transmises via le formulaire de contact servent uniquement à répondre
+              à votre demande et à assurer le suivi qui pourrait en découler. Elles ne sont ni
+              revendues, ni transmises à des tiers à des fins de prospection.
+            </p>
+            <dl class="ll-defs">
+              <dt>Données collectées</dt>
+              <dd>Nom, email, entreprise, rôle, stade de maturité IA et message.</dd>
+              <dt>Base légale</dt>
+              <dd>Consentement et mesures précontractuelles (art. 6.1.a et 6.1.b du RGPD).</dd>
+              <dt>Sous-traitants</dt>
+              <dd>
+                Resend (envoi de la notification de contact) et PostHog (mesure d'audience, serveurs
+                UE).
+              </dd>
+              <dt>Conservation</dt>
+              <dd>36 mois après le dernier échange ; 24 mois pour les données d'audience.</dd>
+              <dt>Vos droits</dt>
+              <dd>Accès, rectification, effacement, opposition, limitation et portabilité.</dd>
+              <dt>Exercer vos droits</dt>
+              <dd>
+                <a href="mailto:bonjour@ligerianlabs.fr">bonjour@ligerianlabs.fr</a> — réponse sous
+                30 jours.
+              </dd>
+            </dl>
+            <p>
+              En cas de désaccord persistant, vous pouvez introduire une réclamation auprès de la
+              CNIL.
+            </p>
+          </div>
 
-    <h2>2. Données collectées</h2>
-    <p>Nous collectons les données suivantes :</p>
-    <ul>
-      <li><strong>Formulaire de contact :</strong> nom, adresse email, entreprise (optionnel), téléphone (optionnel), sujet et message. Ces données sont collectées uniquement lorsque vous remplissez le formulaire.</li>
-      <li><strong>Données de navigation :</strong> pages visitées, durée des visites, type de navigateur, via PostHog (hébergé dans l'UE). Aucune donnée n'est partagée avec des tiers.</li>
-      <li><strong>Cookies :</strong> nous utilisons uniquement des cookies techniques et analytiques (PostHog). Aucun cookie publicitaire n'est utilisé.</li>
-    </ul>
+          <div class="ll-sheet__part" id="cookies">
+            <h2>05 — Cookies &amp; mesure d'audience</h2>
+            <p>
+              Ce site n'utilise ni cookie publicitaire, ni traceur tiers à des fins de profilage. La
+              mesure d'audience est assurée par PostHog, hébergé dans l'Union européenne, en mode
+              profils identifiés uniquement. Les données de navigation sont conservées 24 mois.
+            </p>
+          </div>
 
-    <h2>3. Finalités du traitement</h2>
-    <ul>
-      <li>Répondre à vos demandes de contact</li>
-      <li>Améliorer notre site web et nos services</li>
-      <li>Mesurer l'audience du site (analytics)</li>
-    </ul>
+          <div class="ll-sheet__part" id="responsabilite">
+            <h2>06 — Responsabilité</h2>
+            <p>
+              Les contenus publiés sur ce site, y compris les articles techniques, sont fournis à
+              titre informatif. Ils ne constituent ni un conseil contractuel, ni une garantie de
+              résultat. Ligerian Labs ne saurait être tenue responsable de l'usage qui en serait
+              fait hors d'une mission encadrée par un contrat.
+            </p>
+          </div>
 
-    <h2>4. Base légale</h2>
-    <ul>
-      <li><strong>Formulaire de contact :</strong> consentement (article 6.1.a du RGPD)</li>
-      <li><strong>Analytics :</strong> intérêt légitime (article 6.1.f du RGPD) — amélioration continue du site</li>
-    </ul>
+          <div class="ll-sheet__part" id="droit">
+            <h2>07 — Droit applicable</h2>
+            <p>
+              Les présentes mentions sont soumises au droit français. En cas de litige, et à défaut
+              de résolution amiable, compétence est attribuée aux tribunaux du ressort d'Angers.
+            </p>
+          </div>
 
-    <h2>5. Durée de conservation</h2>
-    <ul>
-      <li>Données de contact : 12 mois après votre dernière interaction</li>
-      <li>Données analytics : 24 mois</li>
-    </ul>
-
-    <h2>6. Partage des données</h2>
-    <p>
-      Vos données personnelles ne sont jamais vendues à des tiers. Elles peuvent être partagées avec :
-    </p>
-    <ul>
-      <li><strong>PostHog</strong> (analytics, serveurs UE) — données de navigation anonymisées</li>
-      <li><strong>Resend</strong> (email transactionnel) — uniquement pour l'envoi de notifications de contact</li>
-    </ul>
-
-    <h2>7. Vos droits</h2>
-    <p>Conformément au RGPD, vous disposez des droits suivants :</p>
-    <ul>
-      <li>Droit d'accès à vos données</li>
-      <li>Droit de rectification</li>
-      <li>Droit à l'effacement (« droit à l'oubli »)</li>
-      <li>Droit à la portabilité</li>
-      <li>Droit d'opposition au traitement</li>
-    </ul>
-    <p>
-      Pour exercer ces droits, contactez-nous à <a href="mailto:bonjour@ligerianlabs.fr">bonjour@ligerianlabs.fr</a>.
-      Nous répondons sous 30 jours.
-    </p>
-
-    <h2>8. Sécurité</h2>
-    <p>
-      Nous mettons en œuvre des mesures techniques et organisationnelles pour protéger vos données : chiffrement HTTPS, accès restreint, hébergement sécurisé.
-    </p>
-
-    <h2>9. Réseaux sociaux</h2>
-    <p>
-      Ligerian Labs publie du contenu sur X (Twitter), TikTok et Instagram. Ces plateformes ont leurs propres politiques de confidentialité. Nous ne collectons aucune donnée via ces plateformes.
-    </p>
-
-    <h2>10. Contact</h2>
-    <p>
-      Pour toute question relative à cette politique :<br>
-      <a href="mailto:bonjour@ligerianlabs.fr">bonjour@ligerianlabs.fr</a><br>
-      Ligerian Labs — Angers, France
-    </p>
-  </div>
+          <div class="ll-note">
+            <div class="ll-label">Note</div>
+            <p>
+              Les informations d'immatriculation (forme juridique, SIREN, TVA intracommunautaire,
+              adresse complète du siège) sont communiquées sur simple demande à
+              <a href="mailto:bonjour@ligerianlabs.fr">bonjour@ligerianlabs.fr</a>.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
 </Base>

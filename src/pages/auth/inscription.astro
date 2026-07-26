@@ -1,6 +1,6 @@
 ---
 export const prerender = false;
-import Base from "../../layouts/Base.astro";
+import AuthSplit from "../../layouts/AuthSplit.astro";
 import { getUserByEmail, createUser, createSession, setSessionCookie } from "../../lib/auth";
 
 const redirectTo = Astro.url.searchParams.get("redirect") || "/dashboard";
@@ -13,7 +13,7 @@ if (Astro.request.method === "POST") {
   const company = formData.get("company") as string;
   const password = formData.get("password") as string;
   const confirmPassword = formData.get("confirm_password") as string;
-  const redirect = formData.get("redirect") as string || redirectTo;
+  const redirect = (formData.get("redirect") as string) || redirectTo;
 
   if (!email || !name || !password) {
     error = "Nom, email et mot de passe requis.";
@@ -31,55 +31,75 @@ if (Astro.request.method === "POST") {
         const sessionId = createSession(user.id);
         setSessionCookie(Astro.cookies, sessionId);
         return Astro.redirect(redirect);
-      } catch (e) {
+      } catch {
         error = "Erreur lors de la création du compte. Réessayez.";
       }
     }
   }
 }
+
+const loginHref = `/auth/connexion${redirectTo !== "/dashboard" ? `?redirect=${encodeURIComponent(redirectTo)}` : ""}`;
 ---
 
-<Base title="Créer un compte — Ligerian Labs" robots="noindex, follow">
-  <section class="max-w-md mx-auto px-6 py-20">
-    <h1 class="text-3xl font-bold mb-2 text-center">Créer un compte</h1>
-    <p class="text-gray-400 text-center mb-8">Accédez à nos formations et services</p>
+<AuthSplit
+  title="Créer un compte — espace client | Ligerian Labs"
+  kicker="Inscription"
+  heading="Créer un compte"
+>
+  <input type="hidden" name="redirect" value={redirectTo} />
 
-    {error && (
-      <div class="bg-red-900/30 border border-red-500/30 rounded-lg p-4 mb-6 text-red-400 text-sm text-center">
-        {error}
-      </div>
-    )}
+  {error && (
+    <div class="ll-alert ll-alert--err" role="alert">
+      <p>{error}</p>
+    </div>
+  )}
 
-    <form method="POST" class="space-y-5">
-      <input type="hidden" name="redirect" value={redirectTo} />
-      <div>
-        <label for="name" class="form-label">Nom complet</label>
-        <input type="text" id="name" name="name" required class="form-input" placeholder="Jean Dupont" />
-      </div>
-      <div>
-        <label for="email" class="form-label">Email</label>
-        <input type="email" id="email" name="email" required class="form-input" placeholder="votre@email.fr" />
-      </div>
-      <div>
-        <label for="company" class="form-label">Entreprise <span class="text-muted">(optionnel)</span></label>
-        <input type="text" id="company" name="company" class="form-input" placeholder="Votre entreprise" />
-      </div>
-      <div>
-        <label for="password" class="form-label">Mot de passe</label>
-        <input type="password" id="password" name="password" required minlength="8" class="form-input" placeholder="••••••••" />
-        <p class="text-xs text-muted mt-1">Minimum 8 caractères</p>
-      </div>
-      <div>
-        <label for="confirm_password" class="form-label">Confirmer le mot de passe</label>
-        <input type="password" id="confirm_password" name="confirm_password" required class="form-input" placeholder="••••••••" />
-      </div>
-      <button type="submit" class="w-full bg-accent hover:bg-accent-light text-white px-6 py-3 rounded-lg font-medium transition">
-        Créer mon compte
-      </button>
-    </form>
+  <label class="ll-field">
+    <span class="ll-label">Nom complet</span>
+    <input class="ll-input" type="text" name="name" required placeholder="Prénom et nom" autocomplete="name" />
+  </label>
 
-    <p class="text-center text-sm text-muted mt-6">
-      Déjà un compte ? <a href={`/auth/connexion${redirectTo !== '/dashboard' ? `?redirect=${encodeURIComponent(redirectTo)}` : ''}`} class="text-accent hover:text-accent-light">Se connecter</a>
-    </p>
-  </section>
-</Base>
+  <label class="ll-field">
+    <span class="ll-label">Email</span>
+    <input class="ll-input" type="email" name="email" required placeholder="vous@entreprise.fr" autocomplete="email" />
+  </label>
+
+  <label class="ll-field">
+    <span class="ll-label">Entreprise (optionnel)</span>
+    <input class="ll-input" type="text" name="company" placeholder="Nom de la structure" autocomplete="organization" />
+  </label>
+
+  <label class="ll-field">
+    <span class="ll-label">Mot de passe</span>
+    <input
+      class="ll-input"
+      type="password"
+      name="password"
+      required
+      minlength="8"
+      placeholder="••••••••"
+      autocomplete="new-password"
+    />
+    <span class="ll-mono ll-mono--plain" style="font-size:11px">Minimum 8 caractères</span>
+  </label>
+
+  <label class="ll-field">
+    <span class="ll-label">Confirmer le mot de passe</span>
+    <input
+      class="ll-input"
+      type="password"
+      name="confirm_password"
+      required
+      placeholder="••••••••"
+      autocomplete="new-password"
+    />
+  </label>
+
+  <button type="submit" class="ll-btn ll-btn--lg ll-btn--block">Créer mon compte →</button>
+
+  <div
+    style="border-top:1px solid var(--rule-hair);padding-top:18px;font-size:14.5px;line-height:1.55;color:var(--ink-soft)"
+  >
+    Déjà un compte&nbsp;? <a href={loginHref}>Se connecter</a>.
+  </div>
+</AuthSplit>

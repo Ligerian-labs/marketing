@@ -1,143 +1,231 @@
 ---
 export const prerender = true;
 import Base from "../layouts/Base.astro";
+import SectionBar from "../components/SectionBar.astro";
+import CtaBand from "../components/CtaBand.astro";
+
+const notDoing = [
+  "Des ateliers de sensibilisation sans suite",
+  "Un chatbot sur votre site parce que ça se fait",
+  "Des abonnements qui tournent après notre départ",
+  "Des promesses de gains sans mesure de départ",
+];
 
 const useCases = [
   {
-    title: "Administratif",
-    text: "Tri d'emails, réponses assistées, génération de documents, extraction d'informations depuis PDF et tableurs."
+    n: "01",
+    title: "Traitement de documents entrants",
+    body: "Devis, factures, bons de commande, dossiers. Extraction, contrôle, routage — avec un humain sur les cas douteux uniquement.",
   },
   {
-    title: "Commercial",
-    text: "Qualification de prospects, relances, synthèses CRM, préparation de rendez-vous et suivi post-call."
+    n: "02",
+    title: "Réponses et relances récurrentes",
+    body: "Les demandes qui reviennent chaque semaine, préparées automatiquement et validées en un clic plutôt que rédigées à zéro.",
   },
   {
-    title: "Opérations",
-    text: "Automatisation de workflows, contrôle qualité, reporting, alertes et agents IA connectés à vos outils."
-  }
+    n: "03",
+    title: "Recherche dans vos propres données",
+    body: "Vos procédures, contrats et historiques deviennent interrogeables — avec les sources citées, sinon ça ne sert à rien.",
+  },
+];
+
+const steps = [
+  {
+    n: "01",
+    title: "On chronomètre",
+    body: "Combien de temps et d'argent ce processus consomme aujourd'hui. Sans ce chiffre, rien ne commence.",
+    when: "SEMAINE 1",
+    lead: false,
+  },
+  {
+    n: "02",
+    title: "On construit petit",
+    body: "Une première version qui traite un sous-ensemble réel, avec vos vraies données et un humain en validation.",
+    when: "SEMAINES 2–4",
+    lead: false,
+  },
+  {
+    n: "03",
+    title: "On compare",
+    body: "Même mesure qu'en semaine 1. Le gain est réel ou il ne l'est pas — dans les deux cas vous le savez.",
+    when: "SEMAINE 5",
+    lead: false,
+  },
+  {
+    n: "04",
+    title: "On vous rend les clés",
+    body: "Documentation, runbook, et une session avec la personne qui reprendra. Pas d'abonnement caché.",
+    when: "SEMAINE 6",
+    lead: true,
+  },
+];
+
+const faq = [
+  {
+    q: "Faut-il une équipe technique en interne ?",
+    a: "Une personne à l'aise avec vos outils suffit pour démarrer. En revanche, il faut quelqu'un qui reprendra à la fin — sinon nous construisons une dépendance, et ce n'est pas ce que nous vendons.",
+  },
+  {
+    q: "Nos données sont sensibles. Où vont-elles ?",
+    a: "Décision prise avec vous et écrite : hébergement européen, rétention limitée, ou modèle auto-hébergé quand le dossier le justifie. Chaque option a un coût que nous chiffrons avant, pas après.",
+  },
+  {
+    q: "Et si l'IA se trompe sur un dossier client ?",
+    a: "C'est pour ça qu'on place des points de contrôle humains là où l'erreur coûte cher, et qu'on les retire là où elle ne coûte rien. Le taux d'erreur est mesuré, pas espéré.",
+  },
+  {
+    q: "Combien ça coûte à faire tourner tous les mois ?",
+    a: "Nous vous donnons un modèle de coûts avec un plafond mensuel appliqué par le code. Vous ne découvrez pas la facture : vous la fixez.",
+  },
+  {
+    q: "Y a-t-il des aides pour financer ce type de projet ?",
+    a: "Des dispositifs régionaux et Bpifrance existent pour la transformation numérique des PME. Nous ne sommes pas cabinet de subventions, mais nous fournissons le dossier technique dont vous aurez besoin.",
+  },
 ];
 
 const structuredData = [
   {
     "@type": "Service",
-    "@id": "https://ligerianlabs.fr/ia-angers-pme/#service",
-    "name": "IA pour PME à Angers",
-    "serviceType": "Audit IA, automatisation et agents IA pour PME",
-    "provider": { "@id": "https://ligerianlabs.fr/#business" },
-    "areaServed": [
-      { "@type": "City", "name": "Angers" },
-      { "@type": "AdministrativeArea", "name": "Maine-et-Loire" },
-      { "@type": "AdministrativeArea", "name": "Pays de la Loire" }
+    "@id": "https://ligerianlabs.fr/ia-angers-pme#service",
+    name: "IA pour PME à Angers",
+    serviceType: "Automatisation mesurée d'un processus métier avec de l'IA",
+    provider: { "@id": "https://ligerianlabs.fr/#business" },
+    areaServed: [
+      { "@type": "City", name: "Angers" },
+      { "@type": "AdministrativeArea", name: "Maine-et-Loire" },
+      { "@type": "AdministrativeArea", name: "Pays de la Loire" },
     ],
-    "audience": {
-      "@type": "BusinessAudience",
-      "name": "PME et TPE"
-    },
-    "description": "Solutions IA pour PME à Angers : audit, automatisation métier, agents IA sur mesure et formation des équipes."
+    audience: { "@type": "BusinessAudience", name: "PME et TPE" },
+    description:
+      "Un processus à la fois, mesuré avant et après, avec passation documentée. Pour les PME d'Angers et des Pays de la Loire.",
+  },
+  {
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Accueil", item: "https://ligerianlabs.fr/" },
+      {
+        "@type": "ListItem",
+        position: 2,
+        name: "IA à Angers",
+        item: "https://ligerianlabs.fr/ia-angers",
+      },
+      { "@type": "ListItem", position: 3, name: "PME" },
+    ],
   },
   {
     "@type": "FAQPage",
-    "@id": "https://ligerianlabs.fr/ia-angers-pme/#faq",
-    "mainEntity": [
-      {
-        "@type": "Question",
-        "name": "Combien coûte un projet IA pour PME à Angers ?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "Le bon budget dépend du cas d'usage. Ligerian Labs commence par un audit court pour prioriser les automatisations IA avec le meilleur retour sur investissement."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "Une PME peut-elle utiliser l'IA sans équipe technique ?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "Oui. Ligerian Labs conçoit des agents IA et workflows utilisables par les équipes métier, avec formation et accompagnement."
-        }
-      }
-    ]
-  }
+    "@id": "https://ligerianlabs.fr/ia-angers-pme#faq",
+    mainEntity: faq.map((item) => ({
+      "@type": "Question",
+      name: item.q,
+      acceptedAnswer: { "@type": "Answer", text: item.a },
+    })),
+  },
 ];
 ---
 
 <Base
-  title="IA Angers PME — Automatisation & agents IA pour PME | Ligerian Labs"
-  description="IA pour PME à Angers : audit, automatisation métier, agents IA sur mesure et formation. Ligerian Labs accompagne les PME du Maine-et-Loire."
+  title="IA pour PME à Angers — workflows fiables et mesurés | Ligerian Labs"
+  description="IA pour PME à Angers et en Pays de la Loire : automatiser un processus, mesurer ce que ça coûte, garder la main. Diagnostic en deux semaines, périmètre écrit."
+  ogImage="og-ia-angers-pme"
   structuredData={structuredData}
 >
-  <section class="max-w-5xl mx-auto px-6 py-24 md:py-32">
-    <p class="section-label mb-6">IA Angers PME</p>
-    <h1 class="text-4xl md:text-6xl font-bold tracking-tight mb-6 leading-tight">
-      IA pour PME à Angers : automatiser sans recruter une armée
-    </h1>
-    <p class="text-xl text-text-secondary max-w-3xl leading-relaxed mb-10">
-      Votre PME perd du temps sur l'administratif, les relances, les tableaux, les documents, les process qui dépendent d'une seule personne ? C'est exactement là que l'IA devient rentable.
-    </p>
-    <div class="flex flex-col sm:flex-row gap-4">
-      <a href="/contact" class="bg-accent hover:bg-accent-light text-white px-8 py-3 rounded-lg font-medium transition inline-block text-center">
-        Auditer ma PME
-      </a>
-      <a href="/services" class="text-text-secondary hover:text-text transition px-8 py-3 text-center">
-        Voir les offres →
-      </a>
+  <header class="ll-sec">
+    <div class="ll-wrap">
+      <nav class="ll-crumbs" aria-label="Fil d'Ariane">
+        <a href="/">Accueil</a><span>/</span><a href="/ia-angers">IA à Angers</a><span>/</span
+        ><span>PME</span>
+      </nav>
+      <div class="ll-hero">
+        <div class="ll-hero__main" style="gap:20px">
+          <div class="ll-mono" style="font-size:12px;letter-spacing:.16em">
+            PME · Angers &amp; Pays de la Loire
+          </div>
+          <h1 class="ll-h1" style="font-size:clamp(30px,4vw,54px);line-height:.94">
+            L'IA pour<br />une PME&nbsp;:<br />un processus,<br />bien fait
+          </h1>
+          <p class="ll-lede">
+            Vous n'avez pas besoin d'une stratégie IA. Vous avez besoin qu'un processus coûteux
+            tourne mieux, que ce soit mesuré, et que personne ne devienne dépendant d'un
+            prestataire.
+          </p>
+          <div class="ll-btn-row" style="margin-top:6px">
+            <a href="/contact" class="ll-btn">Décrire votre situation →</a>
+          </div>
+        </div>
+        <div class="ll-hero__aside ll-hero__aside--ink">
+          <div class="ll-mono ll-mono--invert">Ce que nous ne faisons pas</div>
+          <div class="ll-bullets" style="color:var(--ink-invert)">
+            {notDoing.map((item) => (
+              <div class="ll-bullet ll-bullet--dash"><span>{item}</span></div>
+            ))}
+          </div>
+        </div>
+      </div>
     </div>
-  </section>
+  </header>
 
-  <section class="bg-surface py-20">
-    <div class="max-w-6xl mx-auto px-6">
-      <p class="section-label mb-4">Cas d'usage PME</p>
-      <h2 class="text-3xl md:text-4xl font-bold mb-12">L'IA utile, c'est celle qui enlève du travail répétitif</h2>
-      <div class="grid md:grid-cols-3 gap-8">
-        {useCases.map((useCase) => (
-          <div class="bg-white rounded-2xl p-8 border border-black/5">
-            <h3 class="text-xl font-bold mb-3">{useCase.title}</h3>
-            <p class="text-text-secondary">{useCase.text}</p>
+  <SectionBar label="01 — Là où ça marche vraiment" note="Des processus, pas des idées" />
+
+  <section class="ll-sec">
+    <div class="ll-wrap">
+      <div class="ll-grid ll-grid--3">
+        {useCases.map((item) => (
+          <div class="ll-cell" style="min-height:230px;gap:11px">
+            <div class="ll-step__num" style="font-size:11px">{item.n}</div>
+            <h3 style="font-weight:700;font-size:19px;margin:0;letter-spacing:-.01em;line-height:1.18">
+              {item.title}
+            </h3>
+            <p style="font-size:15px">{item.body}</p>
           </div>
         ))}
       </div>
     </div>
   </section>
 
-  <section class="max-w-6xl mx-auto px-6 py-24">
-    <div class="grid md:grid-cols-2 gap-16 items-start">
-      <div>
-        <p class="section-label mb-4">Méthode</p>
-        <h2 class="text-3xl md:text-4xl font-bold mb-6">Une approche PME : ROI d'abord, techno ensuite</h2>
-        <p class="text-text-secondary text-lg leading-relaxed mb-6">
-          On ne commence pas par “mettre de l'IA partout”. On cartographie vos tâches à faible valeur, on estime le gain de temps, puis on choisit le plus petit système IA capable de produire un résultat fiable.
-        </p>
-        <p class="text-text-secondary text-lg leading-relaxed">
-          Objectif : un outil utilisé par l'équipe, pas une démo LinkedIn. Agents IA, automatisations, RAG, workflows n8n/Make, intégration CRM — seulement si ça sert le business.
+  <section class="ll-sec">
+    <div class="ll-wrap ll-pad">
+      <div class="ll-intro">
+        <h2 class="ll-h2 ll-h2--tight">Comment ça<br />se passe</h2>
+        <p class="ll-body ll-body--lg" style="max-width:54ch">
+          Un processus à la fois. Mesuré avant, mesuré après. Si le chiffre ne bouge pas, on vous le
+          dit et on s'arrête — c'est plus honnête et moins cher que de continuer.
         </p>
       </div>
-      <div class="bg-surface rounded-2xl p-8">
-        <h3 class="text-2xl font-bold mb-6">Plan d'action type</h3>
-        <ol class="space-y-4 text-text-secondary">
-          <li><strong class="text-text">1.</strong> Audit express des process et irritants</li>
-          <li><strong class="text-text">2.</strong> Priorisation par gain de temps et risque</li>
-          <li><strong class="text-text">3.</strong> Prototype IA sur un cas concret</li>
-          <li><strong class="text-text">4.</strong> Déploiement, formation, mesure</li>
-        </ol>
+      <div class="ll-grid ll-grid--4 ll-grid--boxed">
+        {steps.map((step) => (
+          <div class:list={["ll-cell", step.lead && "ll-cell--cobalt"]} style="min-height:210px;gap:10px">
+            <div class="ll-step__num" style="font-size:11px">{step.n}</div>
+            <h3 style="font-weight:700;font-size:18px;margin:0;letter-spacing:-.01em">{step.title}</h3>
+            <p>{step.body}</p>
+            <span
+              class="ll-mono ll-mono--sm"
+              style="margin-top:auto;letter-spacing:.06em;color:inherit;opacity:.75">{step.when}</span
+            >
+          </div>
+        ))}
       </div>
     </div>
   </section>
 
-  <section class="max-w-6xl mx-auto px-6 pb-12">
-    <div class="bg-white border border-black/5 rounded-2xl p-8">
-      <h2 class="text-3xl font-bold mb-6">Le bon premier projet IA pour une PME</h2>
-      <p class="text-text-secondary text-lg leading-relaxed">
-        Le meilleur point de départ n'est pas toujours le plus spectaculaire. C'est souvent un process répétitif, fréquent, bien documenté, qui fatigue déjà l'équipe. On le transforme en prototype mesurable avant de parler gros chantier.
-      </p>
+  <SectionBar label="02 — Questions de dirigeant" note="Les vraies, pas les rassurantes" />
+
+  <section class="ll-sec">
+    <div class="ll-wrap ll-pad">
+      <div class="ll-rows">
+        {faq.map((item) => (
+          <div class="ll-row">
+            <h3 class="ll-row__q">{item.q}</h3>
+            <p class="ll-row__a">{item.a}</p>
+          </div>
+        ))}
+      </div>
     </div>
   </section>
 
-  <section class="bg-accent text-white py-20 mx-6 md:mx-auto max-w-6xl rounded-2xl">
-    <div class="max-w-3xl mx-auto px-6 text-center">
-      <h2 class="text-3xl md:text-4xl font-bold mb-4">Votre PME à Angers veut gagner du temps ?</h2>
-      <p class="text-white/70 mb-8 text-lg">Envoyez le process le plus pénible. On vous dira franchement s'il mérite une automatisation IA.</p>
-      <a href="/contact" class="bg-white text-accent hover:bg-white/90 px-8 py-3 rounded-lg font-medium transition inline-block">
-        Demander un avis IA
-      </a>
-    </div>
-  </section>
+  <CtaBand
+    title="Quel processus<br />vous coûte le plus&nbsp;?"
+    body="Dites-nous lequel en trois lignes. Nous vous répondrons franchement si l'IA y changerait quelque chose."
+    cta="Décrire votre situation →"
+  />
 </Base>

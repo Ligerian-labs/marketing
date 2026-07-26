@@ -1,0 +1,153 @@
+---
+export const prerender = true;
+import Base from "../layouts/Base.astro";
+import SectionBar from "../components/SectionBar.astro";
+import DiagnosticTable from "../components/DiagnosticTable.astro";
+import CtaBand from "../components/CtaBand.astro";
+
+const method = [
+  {
+    n: "01",
+    title: "Cadrage",
+    body: "Nous lisons le code, les tableaux de bord et les factures du dernier trimestre. Puis nous parlons aux ingénieurs, et à celui qui porte le P&L.",
+    foot: "1–2 semaines",
+    lead: false,
+  },
+  {
+    n: "02",
+    title: "Décision",
+    body: "Une décision d'architecture écrite : la route retenue, les compromis, et ce que nous avons délibérément écarté. Datée, signée, opposable.",
+    foot: "Semaine 1–3",
+    lead: false,
+  },
+  {
+    n: "03",
+    title: "Construction",
+    body: "En tranches livrables, chacune en production. Vos ingénieurs sont dedans — pairing et revue — pas spectateurs d'une boîte noire.",
+    foot: "Le gros du temps",
+    lead: false,
+  },
+  {
+    n: "04",
+    title: "Passation",
+    body: "Runbooks, documentation, pratiques. L'objectif est que la question « où est Ligerian Labs » cesse d'avoir de l'importance.",
+    foot: "Un livrable, pas une faveur",
+    lead: true,
+  },
+];
+
+const principles = [
+  {
+    title: "Un problème mesuré vaut mieux qu'une solution élégante",
+    body: "Nous refusons de construire avant de savoir ce que la situation actuelle coûte. Sans chiffre de départ, il n'y a pas de moyen de dire si nous avons aidé — et vous financez une intuition.",
+  },
+  {
+    title: "L'IA est non déterministe. Le reste ne doit pas l'être.",
+    body: "Files, retries, idempotence, validation des sorties, points de contrôle. La partie probabiliste est petite et cernée ; tout ce qui l'entoure est de l'ingénierie classique et fiable.",
+  },
+  {
+    title: "Le modèle changera. L'architecture doit y survivre.",
+    body: "Nous construisons une couture propre là où l'IA se branche. Nouveau fournisseur, nouveau prix, nouveau modèle : ça reste une ligne de configuration, pas un trimestre.",
+  },
+  {
+    title: "Une mission réussie se termine",
+    body: "Nous ne cherchons pas à devenir indispensables. La documentation de passation est écrite pour l'ingénieur qui arrivera le trimestre prochain, pas pour cocher une case.",
+  },
+  {
+    title: "Nous disons non",
+    body: "À ce que nous ferions mal, et aux projets où l'IA est une consigne sans problème derrière. Dans les deux cas nous vous disons qui appeler à la place.",
+  },
+];
+---
+
+<Base
+  title="Approche — comment nous travaillons sur l'IA en production | Ligerian Labs"
+  description="Diagnostic en quatre stades, méthode de cadrage, principes d'ingénierie et passation. La façon dont Ligerian Labs conduit une mission IA du premier appel à la sortie."
+  ogImage="og-approche"
+  active="approche"
+>
+  <header class="ll-sec">
+    <div class="ll-wrap ll-hero">
+      <div class="ll-hero__main">
+        <div class="ll-mono" style="font-size:12px;letter-spacing:.16em">Approche</div>
+        <h1 class="ll-h1">D'abord<br />le diagnostic.<br />Ensuite<br />le code.</h1>
+        <p class="ll-lede">
+          La plupart des projets IA échouent avant la première ligne de code, sur un désaccord non
+          dit à propos du problème à résoudre. Nous commençons par le lever.
+        </p>
+      </div>
+      <div class="ll-hero__aside ll-hero__aside--ink">
+        <div class="ll-mono ll-mono--invert">En une phrase</div>
+        <p
+          style="margin:0;font-weight:700;font-size:clamp(19px,1.9vw,25px);line-height:1.16;letter-spacing:-.02em"
+        >
+          Nous prenons le chantier ambigu et critique pour l'activité, et nous en répondons
+          jusqu'en production.
+        </p>
+        <div
+          style="font-family:var(--font-mono);font-size:11px;color:var(--meta-invert);line-height:1.7"
+        >
+          CADRAGE · ARCHITECTURE<br />CONSTRUCTION · PASSATION
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <SectionBar label="01 — Diagnostic" note="Trouvez la ligne qui vous ressemble" />
+
+  <section class="ll-sec">
+    <div class="ll-wrap ll-pad">
+      <div class="ll-intro">
+        <h2 class="ll-h2">Quatre stades,<br />un seul le vôtre</h2>
+        <p class="ll-body" style="font-size:17px;max-width:56ch">
+          Dans l'ordre où les entreprises les traversent réellement. Le premier travail d'une
+          mission est de s'accorder honnêtement sur la ligne où vous êtes — c'est souvent la
+          conversation la plus utile des deux premières semaines.
+        </p>
+      </div>
+      <DiagnosticTable />
+    </div>
+  </section>
+
+  <SectionBar label="02 — La méthode" note="Du premier appel à la sortie" />
+
+  <section class="ll-sec">
+    <div class="ll-wrap">
+      <div class="ll-grid ll-grid--4">
+        {method.map((step) => (
+          <div class:list={["ll-cell", "ll-step", step.lead && "ll-cell--cobalt"]}>
+            <div class="ll-step__num">{step.n}</div>
+            <h3>{step.title}</h3>
+            <p style="font-size:15px">{step.body}</p>
+            <div class="ll-cell__foot"><span>{step.foot}</span></div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <SectionBar label="03 — Principes" note="Ce sur quoi nous ne négocions pas" />
+
+  <section class="ll-sec">
+    <div class="ll-wrap ll-pad">
+      <div class="ll-rows">
+        {principles.map((principle, i) => (
+          <div class="ll-row ll-row--principle">
+            <div class="ll-row__index">{String(i + 1).padStart(2, "0")}</div>
+            <h3
+              style="font-weight:700;font-size:clamp(19px,1.9vw,24px);margin:0;letter-spacing:-.015em;line-height:1.18"
+            >
+              {principle.title}
+            </h3>
+            <p class="ll-row__a" style="font-size:15.5px">{principle.body}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <CtaBand
+    title="Commencez par<br />deux semaines"
+    body="Une évaluation technique écrite, un plan séquencé, un modèle de coûts. Aucune obligation de continuer avec nous."
+  />
+</Base>

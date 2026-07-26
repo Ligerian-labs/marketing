@@ -1,8 +1,10 @@
 ---
 export const prerender = false;
 import Base from "../../layouts/Base.astro";
+import CtaBand from "../../components/CtaBand.astro";
 import { getAuthenticatedUser } from "../../lib/auth";
 import { getUserPurchases } from "../../lib/formations";
+
 const user = getAuthenticatedUser(Astro.cookies);
 const purchases = user ? getUserPurchases(user.id) : [];
 
@@ -15,148 +17,151 @@ if (buyPack && ["formation-starter", "formation-intermediate", "formation-premiu
 
 const formations = [
   {
-    id: 'formation-starter',
-    name: 'IA pour les PME',
-    label: 'Starter',
-    description: 'Comprendre l\'IA et lancer votre premier projet en 30 jours.',
+    id: "formation-starter",
+    name: "IA pour les PME",
+    label: "F/01 · Starter",
+    description: "Comprendre l'IA et lancer votre premier projet en 30 jours.",
     price: 49,
-    tier_dir: '01-guide-pme',
+    tier_dir: "01-guide-pme",
     popular: false,
     chapters: 6,
     features: [
-      'Comprendre l\'IA sans jargon',
-      'Cas d\'usage concrets pour PME',
-      'Outils no-code recommandés',
-      'Premier projet IA pas à pas',
-      'Erreurs à éviter',
-    ]
+      "Comprendre l'IA sans jargon",
+      "Cas d'usage concrets pour PME",
+      "Outils no-code recommandés",
+      "Premier projet IA pas à pas",
+      "Erreurs à éviter",
+    ],
   },
   {
-    id: 'formation-intermediate',
-    name: 'Automatiser son Business',
-    label: 'Intermédiaire',
-    description: 'Construire des workflows IA qui tournent en continu.',
+    id: "formation-intermediate",
+    name: "Automatiser son business",
+    label: "F/02 · Intermédiaire",
+    description: "Construire des workflows IA qui tournent en continu.",
     price: 99,
-    tier_dir: '02-automatiser',
+    tier_dir: "02-automatiser",
     popular: true,
     chapters: 8,
     features: [
-      'Tout le contenu Starter inclus',
-      'Stack IA moderne (LLMs, APIs, RAG)',
-      'Automatiser marketing & ventes',
-      'Workflows Make.com & n8n',
-      'Plan d\'action 90 jours',
-    ]
+      "Tout le contenu Starter inclus",
+      "Stack IA moderne (LLMs, APIs, RAG)",
+      "Automatiser marketing & ventes",
+      "Workflows Make.com & n8n",
+      "Plan d'action 90 jours",
+    ],
   },
   {
-    id: 'formation-premium',
-    name: 'Déployer l\'IA en Entreprise',
-    label: 'Premium',
-    description: 'Architecture, gouvernance et mise en production à l\'échelle.',
+    id: "formation-premium",
+    name: "Déployer l'IA en entreprise",
+    label: "F/03 · Premium",
+    description: "Architecture, gouvernance et mise en production à l'échelle.",
     price: 149,
-    tier_dir: '03-deployer',
+    tier_dir: "03-deployer",
     popular: false,
     chapters: 9,
     features: [
-      'Tout le contenu précédent inclus',
-      'Architecture technique avancée',
-      'LLMs en production',
-      'Gouvernance, sécurité & EU AI Act',
-      '5 cas d\'études détaillés',
-    ]
-  }
+      "Tout le contenu précédent inclus",
+      "Architecture technique avancée",
+      "LLMs en production",
+      "Gouvernance, sécurité & EU AI Act",
+      "5 cas d'études détaillés",
+    ],
+  },
 ];
 
-const hasPurchased = (formationId: string) => {
-  return purchases.some(p => p.pack === formationId && p.status === 'completed');
-};
+const hasPurchased = (formationId: string) =>
+  purchases.some((p) => p.pack === formationId && p.status === "completed");
+
+const payment = Astro.url.searchParams.get("payment");
+const setup = Astro.url.searchParams.get("setup");
 ---
 
-<Base title="Formations IA — Ligerian Labs" description="Formations pratiques pour maîtriser l'Intelligence Artificielle dans votre entreprise">
-  {Astro.url.searchParams.get("payment") === "success" && (
-    <div class="bg-green-50 border-b border-green-200 text-green-800 text-center py-3 px-6 text-sm font-medium">
-      ✅ Paiement réussi ! Votre formation est maintenant accessible ci-dessous.
+<Base
+  title="Formations IA — Ligerian Labs"
+  description="Formations pratiques pour intégrer l'intelligence artificielle dans votre entreprise, du premier cas d'usage à la mise en production."
+  robots="index, follow"
+>
+  {payment === "success" && (
+    <div class="ll-notice">
+      <div class="ll-wrap"><p>Paiement réussi. Votre formation est accessible ci-dessous.</p></div>
     </div>
   )}
-  {Astro.url.searchParams.get("setup") === "success" && (
-    <div class="bg-green-50 border-b border-green-200 text-green-800 text-center py-3 px-6 text-sm font-medium">
-      🎉 Compte configuré avec succès ! Bienvenue chez Ligerian Labs. Vos formations vous attendent ci-dessous.
+  {setup === "success" && (
+    <div class="ll-notice">
+      <div class="ll-wrap"><p>Compte configuré. Vos formations vous attendent ci-dessous.</p></div>
     </div>
   )}
-  {Astro.url.searchParams.get("payment") === "cancelled" && (
-    <div class="bg-yellow-50 border-b border-yellow-200 text-yellow-800 text-center py-3 px-6 text-sm font-medium">
-      Paiement annulé. Vous pouvez réessayer quand vous le souhaitez.
+  {payment === "cancelled" && (
+    <div class="ll-notice ll-notice--muted">
+      <div class="ll-wrap"><p>Paiement annulé. Vous pouvez réessayer quand vous le souhaitez.</p></div>
     </div>
   )}
-  <!-- Hero -->
-  <section class="max-w-5xl mx-auto px-6 py-28 md:py-36 text-center">
-    <p class="section-label mb-8">Formations IA pratiques</p>
-    <h1 class="text-5xl md:text-7xl font-bold tracking-tight mb-6 leading-[1.1]">
-      Maîtrisez l'IA<br />pour votre entreprise
-    </h1>
-    <p class="text-xl text-text-secondary max-w-2xl mx-auto mb-12 leading-relaxed">
-      Formations pratiques et concrètes pour intégrer l'Intelligence Artificielle
-      dans votre activité. Du débutant à l'expert.
-    </p>
-  </section>
 
-  <!-- Formations Grid -->
-  <section class="bg-surface py-24">
-    <div class="max-w-5xl mx-auto px-6">
-      <div class="grid md:grid-cols-3 gap-6 items-stretch">
+  <header class="ll-sec">
+    <div class="ll-wrap ll-hero">
+      <div class="ll-hero__main">
+        <div class="ll-mono" style="font-size:12px;letter-spacing:.16em">Formations</div>
+        <h1 class="ll-h1">Maîtrisez l'IA<br />pour votre<br />entreprise</h1>
+        <p class="ll-lede">
+          Trois parcours pratiques, du premier cas d'usage à la mise en production. Écrits depuis
+          des missions réelles — même méthode, format autonome.
+        </p>
+      </div>
+      <div class="ll-hero__aside ll-hero__aside--panel">
+        <div class="ll-mono">Format</div>
+        <div class="ll-bullets" style="font-size:15px">
+          <div class="ll-bullet"><span>Chapitres courts, lisibles en une session</span></div>
+          <div class="ll-bullet"><span>Exemples et gabarits réutilisables</span></div>
+          <div class="ll-bullet"><span>Accès à vie, mises à jour incluses</span></div>
+        </div>
+        <div class="ll-mono ll-mono--plain">Paiement unique · sans abonnement</div>
+      </div>
+    </div>
+  </header>
+
+  <section class="ll-sec">
+    <div class="ll-wrap">
+      <div class="ll-grid ll-grid--3">
         {formations.map((formation) => {
           const purchased = hasPurchased(formation.id);
           return (
-            <div class={`bg-white rounded-2xl flex flex-col relative ${formation.popular ? 'ring-2 ring-black shadow-xl md:-my-4 md:py-2' : 'border border-black/8'}`}>
-              {formation.popular && (
-                <div class="absolute -top-3.5 left-1/2 -translate-x-1/2">
-                  <span class="bg-black text-white text-xs font-semibold px-4 py-1.5 rounded-full">
-                    Le plus populaire
-                  </span>
-                </div>
-              )}
+            <div class:list={["ll-cell", "ll-price", formation.popular && "ll-cell--cobalt"]}>
+              <div class="ll-price__label">{formation.label}</div>
+              <h2 class="ll-offer__name" style="font-size:21px">{formation.name}</h2>
+              <p style="margin-top:10px">{formation.description}</p>
 
-              <div class="p-8 pb-0">
-                <p class="text-xs font-semibold uppercase tracking-widest text-text-secondary mb-3">{formation.label}</p>
-                <h3 class="text-xl font-bold mb-2">{formation.name}</h3>
-                <p class="text-text-secondary text-sm mb-6 leading-relaxed">{formation.description}</p>
+              <div class="ll-price__amount">{formation.price} €</div>
+              <div class="ll-price__unit">{formation.chapters} chapitres · accès à vie</div>
 
-                <div class="flex items-baseline gap-1 mb-8">
-                  <span class="text-4xl font-bold">{formation.price}</span>
-                  <span class="text-text-secondary text-lg">€</span>
-                  <span class="text-text-secondary text-sm ml-1">· {formation.chapters} chapitres</span>
-                </div>
+              <div
+                class="ll-bullets"
+                style="margin-top:22px;padding-top:18px;border-top:1px solid var(--rule-hair);font-size:14.5px"
+              >
+                {formation.features.map((feature) => (
+                  <div class:list={["ll-bullet", formation.popular && "ll-bullet--cream"]}>
+                    <span>{feature}</span>
+                  </div>
+                ))}
               </div>
 
-              <div class="px-8 flex-grow">
-                <div class="border-t border-black/5 pt-6">
-                  <ul class="space-y-3">
-                    {formation.features.map((feature) => (
-                      <li class="flex items-start gap-3">
-                        <svg class="w-4 h-4 mt-0.5 text-black shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5">
-                          <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/>
-                        </svg>
-                        <span class="text-sm text-text-secondary">{feature}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              </div>
-
-              <div class="p-8 pt-8 mt-auto">
+              <div class="ll-price__cta">
                 {purchased ? (
                   <a
                     href={`/formations/${formation.tier_dir}/`}
-                    class="block w-full text-center py-3 px-6 rounded-xl font-medium bg-black text-white hover:bg-black/80 transition"
+                    class:list={["ll-btn", "ll-btn--block", formation.popular && "ll-btn--cream"]}
                   >
                     Accéder au contenu →
                   </a>
                 ) : (
-                  <form action="/api/stripe/checkout" method="POST" class="w-full">
+                  <form action="/api/stripe/checkout" method="POST">
                     <input type="hidden" name="pack" value={formation.id} />
                     <button
                       type="submit"
-                      class={`w-full py-3 px-6 rounded-xl font-medium transition ${formation.popular ? 'bg-black text-white hover:bg-black/80' : 'bg-white text-black border-2 border-black hover:bg-black hover:text-white'}`}
+                      class:list={[
+                        "ll-btn",
+                        "ll-btn--block",
+                        formation.popular ? "ll-btn--cream" : "ll-btn--ghost",
+                      ]}
                     >
                       Acheter
                     </button>
@@ -164,16 +169,23 @@ const hasPurchased = (formationId: string) => {
                 )}
               </div>
             </div>
-          )
+          );
         })}
       </div>
 
       {!user && (
-        <p class="text-center text-sm text-text-secondary mt-10">
-          Déjà un compte ?
-          <a href="/auth/connexion?redirect=/formations/" class="text-black font-medium hover:underline ml-1">Se connecter</a>
+        <p style="padding:22px 0;text-align:center" class="ll-mono ll-mono--plain">
+          Déjà un compte&nbsp;?
+          <a href="/auth/connexion?redirect=/formations/">Se connecter</a>
         </p>
       )}
     </div>
   </section>
+
+  <CtaBand
+    title="Vous préférez<br />qu'on le fasse&nbsp;?"
+    body="Les formations transmettent la méthode. Les quatre offres la mettent en œuvre chez vous, en production."
+    cta="Voir les offres →"
+    href="/offres"
+  />
 </Base>

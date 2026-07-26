@@ -1,111 +1,210 @@
 ---
 export const prerender = true;
 import Base from "../layouts/Base.astro";
+import SectionBar from "../components/SectionBar.astro";
+import ProofSection from "../components/ProofSection.astro";
+import CtaBand from "../components/CtaBand.astro";
+
+const career = [
+  {
+    org: "Ligerian Labs",
+    role: "fondateur, ingénierie IA",
+    highlight: true,
+    what: "Token ops, mise en production, architecture IA, agents. Cadrage et livraison de bout en bout.",
+    when: "2021 → Auj.",
+    where: "Angers · Télétravail",
+  },
+  {
+    org: "Cartridge.gg",
+    role: "Ingénieur logiciel",
+    highlight: false,
+    what: "Infrastructure gaming et onchain en Rust et TypeScript ; mainteneur de dojo.js, torii-core et arcade en open source.",
+    when: "2024 → 2026",
+    where: "NYC · Télétravail",
+  },
+  {
+    org: "Pasquinade.fr",
+    role: "Lead développeur / CTO",
+    highlight: false,
+    what: "Migration d'AWS ECS vers Kubernetes ; mise en place de la CI/CD et de l'outillage avec Ansible et Terraform.",
+    when: "2020 → 2021",
+    where: "Paris · Télétravail",
+  },
+  {
+    org: "FioulMarket / Total Proxi Énergies",
+    role: "Responsable technique",
+    highlight: false,
+    what: "Décisions techniques et mises en production hebdomadaires sur une plateforme Symfony + React.",
+    when: "2017 → 2020",
+    where: "Rueil · Télétravail",
+  },
+];
+
+const stack = [
+  { label: "Systèmes", items: ["Rust", "Zig", "Go", "TypeScript", "Node.js", "Python", "Cairo"] },
+  {
+    label: "IA",
+    items: [
+      "Orchestration d'agents",
+      "Évaluations",
+      "Recherche (RAG)",
+      "OpenTelemetry",
+      "Exécution en sandbox",
+      "Modélisation des coûts",
+    ],
+  },
+  {
+    label: "Infra",
+    items: ["Kubernetes", "AWS", "Terraform", "Ansible", "Docker", "Firecracker", "CI/CD"],
+  },
+  {
+    label: "Livraison",
+    items: ["Cadrage", "Traduction des enjeux", "Revue de code", "Pairing", "Maintenance open source"],
+  },
+];
+
+const personSchema = {
+  "@type": "Person",
+  "@id": "https://ligerianlabs.fr/a-propos#valentin-dosimont",
+  name: "Valentin Dosimont",
+  jobTitle: "Fondateur, ingénieur logiciel",
+  image: "https://ligerianlabs.fr/brand/valentin-dosimont.jpg",
+  worksFor: { "@id": "https://ligerianlabs.fr/#organization" },
+  knowsLanguage: ["fr", "en"],
+  sameAs: ["https://github.com/Ligerian-labs"],
+};
 ---
 
-<Base title="À propos — Ligerian Labs | Laboratoire IA à Angers" description="Découvrez Ligerian Labs, laboratoire d'innovation IA basé à Angers. Notre mission : rendre l'intelligence artificielle accessible aux entreprises des Pays de la Loire.">
-  <!-- Story -->
-  <section class="max-w-5xl mx-auto px-6 py-24">
-    <p class="section-label mb-6">Notre histoire</p>
-    <h1 class="text-4xl md:text-6xl font-bold tracking-tight mb-8">L'artisan derrière le labo</h1>
-
-    <div class="max-w-3xl space-y-6 text-text-secondary text-lg leading-relaxed">
-      <p>
-        <strong class="text-text">Je m'appelle Valentin.</strong>
-        J'ai commencé à coder en autodidacte il y a 12 ans. Pas d'école d'ingé,
-        pas de parcours fléché — juste de la curiosité, un terminal, et des nuits blanches.
-      </p>
-      <p>
-        Depuis, j'ai occupé tous les postes : intégrateur front-end, développeur full-stack,
-        lead technique, et CTO. À chaque étape, j'ai construit.
-        <strong class="text-text">Pas géré. Construit.</strong>
-        Des produits, des équipes, des architectures — toujours les mains dans le code.
-      </p>
-      <p>
-        Aujourd'hui, <strong class="text-text">je veux transmettre ce que j'ai appris</strong> —
-        12 ans de métier compressés en outils concrets pour les entreprises locales qui veulent
-        passer à la vitesse supérieure.
-      </p>
-    </div>
-  </section>
-
-  <!-- Values -->
-  <section class="bg-surface py-24">
-    <div class="max-w-6xl mx-auto px-6">
-      <p class="section-label mb-4">Nos valeurs</p>
-      <h2 class="text-3xl md:text-4xl font-bold mb-16">Ce qui nous guide</h2>
-
-      <div class="grid md:grid-cols-3 gap-8">
-        <div class="bg-white rounded-2xl p-8 border border-black/5">
-          <div class="w-12 h-12 bg-surface rounded-xl flex items-center justify-center mb-6">
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M11.42 15.17l-5.384 3.175 1.037-5.995L2.688 8.21l6.027-.874L11.42 2l2.705 5.336 6.027.874-4.385 4.14 1.037 5.995z"/></svg>
-          </div>
-          <h3 class="text-xl font-bold mb-3">Pragmatisme</h3>
-          <p class="text-text-secondary">
-            On livre ce qui marche. Si ça ne résout pas un vrai problème, on ne le construit pas.
-            Pas de PowerPoint, du concret.
-          </p>
-        </div>
-        <div class="bg-white rounded-2xl p-8 border border-black/5">
-          <div class="w-12 h-12 bg-surface rounded-xl flex items-center justify-center mb-6">
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z"/></svg>
-          </div>
-          <h3 class="text-xl font-bold mb-3">Proximité</h3>
-          <p class="text-text-secondary">
-            On est à Angers, on travaille avec les acteurs locaux. On croit à l'empowerment
-            des territoires — l'innovation n'a pas besoin de Paris.
-          </p>
-        </div>
-        <div class="bg-white rounded-2xl p-8 border border-black/5">
-          <div class="w-12 h-12 bg-surface rounded-xl flex items-center justify-center mb-6">
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19.128a9.38 9.38 0 002.625.372 9.337 9.337 0 004.121-.952 4.125 4.125 0 00-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 018.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0111.964-3.07M12 6.375a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zm8.25 2.25a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z"/></svg>
-          </div>
-          <h3 class="text-xl font-bold mb-3">Accompagnement</h3>
-          <p class="text-text-secondary">
-            L'IA doit amplifier le savoir-faire, pas le remplacer.
-            On forme, on suit, on ajuste — jusqu'à ce que ça tourne.
-          </p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Pourquoi Ligerian -->
-  <section class="max-w-5xl mx-auto px-6 py-24">
-    <div class="grid md:grid-cols-2 gap-16 items-center">
-      <div>
-        <p class="section-label mb-4">Pourquoi "Ligerian" ?</p>
-        <h2 class="text-3xl md:text-4xl font-bold mb-6">L'IA de la Loire</h2>
-        <p class="text-text-secondary text-lg leading-relaxed mb-6">
-          <em>Ligérien</em> — du latin <em>Liger</em>, la Loire. C'est notre ancrage.
-          On est fiers d'être en Pays de la Loire et on veut que le territoire
-          soit à la pointe de la révolution IA.
-        </p>
-        <p class="text-text-secondary text-lg leading-relaxed">
-          Pas besoin d'être à San Francisco pour forger de bons outils.
-          L'IA, c'est un outil d'artisan — comme le tour pour le menuisier
-          ou le four pour le boulanger. Le bon outil, bien taillé, entre les bonnes mains,
-          transforme une TPE en machine de guerre.
+<Base
+  title="À propos — Ligerian Labs, laboratoire IA à Angers"
+  description="Ligerian Labs est un laboratoire d'ingénierie IA fondé par Valentin Dosimont à Angers. Douze ans de production, du gaming à l'onchain, aujourd'hui l'IA en production."
+  ogImage="og-a-propos"
+  active="apropos"
+  structuredData={personSchema}
+>
+  <header class="ll-sec">
+    <div class="ll-wrap ll-hero">
+      <div class="ll-hero__main">
+        <div class="ll-mono" style="font-size:12px;letter-spacing:.16em">À propos</div>
+        <h1 class="ll-h1">Un labo<br />d'ingénierie,<br />pas une agence</h1>
+        <p class="ll-lede">
+          Ligerian Labs est un atelier d'ingénierie IA basé à Angers. Petite structure, missions
+          sérieuses : nous prenons peu de clients et nous répondons de ce qui tourne en production.
         </p>
       </div>
-      <div class="bg-surface rounded-2xl aspect-square flex items-center justify-center">
-        <svg class="w-32 h-32 text-muted/20" viewBox="-2 10 84 48" fill="currentColor">
-          <path d="M0 20c5-2 12 2 20 5 10 3 18-5 28-7 10-2 17 4 24 10 6 5 8 10 8 17l0 7c-2-4-8-10-15-14-9-5-17-10-27-8-10 2-18 8-26 5-6-2-10-7-12-10z"/>
-        </svg>
+      <div class="ll-hero__aside ll-hero__aside--cobalt" style="gap:24px">
+        <div class="ll-mono" style="color:inherit">Le nom</div>
+        <p style="margin:0;font-size:16px;line-height:1.55">
+          «&nbsp;Ligerian&nbsp;» vient de <em>Liger</em>, le nom latin de la Loire. Le fleuve
+          traverse Angers, il n'est pas canalisé, et il impose son rythme aux ouvrages qui le
+          bordent. Cela nous paraissait un bon modèle pour l'ingénierie.
+        </p>
+        <div style="font-family:var(--font-mono);font-size:11px;line-height:1.7;opacity:.85">
+          ANGERS · PAYS DE LA LOIRE<br />47.4784 N · −0.5632 E
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <SectionBar label="01 — Qui est derrière" note="Douze ans en production" />
+
+  <section class="ll-sec">
+    <div class="ll-wrap">
+      <div class="ll-portrait">
+        <div class="ll-portrait__img">
+          <img
+            src="/brand/valentin-dosimont.jpg"
+            alt="Valentin Dosimont, fondateur de Ligerian Labs"
+            loading="lazy"
+            decoding="async"
+          />
+        </div>
+        <div class="ll-portrait__text">
+          <div class="ll-mono" style="letter-spacing:.16em">Valentin Dosimont · fondateur</div>
+          <h2 class="ll-h2 ll-h2--tight">
+            Douze ans<br />en production.<br />Aujourd'hui<br />avec l'IA au cœur.
+          </h2>
+          <p class="ll-body ll-body--lg" style="max-width:54ch">
+            J'ai été celui qui porte le chantier ambigu et critique dont personne ne veut — dans le
+            gaming, l'IA et la blockchain, en français comme en anglais. Domain-driven,
+            event-driven, d'une fiabilité ennuyeuse.
+          </p>
+          <p class="ll-body ll-body--lg" style="max-width:54ch">
+            Je prends le cadrage, l'architecture et la livraison de bout en bout, puis je rends un
+            système que votre équipe sait faire tourner sans moi.
+          </p>
+        </div>
       </div>
     </div>
   </section>
 
-  <!-- CTA -->
-  <section class="bg-accent text-white py-24 my-20 mx-6 md:mx-auto max-w-6xl rounded-2xl">
-    <div class="max-w-3xl mx-auto px-6 text-center">
-      <h2 class="text-3xl md:text-4xl font-bold mb-4">Envie d'en savoir plus ?</h2>
-      <p class="text-white/70 mb-8 max-w-lg mx-auto text-lg">
-        12 ans de métier au service de votre croissance. Discutons de votre projet.
-      </p>
-      <a href="/contact" class="bg-white text-accent hover:bg-white/90 px-8 py-3 rounded-lg font-medium transition inline-block">
-        Discutons de votre projet →
-      </a>
+  <section class="ll-sec">
+    <div class="ll-wrap">
+      <div class="ll-stats">
+        <div class="ll-stat">
+          <div class="ll-stat__n">12+</div>
+          <div class="ll-stat__k">Ans en production</div>
+        </div>
+        <div class="ll-stat ll-stat--on">
+          <div class="ll-stat__n">60+</div>
+          <div class="ll-stat__k">Dépôts publics</div>
+        </div>
+        <div class="ll-stat">
+          <div class="ll-stat__n">03</div>
+          <div class="ll-stat__k">Gaming · IA · chain</div>
+        </div>
+        <div class="ll-stat">
+          <div class="ll-stat__n">E2E</div>
+          <div class="ll-stat__k">Cadrage → déploiement</div>
+        </div>
+      </div>
     </div>
   </section>
+
+  <SectionBar label="02 — Parcours" note="De la production, pas des pilotes" />
+
+  <section class="ll-sec">
+    <div class="ll-wrap ll-pad">
+      <div class="ll-rows">
+        {career.map((job) => (
+          <div class="ll-row ll-row--cv">
+            <div>
+              <div style="font-weight:700;font-size:17px">
+                {job.org}
+                <span style={`font-weight:500;color:${job.highlight ? "var(--cobalt)" : "#555"}`}>
+                  {" "}— {job.role}
+                </span>
+              </div>
+              <div style="font-size:15px;color:#444;margin-top:5px;line-height:1.5">{job.what}</div>
+            </div>
+            <div class="ll-row__dates">{job.when}<br />{job.where}</div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <ProofSection label="03 — La preuve" />
+
+  <section class="ll-sec">
+    <div class="ll-wrap ll-pad" style="display:flex;flex-direction:column;gap:16px">
+      <div class="ll-bar__label" style="margin-bottom:6px">04 — Stack</div>
+      {stack.map((group) => (
+        <div class="ll-stackrow">
+          <div class="ll-stackrow__label">{group.label}</div>
+          <div class="ll-chips">
+            {group.items.map((item) => <span class="ll-chip">{item}</span>)}
+          </div>
+        </div>
+      ))}
+      <div class="ll-mono ll-mono--plain" style="margin-top:10px">
+        Architecture on AWS · Cloud University 2020 — FR natif · EN professionnel courant
+      </div>
+    </div>
+  </section>
+
+  <CtaBand
+    title="Confiez-nous<br />le chantier ambigu"
+    body="Celui qui est critique pour l'activité et dont personne ne veut. C'est là que nous sommes utiles."
+  />
 </Base>

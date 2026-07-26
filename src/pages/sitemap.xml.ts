@@ -5,13 +5,15 @@ export const prerender = true;
 const site = "https://ligerianlabs.fr";
 const staticPages = [
   { path: "/", priority: "1.0", changefreq: "weekly" },
-  { path: "/ia-angers", priority: "0.95", changefreq: "monthly" },
-  { path: "/ia-angers-pme", priority: "0.95", changefreq: "monthly" },
-  { path: "/services", priority: "0.9", changefreq: "monthly" },
+  { path: "/offres", priority: "0.95", changefreq: "monthly" },
+  { path: "/approche", priority: "0.9", changefreq: "monthly" },
+  { path: "/ia-angers", priority: "0.9", changefreq: "monthly" },
+  { path: "/ia-angers-pme", priority: "0.9", changefreq: "monthly" },
+  { path: "/blog", priority: "0.8", changefreq: "weekly" },
   { path: "/contact", priority: "0.8", changefreq: "monthly" },
   { path: "/a-propos", priority: "0.7", changefreq: "monthly" },
-  { path: "/blog", priority: "0.8", changefreq: "weekly" },
   { path: "/formations", priority: "0.6", changefreq: "monthly" },
+  { path: "/kit-presse", priority: "0.4", changefreq: "yearly" },
   { path: "/mentions-legales", priority: "0.2", changefreq: "yearly" },
 ];
 
@@ -28,9 +30,12 @@ export async function GET() {
     ...posts.map((post) => entry(`${site}/blog/${post.slug}`, post.data.date, "monthly", "0.7")),
   ];
 
-  return new Response(`<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls.join("\n")}\n</urlset>\n`, {
-    headers: {
-      "Content-Type": "application/xml; charset=utf-8",
+  return new Response(
+    `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls.join("\n")}\n</urlset>\n`,
+    {
+      headers: {
+        "Content-Type": "application/xml; charset=utf-8",
+      },
     },
-  });
+  );
 }

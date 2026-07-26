@@ -1,0 +1,555 @@
+---
+export const prerender = true;
+import Base from "../layouts/Base.astro";
+import SectionBar from "../components/SectionBar.astro";
+import CtaBand from "../components/CtaBand.astro";
+import { offers } from "../data/offers";
+
+const toc = offers.map((offer, i) => ({
+  slug: offer.slug,
+  label: `${String(i + 1).padStart(2, "0")} · ${offer.name}`,
+  duration: offer.duration
+    .replace("semaines", "sem.")
+    .replace("mois", "mois"),
+}));
+
+const serviceSchema = offers.map((offer) => ({
+  "@type": "Service",
+  "@id": `https://ligerianlabs.fr/offres#${offer.slug}`,
+  name: `${offer.name} — ${offer.promise}`,
+  serviceType: offer.promise,
+  description: offer.teaser,
+  provider: { "@id": "https://ligerianlabs.fr/#organization" },
+  areaServed: { "@type": "Country", name: "France" },
+}));
+---
+
+<Base
+  title="Offres — token ops, mise en production, architecture IA, agents | Ligerian Labs"
+  description="Quatre offres d'ingénierie IA : supervision et token ops, déploiement en production, architecture IA au cœur du produit, développement d'agents. Périmètre écrit, livrables nommés."
+  ogImage="og-offres"
+  active="offres"
+  structuredData={serviceSchema}
+>
+  <header class="ll-sec">
+    <div class="ll-wrap ll-hero">
+      <div class="ll-hero__main">
+        <div class="ll-mono" style="font-size:12px;letter-spacing:.16em">Offres</div>
+        <h1 class="ll-h1">Quatre offres.<br />Vous en<br />achetez une.</h1>
+        <p class="ll-lede">
+          Chacune répond à un stade précis. Périmètre écrit avant de démarrer, livrables nommés,
+          documentation de passation incluse — pas en option.
+        </p>
+      </div>
+      <div class="ll-hero__aside ll-hero__aside--panel">
+        <div class="ll-mono">Sommaire</div>
+        <div class="ll-stack">
+          {toc.map((item) => (
+            <a href={`#${item.slug}`} class="ll-toc">
+              <span>{item.label}</span>
+              <span class="ll-toc__meta">{item.duration}</span>
+            </a>
+          ))}
+        </div>
+        <a
+          href="#cadrage"
+          style="font-family:var(--font-mono);font-size:11.5px;letter-spacing:.06em;text-transform:uppercase"
+        >
+          Ou commencez par le cadrage →
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- 01 · Voir ---------------------------------------------------------- -->
+  <section id="voir" class="ll-sec ll-anchor">
+    <div class="ll-wrap">
+      <div class="ll-offerbar ll-offerbar--on">
+        <span>Offre 01 · Voir</span>
+        <span>Forfait · 3–5 semaines · offre phare</span>
+      </div>
+      <div class="ll-offerbody">
+        <div class="ll-offerbody__left">
+          <h2 class="ll-h1" style="font-size:clamp(28px,3.4vw,44px);line-height:.94">
+            Token ops &amp;<br />supervision
+          </h2>
+          <p class="ll-lede" style="font-weight:500;max-width:44ch;color:var(--ink)">
+            Vous avez livré de l'IA. Le coût, la latence et la qualité sont trois choses que vous
+            découvrez après coup. Ici, les trois deviennent des chiffres que votre équipe regarde
+            chaque matin.
+          </p>
+          <div class="ll-offerbody__pain">
+            <div class="ll-mono">Le problème</div>
+            <p class="ll-body">
+              La facture arrive et personne ne sait l'attribuer. Un changement de prompt est livré
+              et personne ne sait si le produit s'est amélioré. La latence dérive et le support s'en
+              aperçoit avant la supervision.
+            </p>
+            <p class="ll-body">
+              Pendant ce temps, la question que la finance répète — combien cette fonctionnalité
+              nous coûte-t-elle par client — n'a ni propriétaire ni réponse.
+            </p>
+          </div>
+          <div class="ll-keeps">
+            <div class="ll-mono" style="margin-bottom:10px">Ce que votre équipe garde</div>
+            <p class="ll-body">
+              Les tableaux de bord, la suite d'évaluations dans votre dépôt, un runbook par alerte,
+              et un modèle de coûts écrit qu'elle sait manipuler sans nous.
+            </p>
+          </div>
+        </div>
+
+        <div class="ll-stack">
+          <div class="ll-offerbody__deliv">
+            <div class="ll-mono" style="margin-bottom:18px">Ce que nous livrons</div>
+            <div class="ll-bullets">
+              <div class="ll-bullet">
+                <span
+                  ><strong>Instrumentation de chaque appel au modèle</strong> — tokens, coût,
+                  latence, cache, classe d'erreur — taggé par fonctionnalité, client et
+                  environnement.</span
+                >
+              </div>
+              <div class="ll-bullet">
+                <span
+                  ><strong>Un tableau de bord coût et qualité</strong> avec attribution par
+                  fonctionnalité et par client — l'écran qui répond à la question de la finance.</span
+                >
+              </div>
+              <div class="ll-bullet">
+                <span
+                  ><strong>Un harnais d'évaluations branché à la CI</strong> pour comparer chaque
+                  changement de prompt ou de modèle à un vrai jeu de test avant livraison.</span
+                >
+              </div>
+              <div class="ll-bullet">
+                <span
+                  ><strong>Budgets, plafonds et alertes</strong> — les anomalies de dépense
+                  détectées en heures, pas sur la facture du mois suivant.</span
+                >
+              </div>
+              <div class="ll-bullet">
+                <span
+                  ><strong>Chemins de repli et de dégradation</strong> en cas de panne fournisseur,
+                  de rate limit ou de changement de tarif.</span
+                >
+              </div>
+            </div>
+          </div>
+
+          <div class="ll-offerbody__extra">
+            <div class="ll-mono" style="margin-bottom:16px">Les six panneaux du tableau de bord</div>
+            <div class="ll-grid ll-grid--3 ll-grid--boxed ll-grid--tight">
+              <div class="ll-tile"><span class="ll-tile__n">01</span>Coût par fonctionnalité</div>
+              <div class="ll-tile"><span class="ll-tile__n">02</span>Coût par client</div>
+              <div class="ll-tile ll-tile--on"><span class="ll-tile__n">03</span>Réussite aux évals</div>
+              <div class="ll-tile"><span class="ll-tile__n">04</span>Latence p50 / p95</div>
+              <div class="ll-tile"><span class="ll-tile__n">05</span>Dépense vs budget</div>
+              <div class="ll-tile"><span class="ll-tile__n">06</span>Taxonomie des échecs</div>
+            </div>
+            <p class="ll-stackline">
+              Construit sur OpenTelemetry — se branche sur la stack que vous exploitez déjà.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 02 · Livrer -------------------------------------------------------- -->
+  <section id="livrer" class="ll-sec ll-anchor">
+    <div class="ll-wrap">
+      <div class="ll-offerbar">
+        <span>Offre 02 · Livrer</span>
+        <span>Forfait · 4–8 semaines</span>
+      </div>
+      <div class="ll-offerbody">
+        <div class="ll-offerbody__left">
+          <h2 class="ll-h1" style="font-size:clamp(28px,3.4vw,44px);line-height:.94">
+            Déployer l'IA<br />en production
+          </h2>
+          <p class="ll-lede" style="font-weight:500;max-width:44ch;color:var(--ink)">
+            La démo a convaincu tout le monde. Six mois plus tard, c'est toujours une démo. Mettre
+            l'IA en production est un problème d'ingénierie, pas de prompt.
+          </p>
+          <div class="ll-offerbody__pain">
+            <div class="ll-mono">Le problème</div>
+            <p class="ll-body">
+              Du code de notebook sans tests, sans propriétaire et sans chemin de déploiement. Des
+              secrets dans un fichier envoyé par mail. Personne ne sait ce qui se passe sous charge,
+              ni quand le modèle renvoie une absurdité à un client payant.
+            </p>
+            <p class="ll-body">
+              L'équipe n'est pas lente — elle n'a jamais eu à rendre fiable un système non
+              déterministe.
+            </p>
+          </div>
+          <div class="ll-keeps">
+            <div class="ll-mono" style="margin-bottom:10px">Ce que votre équipe garde</div>
+            <p class="ll-body">
+              Le pipeline de déploiement, l'infrastructure as code, un runbook d'incident et des
+              notes d'astreinte pour celui qui n'était pas là.
+            </p>
+          </div>
+        </div>
+
+        <div class="ll-stack">
+          <div class="ll-offerbody__deliv" style="flex:1">
+            <div class="ll-mono" style="margin-bottom:18px">Ce que nous livrons</div>
+            <div class="ll-bullets">
+              <div class="ll-bullet">
+                <span
+                  ><strong>Un vrai service autour du modèle</strong> — files, retries, timeouts,
+                  idempotence, validation des sorties.</span
+                >
+              </div>
+              <div class="ll-bullet">
+                <span
+                  ><strong>Garde-fous et points de contrôle humains</strong> partout où une mauvaise
+                  réponse coûte plus cher qu'une attente.</span
+                >
+              </div>
+              <div class="ll-bullet">
+                <span
+                  ><strong>CI/CD et infrastructure as code</strong> avec un déploiement progressif —
+                  canary, puis pourcentage, puis par défaut.</span
+                >
+              </div>
+              <div class="ll-bullet">
+                <span
+                  ><strong>Tests de charge et de panne</strong> — y compris la panne fournisseur que
+                  tout le monde juge improbable.</span
+                >
+              </div>
+              <div class="ll-bullet">
+                <span
+                  ><strong>Une revue de sécurité</strong> : secrets, données personnelles,
+                  rétention, injection de prompt.</span
+                >
+              </div>
+              <div class="ll-bullet">
+                <span
+                  ><strong>L'observabilité dès le premier jour</strong> — l'instrumentation de
+                  l'offre 01, pas ajoutée après.</span
+                >
+              </div>
+            </div>
+          </div>
+
+          <div class="ll-offerbody__extra" style="border-top:2px solid var(--ink)">
+            <div class="ll-pipeline">
+              <div class="ll-pipeline__box">
+                <span class="ll-pipeline__n">01</span>
+                <b>Démo</b>
+              </div>
+              <span class="ll-pipeline__arrow">→</span>
+              <div class="ll-pipeline__box">
+                <span class="ll-pipeline__n">02</span>
+                <b>Service durci</b>
+              </div>
+              <span class="ll-pipeline__arrow">→</span>
+              <div class="ll-pipeline__box">
+                <span class="ll-pipeline__n">03</span>
+                <b>Déploiement progressif</b>
+              </div>
+              <span class="ll-pipeline__arrow">→</span>
+              <div class="ll-pipeline__box ll-pipeline__box--on">
+                <span class="ll-pipeline__n">04</span>
+                <b>Chemin par défaut</b>
+              </div>
+            </div>
+            <p class="ll-stackline">Kubernetes · AWS · Terraform · Ansible · Docker · CI/CD</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 03 · Reconstruire -------------------------------------------------- -->
+  <section id="reconstruire" class="ll-sec ll-anchor">
+    <div class="ll-wrap">
+      <div class="ll-offerbar">
+        <span>Offre 03 · Reconstruire</span>
+        <span>Régie ou forfait · 3–9 mois</span>
+      </div>
+      <div class="ll-offerframe">
+        <div class="ll-splitrow">
+          <div class="ll-splitrow__a">
+            <h2 class="ll-h1" style="font-size:clamp(28px,3.4vw,44px);line-height:.94">
+              L'IA au cœur<br />du produit
+            </h2>
+            <p class="ll-lede" style="font-weight:500;max-width:46ch;color:var(--ink)">
+              L'IA est greffée sur le côté de votre produit. En faire le centre est une décision
+              d'architecture — et il n'existe que trois façons honnêtes de le faire.
+            </p>
+          </div>
+          <div class="ll-splitrow__b">
+            <div class="ll-mono" style="margin-bottom:4px">La cible</div>
+            <div class="ll-layers">
+              <div class="ll-layer"><b>Surface produit</b><span>inchangée</span></div>
+              <div class="ll-layer ll-layer--on"><b>IA &amp; orchestration</b><span>le nouveau cœur</span></div>
+              <div class="ll-layer"><b>Domaine &amp; événements</b><span>vos règles métier</span></div>
+              <div class="ll-layer"><b>Données &amp; infrastructure</b><span>existante</span></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="ll-framebar">Trois routes — une choisie en semaine 1, par écrit</div>
+
+        <div class="ll-grid ll-grid--3" style="border-left:0;border-right:0">
+          <div class="ll-cell" style="gap:11px">
+            <span class="ll-mono ll-mono--cobalt" style="letter-spacing:.1em">Route A</span>
+            <h3 class="ll-h3" style="font-size:21px">Étendre</h3>
+            <p style="font-size:15px">
+              On fait grandir votre code existant autour d'un cœur IA. Risque minimal, valeur
+              rapide. Le bon choix quand le modèle de domaine est sain.
+            </p>
+          </div>
+          <div class="ll-cell" style="gap:11px">
+            <span class="ll-mono ll-mono--cobalt" style="letter-spacing:.1em">Route B</span>
+            <h3 class="ll-h3" style="font-size:21px">Brancher</h3>
+            <p style="font-size:15px">
+              On construit le système IA à côté et on l'intègre par événements et API. Votre produit
+              continue de livrer pendant la construction.
+            </p>
+          </div>
+          <div class="ll-cell" style="gap:11px">
+            <span class="ll-mono ll-mono--cobalt" style="letter-spacing:.1em">Route C</span>
+            <h3 class="ll-h3" style="font-size:21px">Réécrire</h3>
+            <p style="font-size:15px">
+              L'option honnête quand l'architecture ne peut pas le porter. Strangler-fig, tranche
+              par tranche — jamais de bascule big-bang.
+            </p>
+          </div>
+        </div>
+
+        <div class="ll-splitrow ll-splitrow--wide" style="border-top:2px solid var(--ink)">
+          <div class="ll-splitrow__a">
+            <div class="ll-mono" style="margin-bottom:18px">Ce que nous livrons</div>
+            <div class="ll-bullets">
+              <div class="ll-bullet">
+                <span
+                  ><strong>Un dossier de décision d'architecture</strong> — la route, les compromis,
+                  et ce qu'on a délibérément écarté.</span
+                >
+              </div>
+              <div class="ll-bullet">
+                <span
+                  ><strong>Un modèle de domaine et d'événements</strong> où votre équipe reconnaît
+                  son métier, pas une abstraction de consultant.</span
+                >
+              </div>
+              <div class="ll-bullet">
+                <span
+                  ><strong>Un plan de migration en tranches livrables</strong> — chacune en
+                  production, aucune sur une branche de six mois.</span
+                >
+              </div>
+              <div class="ll-bullet">
+                <span
+                  ><strong>La construction elle-même</strong>, avec vos ingénieurs dedans — pairing
+                  et revue, pas une passation à la fin.</span
+                >
+              </div>
+              <div class="ll-bullet">
+                <span
+                  ><strong>Une couture propre où l'IA se branche</strong> : le prochain changement
+                  de modèle tient en une ligne de config.</span
+                >
+              </div>
+            </div>
+          </div>
+          <div class="ll-splitrow__b ll-splitrow__b--panel">
+            <div class="ll-mono">Ce que votre équipe garde</div>
+            <p class="ll-body">
+              Les décisions d'architecture, le modèle de domaine, le plan de migration, et une
+              documentation écrite pour l'ingénieur qui arrivera le trimestre prochain.
+            </p>
+            <div class="ll-mono" style="margin-top:8px">Ce n'est pas pour vous si</div>
+            <p class="ll-body" style="font-size:15px">
+              Vous voulez que la réécriture soit décidée avant le cadrage. La route C est une
+              conclusion, pas une position de départ.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 04 · Automatiser --------------------------------------------------- -->
+  <section id="automatiser" class="ll-sec ll-anchor">
+    <div class="ll-wrap">
+      <div class="ll-offerbar">
+        <span>Offre 04 · Automatiser</span>
+        <span>Forfait · 6–12 semaines</span>
+      </div>
+      <div class="ll-offerbody">
+        <div class="ll-offerbody__left">
+          <h2 class="ll-h1" style="font-size:clamp(28px,3.4vw,44px);line-height:.94">
+            Développer<br />des agents
+          </h2>
+          <p class="ll-lede" style="font-weight:500;max-width:46ch;color:var(--ink)">
+            Un agent n'est pas un chatbot. C'est un logiciel qui prend une tâche dans votre file,
+            fait le travail, et vous montre exactement ce qu'il a fait.
+          </p>
+          <div class="ll-offerbody__pain">
+            <div class="ll-mono">Le problème</div>
+            <p class="ll-body">
+              Chaque équipe a une liste de travaux répétitifs, chargés en règles et trop biscornus
+              pour des scripts. Des agents peuvent réellement les prendre en charge.
+            </p>
+            <p class="ll-body">
+              Mais un agent sans sandbox, sans point de contrôle et sans traces n'est pas une
+              fonctionnalité — c'est un risque non borné qui porte vos identifiants.
+            </p>
+          </div>
+          <div class="ll-keeps">
+            <div class="ll-mono" style="margin-bottom:10px">Ce que votre équipe garde</div>
+            <p class="ll-body">
+              Le code des agents, la définition de leurs outils, la suite d'évaluations, le
+              visualiseur de traces, et une politique écrite de ce qu'un agent peut faire sans
+              supervision.
+            </p>
+          </div>
+        </div>
+
+        <div class="ll-stack">
+          <div class="ll-offerbody__deliv" style="flex:1">
+            <div class="ll-mono" style="margin-bottom:18px">Ce que nous livrons</div>
+            <div class="ll-bullets">
+              <div class="ll-bullet">
+                <span
+                  ><strong>Un inventaire du travail que des agents peuvent porter</strong>, classé
+                  par valeur et par coût d'une erreur.</span
+                >
+              </div>
+              <div class="ll-bullet">
+                <span
+                  ><strong>L'architecture des agents</strong> — outils, mémoire, orchestration, et
+                  exécution en sandbox réellement isolée.</span
+                >
+              </div>
+              <div class="ll-bullet">
+                <span
+                  ><strong>Des points de contrôle humains</strong> placés là où l'erreur coûte cher,
+                  et retirés là où elle ne coûte rien.</span
+                >
+              </div>
+              <div class="ll-bullet">
+                <span
+                  ><strong>Traces et évaluations à chaque exécution</strong> — vous pouvez rejouer
+                  ce qu'un agent a fait et pourquoi, des mois plus tard.</span
+                >
+              </div>
+              <div class="ll-bullet">
+                <span
+                  ><strong>Un plafond de coût par exécution</strong>, appliqué par le code et non
+                  espéré.</span
+                >
+              </div>
+            </div>
+          </div>
+
+          <div class="ll-offerbody__extra" style="border-top:2px solid var(--ink)">
+            <div class="ll-mono" style="margin-bottom:14px">Nous construisons ça en public</div>
+            <div class="ll-stack" style="gap:10px">
+              <div class="ll-ossline">
+                <span>marathon</span>
+                <span>Runner Zig, tâches d'agent en VM Firecracker isolées</span>
+              </div>
+              <div class="ll-ossline">
+                <span>claudeswarm</span>
+                <span>Du ticket à la PR, avec points de contrôle humains</span>
+              </div>
+              <div class="ll-ossline ll-ossline--last">
+                <span>atelier</span>
+                <span>Studio Rust pilotant quatre agents de code</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <SectionBar
+    id="cadrage"
+    label="Formats · comment nous travaillons"
+    note="Cinq formats · un vous convient"
+  />
+
+  <section class="ll-sec">
+    <div class="ll-wrap ll-pad">
+      <div class="ll-table">
+        <div class="ll-table__row ll-table__row--head">
+          <div>Format</div>
+          <div>Idéal quand</div>
+          <div>Fonctionnement</div>
+          <div>Durée</div>
+        </div>
+        <div class="ll-table__row ll-table__row--on">
+          <div class="ll-table__name">
+            Sprint de cadrage<span class="ll-table__flag">LE POINT DE DÉPART</span>
+          </div>
+          <div>Personne n'est d'accord sur le périmètre</div>
+          <div>Audit → plan écrit</div>
+          <div class="ll-table__dur">1–2 semaines</div>
+        </div>
+        <div class="ll-table__row">
+          <div class="ll-table__name">Construction au forfait</div>
+          <div>Le résultat est connu et daté</div>
+          <div>Livrer, puis transmettre</div>
+          <div class="ll-table__dur">4–12 semaines</div>
+        </div>
+        <div class="ll-table__row ll-table__row--alt">
+          <div class="ll-table__name">
+            CTO à temps partagé<span class="ll-table__flag">LE PLUS COURANT</span>
+          </div>
+          <div>Pas de responsable technique senior, et recruter prendra neuf mois</div>
+          <div>n jours par semaine, dans vos rituels</div>
+          <div class="ll-table__dur">Reconductible</div>
+        </div>
+        <div class="ll-table__row">
+          <div class="ll-table__name">Ingénieur intégré</div>
+          <div>L'équipe est bonne mais saturée</div>
+          <div>Dans votre squad, sur votre board</div>
+          <div class="ll-table__dur">Mensuel</div>
+        </div>
+        <div class="ll-table__row">
+          <div class="ll-table__name">Ateliers de montée en compétence</div>
+          <div>L'équipe a besoin de la compétence, pas du prestataire</div>
+          <div>Sessions pratiques sur votre code</div>
+          <div class="ll-table__dur">2–5 jours</div>
+        </div>
+      </div>
+
+      <div class="ll-grid ll-grid--2" style="border-top:0">
+        <div class="ll-cell" style="gap:14px">
+          <div class="ll-mono">Ce qui est toujours vrai</div>
+          <div class="ll-bullets">
+            <div class="ll-bullet"><span>Un périmètre écrit avant de démarrer. Pas d'avenant surprise.</span></div>
+            <div class="ll-bullet"><span>Vos ingénieurs dans le travail, pas spectateurs.</span></div>
+            <div class="ll-bullet"><span>La documentation de passation est un livrable, pas une faveur.</span></div>
+            <div class="ll-bullet"><span>Nous refusons ce que nous ferions mal, et disons qui le ferait bien.</span></div>
+          </div>
+        </div>
+        <div class="ll-cell ll-cell--ink" style="gap:14px">
+          <div class="ll-mono ll-mono--invert">Ce n'est pas pour vous si</div>
+          <div class="ll-stack" style="gap:11px;font-size:15.5px;line-height:1.5;color:var(--ink-invert)">
+            <span>Vous cherchez une paire de bras plutôt qu'une décision.</span>
+            <span>
+              Le plan est figé et seule l'exécution est attendue — nous ne serions pas d'accord en
+              semaine deux, et ça coûte cher à tout le monde.
+            </span>
+            <span>L'IA est une consigne venue d'en haut, sans problème concret derrière.</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <CtaBand
+    title="Vous ne savez pas<br />laquelle vous concerne&nbsp;?"
+    body="C'est précisément l'objet du sprint de cadrage. Deux semaines, un plan écrit, aucune obligation de continuer."
+  />
+</Base>

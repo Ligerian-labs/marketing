@@ -1,0 +1,30 @@
+---
+import { offers } from "../data/offers";
+
+interface Props {
+  /** "teaser" is the homepage anatomy, "short" the compact local-page one. */
+  variant?: "teaser" | "short";
+}
+
+const { variant = "teaser" } = Astro.props;
+---
+
+<div class="ll-grid ll-grid--4">
+  {offers.map((offer) => (
+    <a
+      href={`/offres#${offer.slug}`}
+      class:list={["ll-cell", "ll-offer", offer.lead && "ll-cell--cobalt ll-offer--cobalt"]}
+    >
+      <div class="ll-offer__head">
+        <span class="ll-offer__code">{offer.code}</span>
+        <span class="ll-offer__dur">{offer.duration}</span>
+      </div>
+      <h3 class="ll-offer__name">{offer.name}</h3>
+      {variant === "teaser" && <div class="ll-offer__promise">{offer.promise}</div>}
+      <p>{variant === "teaser" ? offer.teaser : offer.short}</p>
+      <div class="ll-cell__foot">
+        <span>{offer.lead ? "Offre phare →" : "En savoir plus →"}</span>
+      </div>
+    </a>
+  ))}
+</div>

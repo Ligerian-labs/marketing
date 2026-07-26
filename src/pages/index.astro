@@ -1,144 +1,201 @@
 ---
 export const prerender = true;
 import Base from "../layouts/Base.astro";
+import SectionBar from "../components/SectionBar.astro";
+import OfferGrid from "../components/OfferGrid.astro";
+import DiagnosticTable from "../components/DiagnosticTable.astro";
+import ProofSection from "../components/ProofSection.astro";
+import CtaBand from "../components/CtaBand.astro";
 import { getCollection } from "astro:content";
-import HeroCTA from "../components/HeroCTA.astro";
+import { formatDate, readingTimeFromBody } from "../lib/blog";
 
 const posts = (await getCollection("blog"))
   .sort((a, b) => new Date(b.data.date).getTime() - new Date(a.data.date).getTime())
   .slice(0, 3);
+
+const questions = [
+  {
+    q: "Combien l'IA nous a-t-elle coûté le mois dernier — par fonctionnalité, par client&nbsp;?",
+    a: "La plupart des équipes n'ont qu'un seul chiffre : la facture du fournisseur. Il ne se rattache ni à une fonctionnalité, ni à un client, ni à une décision.",
+  },
+  {
+    q: "Le changement de prompt de la semaine dernière a-t-il amélioré ou dégradé le produit&nbsp;?",
+    a: "Sans évaluations dans la CI, la qualité est arbitrée par celui qui s'est plaint le plus fort. Vous livrez des régressions invisibles.",
+  },
+  {
+    q: "Que se passe-t-il quand le modèle, le prix ou l'API changent&nbsp;?",
+    a: "Si la réponse est «&nbsp;on réécrit&nbsp;», l'IA n'est pas dans votre architecture — elle est scotchée dessus. Chaque changement de fournisseur devient un trimestre non prévu.",
+  },
+  {
+    q: "Quelle part de votre travail pourrait déjà tourner sans humain&nbsp;?",
+    a: "Tout le monde a une intuition. Personne n'a d'inventaire — la conversation sur l'automatisation ne dépasse donc jamais l'opinion.",
+  },
+];
+
+// La Loire, mean flow. Bar heights in %; the cobalt run is the spring rise.
+const flow = [34, 52, 44, 68, 88, 100, 76, 58, 41, 30, 24];
 ---
 
-<Base title="Agence IA à Angers pour PME — Agents IA & automatisation | Ligerian Labs" description="Ligerian Labs, agence IA à Angers pour PME et TPE : audit IA, agents IA sur mesure, automatisation métier et formation en Pays de la Loire.">
-  <!-- Hero -->
-  <section class="max-w-5xl mx-auto px-6 py-28 md:py-36 text-center">
-    <p class="section-label mb-8">Laboratoire IA — Angers, Pays de la Loire</p>
-    <h1 class="text-5xl md:text-7xl font-bold tracking-tight mb-6 leading-[1.1]">
-      Agence IA à Angers<br />pour PME ambitieuses
-    </h1>
-    <p class="text-xl text-text-secondary max-w-2xl mx-auto mb-12 leading-relaxed">
-      Audit IA, automatisation métier, agents IA autonomes et formation — on aide les PME d'Angers
-      et des Pays de la Loire à gagner du temps avec l'intelligence artificielle. Concrètement, sans jargon.
-    </p>
-    <HeroCTA />
-  </section>
-
-  <!-- Services Grid -->
-  <section class="bg-surface py-24">
-    <div class="max-w-6xl mx-auto px-6">
-      <p class="section-label mb-4">Ce qu'on fait</p>
-      <h2 class="text-3xl md:text-4xl font-bold mb-4">Nos expertises</h2>
-      <p class="text-text-secondary max-w-xl mb-16">
-        On identifie où l'IA crée de la valeur dans votre activité, et on construit les outils pour la capturer. Voir aussi nos pages <a href="/ia-angers" class="underline hover:text-text">IA Angers</a> et <a href="/ia-angers-pme" class="underline hover:text-text">IA Angers PME</a>.
-      </p>
-      <div class="grid md:grid-cols-3 gap-8">
-        <div class="bg-white rounded-2xl p-8 border border-black/5 hover:shadow-lg transition">
-          <div class="w-12 h-12 bg-surface rounded-xl flex items-center justify-center mb-6">
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z"/></svg>
-          </div>
-          <h3 class="text-xl font-bold mb-3">Conseil IA</h3>
-          <p class="text-text-secondary">
-            On analyse votre activité pour identifier les leviers IA les plus impactants.
-            Pas de PowerPoint creux — un plan d'action concret.
-          </p>
+<Base
+  title="Agence IA à Angers — l'IA en production, mesurée et tenue | Ligerian Labs"
+  description="Ligerian Labs met l'IA en production et vous rend la main sur ce qu'elle coûte, ce qu'elle fait et si elle s'améliore. Token ops, mise en production, architecture IA, agents. Angers, Pays de la Loire."
+  ogImage="og-accueil"
+>
+  <header class="ll-sec">
+    <div class="ll-wrap ll-hero ll-hero--wide">
+      <div class="ll-hero__main" style="gap:26px">
+        <div class="ll-mono" style="font-size:12px;letter-spacing:.16em">
+          Laboratoire IA — Angers, Pays de la Loire
         </div>
-        <div class="bg-white rounded-2xl p-8 border border-black/5 hover:shadow-lg transition">
-          <div class="w-12 h-12 bg-surface rounded-xl flex items-center justify-center mb-6">
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M11.42 15.17l-5.384 3.175 1.037-5.995L2.688 8.21l6.027-.874L11.42 2l2.705 5.336 6.027.874-4.385 4.14 1.037 5.995z"/></svg>
-          </div>
-          <h3 class="text-xl font-bold mb-3">Outils sur mesure</h3>
-          <p class="text-text-secondary">
-            On développe des agents IA autonomes adaptés à vos besoins réels.
-            IA agentique, automatisation, analyse de données — du concret.
-          </p>
-        </div>
-        <div class="bg-white rounded-2xl p-8 border border-black/5 hover:shadow-lg transition">
-          <div class="w-12 h-12 bg-surface rounded-xl flex items-center justify-center mb-6">
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M4.26 10.147a60.438 60.438 0 00-.491 6.347A48.62 48.62 0 0112 20.904a48.62 48.62 0 018.232-4.41 60.46 60.46 0 00-.491-6.347m-15.482 0a50.636 50.636 0 00-2.658-.813A59.906 59.906 0 0112 3.493a59.903 59.903 0 0110.399 5.84c-.896.248-1.783.52-2.658.814m-15.482 0A50.717 50.717 0 0112 13.489a50.702 50.702 0 017.74-3.342"/></svg>
-          </div>
-          <h3 class="text-xl font-bold mb-3">Formation</h3>
-          <p class="text-text-secondary">
-            On forme vos équipes pour qu'elles maîtrisent l'IA au quotidien.
-            Ateliers pratiques, pas de théorie abstraite.
-          </p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Approach / Loire -->
-  <section class="max-w-6xl mx-auto px-6 py-24">
-    <div class="grid md:grid-cols-2 gap-16 items-center">
-      <div>
-        <p class="section-label mb-4">Notre approche</p>
-        <h2 class="text-3xl md:text-4xl font-bold mb-6">Une agence IA ancrée à Angers</h2>
-        <p class="text-text-secondary text-lg leading-relaxed mb-6">
-          Basés à Angers, on travaille avec les PME, TPE, artisans et collectivités
-          des Pays de la Loire. On connaît le tissu économique local et on croit que l'IA
-          n'est pas réservée aux géants de la tech.
+        <h1 class="ll-display">
+          Votre IA<br />tourne.<br /><span style="white-space:nowrap">Pouvez-vous</span><br />le
+          prouver&nbsp;?
+        </h1>
+        <p class="ll-lede ll-lede--strong">
+          Nous mettons l'IA en production et nous vous rendons la main sur ce qu'elle coûte, ce
+          qu'elle fait, et si elle s'améliore. Concrètement, mesurable, sans PowerPoint creux.
         </p>
-        <div class="flex gap-8 text-sm text-muted">
-          <span class="flex items-center gap-2">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z"/></svg>
-            Angers
-          </span>
-          <span class="flex items-center gap-2">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 21h19.5m-18-18v18m10.5-18v18m6-13.5V21M6.75 6.75h.75m-.75 3h.75m-.75 3h.75m3-6h.75m-.75 3h.75m-.75 3h.75M6.75 21v-3.375c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21"/></svg>
-            PME & TPE
-          </span>
-          <span class="flex items-center gap-2">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19.128a9.38 9.38 0 002.625.372 9.337 9.337 0 004.121-.952 4.125 4.125 0 00-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 018.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0111.964-3.07M12 6.375a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zm8.25 2.25a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z"/></svg>
-            Accompagnement humain
-          </span>
+        <div class="ll-btn-row" style="margin-top:6px">
+          <a href="/contact" class="ll-btn ll-btn--lg">Parlons de votre projet →</a>
+          <a href="/offres" class="ll-btn ll-btn--lg ll-btn--ghost">Voir les offres</a>
         </div>
       </div>
-      <div class="bg-surface rounded-2xl aspect-[4/3] flex items-center justify-center overflow-hidden">
-        <div class="text-center p-12">
-          <svg class="w-24 h-24 mx-auto mb-4 text-muted/40" viewBox="-2 10 84 48" fill="currentColor">
-            <path d="M0 20c5-2 12 2 20 5 10 3 18-5 28-7 10-2 17 4 24 10 6 5 8 10 8 17l0 7c-2-4-8-10-15-14-9-5-17-10-27-8-10 2-18 8-26 5-6-2-10-7-12-10z"/>
-          </svg>
-          <p class="text-muted text-sm">La Loire, notre ancrage</p>
+
+      <div class="ll-hero__aside ll-hero__aside--cobalt" style="gap:28px;min-height:340px">
+        <div class="ll-mono" style="color:inherit">Le point de départ</div>
+        <div style="display:flex;flex-direction:column;gap:16px">
+          <div class="ll-kicker">Deux semaines<br />de cadrage</div>
+          <p style="margin:0;font-size:15.5px;line-height:1.55">
+            On lit le code, les tableaux de bord et les factures. Vous repartez avec une évaluation
+            écrite et un plan séquencé — que vous continuiez avec nous ou non.
+          </p>
         </div>
+        <a
+          href="/offres#cadrage"
+          class="ll-btn ll-btn--cream"
+          style="align-self:flex-start;padding:15px 24px;font-size:15.5px"
+        >
+          Le sprint de cadrage →
+        </a>
       </div>
     </div>
-  </section>
+  </header>
 
-  <!-- Blog Preview -->
-  {posts.length > 0 && (
-    <section class="max-w-6xl mx-auto px-6 py-24">
-      <div class="flex justify-between items-end mb-12">
-        <div>
-          <p class="section-label mb-4">Le blog</p>
-          <h2 class="text-3xl md:text-4xl font-bold">Derniers articles</h2>
-        </div>
-        <a href="/blog" class="text-sm text-text-secondary hover:text-text transition hidden md:inline">Voir tout →</a>
-      </div>
-      <div class="grid md:grid-cols-3 gap-8">
-        {posts.map((post) => (
-          <a href={`/blog/${post.slug}`} class="group">
-            <div class="bg-surface rounded-2xl p-6 h-full border border-transparent hover:border-black/5 transition">
-              <p class="text-sm text-muted mb-3">{post.data.date}</p>
-              <h3 class="text-lg font-bold mb-2 group-hover:text-accent-light transition">{post.data.title}</h3>
-              <p class="text-text-secondary text-sm">{post.data.excerpt}</p>
+  <SectionBar label="01 — Le problème" note="Posez-les à votre équipe lundi" />
+
+  <section class="ll-sec">
+    <div class="ll-wrap" style="padding-top:clamp(38px,5vw,68px)">
+      <h2 class="ll-h2" style="margin-bottom:16px">Quatre questions<br />sans réponse</h2>
+      <p class="ll-body" style="font-size:17px;margin-bottom:clamp(30px,4vw,48px)">
+        Toutes les entreprises que nous rencontrons ont mis quelque chose avec de l'IA en
+        production. Presque aucune ne sait répondre aux quatre. C'est dans cet écart que se trouve
+        le risque.
+      </p>
+    </div>
+    <div class="ll-wrap" style="padding-bottom:clamp(38px,5vw,60px)">
+      <div class="ll-rows ll-rows--open">
+        {questions.map((item, i) => (
+          <div class="ll-row ll-row--q">
+            <div class="ll-row__ask">
+              <span class="ll-row__asknum">{String(i + 1).padStart(2, "0")}</span>
+              <span class="ll-row__asktext" set:html={item.q} />
             </div>
-          </a>
+            <p class="ll-row__a" style="align-self:center" set:html={item.a} />
+          </div>
         ))}
       </div>
-      <a href="/blog" class="text-sm text-text-secondary hover:text-text transition mt-8 inline-block md:hidden">Voir tout →</a>
-    </section>
-  )}
-
-  <!-- Dark CTA Section -->
-  <section class="bg-accent text-white py-24 my-20 mx-6 md:mx-auto max-w-6xl rounded-2xl">
-    <div class="max-w-3xl mx-auto px-6 text-center">
-      <h2 class="text-3xl md:text-4xl font-bold mb-4">Prêt à passer à l'IA ?</h2>
-      <p class="text-white/70 mb-8 max-w-lg mx-auto text-lg">
-        Que vous soyez une PME, un artisan ou une collectivité en Pays de la Loire —
-        on vous aide à intégrer l'IA là où ça compte vraiment.
-      </p>
-      <a href="/contact" class="bg-white text-accent hover:bg-white/90 px-8 py-3 rounded-lg font-medium transition inline-block" onclick="window.posthog && window.posthog.capture('cta_clicked', {location: 'homepage_bottom', text: 'Discutons ensemble'})">
-        Discutons ensemble
-      </a>
     </div>
   </section>
+
+  <SectionBar
+    id="offres"
+    label="02 — Ce que nous vendons"
+    note="Quatre offres · vous en achetez une"
+  />
+
+  <section class="ll-sec">
+    <div class="ll-wrap">
+      <OfferGrid />
+    </div>
+  </section>
+
+  <SectionBar id="diagnostic" label="03 — Diagnostic" note="Trouvez la ligne qui vous ressemble" />
+
+  <section class="ll-sec">
+    <div class="ll-wrap ll-pad-lg">
+      <div class="ll-intro">
+        <h2 class="ll-h2">Où vous en<br />êtes sans doute</h2>
+        <p class="ll-body" style="font-size:17px;max-width:56ch">
+          Quatre stades, dans l'ordre où les entreprises les traversent réellement. Vous n'achetez
+          pas les quatre offres — vous achetez celle qui vous sort du stade où vous êtes.
+        </p>
+      </div>
+      <DiagnosticTable />
+    </div>
+  </section>
+
+  <ProofSection stats projects={3} />
+
+  <section class="ll-sec">
+    <div class="ll-wrap">
+      <div class="ll-anchorage">
+        <div class="ll-anchorage__text">
+          <div class="ll-bar__label">05 — L'ancrage</div>
+          <h2 class="ll-h2 ll-h2--tight">Depuis Angers,<br />pour des équipes<br />partout</h2>
+          <p class="ll-body" style="font-size:16px;max-width:48ch">
+            Nous sommes sur la Loire et nous y restons. Le travail, lui, est à distance par défaut —
+            sur site quand ça se justifie. Les PME et collectivités des Pays de la Loire ont accès
+            aux mêmes méthodes que les équipes produit que nous accompagnons ailleurs.
+          </p>
+          <div class="ll-chips" style="margin-top:4px">
+            <a href="/ia-angers" class="ll-chip">Agence IA à Angers</a>
+            <a href="/ia-angers-pme" class="ll-chip">IA pour PME</a>
+          </div>
+        </div>
+        <div class="ll-anchorage__plot">
+          <div class="ll-mono">47.4784 N · −0.5632 E</div>
+          <div class="ll-flow" aria-hidden="true">
+            {flow.map((h, i) => (
+              <span class:list={[i >= 3 && i <= 6 && "on"]} style={`height:${h}%`}></span>
+            ))}
+          </div>
+          <div class="ll-anchorage__caption">
+            LA LOIRE — DÉBIT MOYEN<br />ANGERS · PAYS DE LA LOIRE
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  {posts.length > 0 && (
+    <>
+      <SectionBar label="06 — Le blog" note="Voir tous les articles →" noteHref="/blog" />
+      <section class="ll-sec">
+        <div class="ll-wrap">
+          <div class="ll-grid ll-grid--3">
+            {posts.map((post) => (
+              <a href={`/blog/${post.slug}`} class="ll-cell" style="min-height:230px">
+                <div class="ll-mono ll-mono--plain" style="font-size:11px">
+                  {formatDate(post.data.date)}
+                </div>
+                <h3 style="font-weight:700;font-size:19px;line-height:1.18;margin:0;letter-spacing:-.01em">
+                  {post.data.title}
+                </h3>
+                <p>{post.data.excerpt}</p>
+                <div class="ll-cell__foot" style="color:var(--cobalt)">
+                  <span>Lire →</span>
+                  <span>{readingTimeFromBody(post.body)} min</span>
+                </div>
+              </a>
+            ))}
+          </div>
+        </div>
+      </section>
+    </>
+  )}
+
+  <CtaBand
+    title="Commencez par<br />deux semaines"
+    body="Vous n'avez pas à choisir une offre aujourd'hui. Le sprint de cadrage dit laquelle il vous faut vraiment — et le livrable est à vous dans tous les cas."
+  />
 </Base>

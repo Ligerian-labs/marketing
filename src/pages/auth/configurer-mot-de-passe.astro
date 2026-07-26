@@ -1,10 +1,15 @@
 ---
 export const prerender = false;
-import Base from "../../layouts/Base.astro";
-import { getValidPasswordToken, setPassword, markTokenUsed, createSession, setSessionCookie } from "../../lib/auth";
+import AuthSplit from "../../layouts/AuthSplit.astro";
+import {
+  getValidPasswordToken,
+  setPassword,
+  markTokenUsed,
+  createSession,
+  setSessionCookie,
+} from "../../lib/auth";
 
 let error = "";
-let success = false;
 let tokenData: { id: string; user_id: string } | undefined;
 
 const token = Astro.url.searchParams.get("token");
@@ -13,7 +18,7 @@ if (!token) {
   error = "Token manquant. Veuillez vérifier le lien dans votre email.";
 } else {
   tokenData = getValidPasswordToken(token);
-  
+
   if (!tokenData) {
     error = "Ce lien a expiré ou a déjà été utilisé. Contactez-nous pour obtenir de l'aide.";
   }
@@ -26,7 +31,7 @@ if (Astro.request.method === "POST" && tokenData && !error) {
     const password = formData.get("password")?.toString();
     const confirmPassword = formData.get("confirmPassword")?.toString();
     const tokenFromForm = formData.get("token")?.toString();
-    
+
     if (!password || !confirmPassword) {
       error = "Veuillez remplir tous les champs.";
     } else if (password !== confirmPassword) {
@@ -44,14 +49,12 @@ if (Astro.request.method === "POST" && tokenData && !error) {
         // Set password, mark token as used, and auto-login
         setPassword(freshTokenData.user_id, password);
         markTokenUsed(freshTokenData.id);
-        
-        // Create session and set cookie
+
         const sessionId = createSession(freshTokenData.user_id);
         setSessionCookie(Astro.cookies, sessionId);
-        
+
         console.log(`[AUTH] Password setup completed for user ${freshTokenData.user_id}`);
-        
-        // Redirect to formations
+
         return Astro.redirect("/formations/?setup=success");
       }
     }
@@ -62,140 +65,84 @@ if (Astro.request.method === "POST" && tokenData && !error) {
 }
 ---
 
-<Base title="Configurez votre mot de passe — Ligerian Labs" robots="noindex, nofollow">
-  <div class="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
-    <div class="sm:mx-auto sm:w-full sm:max-w-md">
-      <div class="text-center">
-        <h1 class="text-3xl font-bold text-gray-900 mb-2">Ligerian Labs</h1>
-        <p class="text-gray-600">Configurez votre accès</p>
-      </div>
+<AuthSplit
+  title="Configurez votre mot de passe | Ligerian Labs"
+  kicker="Premier accès"
+  heading="Bienvenue"
+>
+  {error ? (
+    <div class="ll-alert ll-alert--err" role="alert">
+      <p>{error}</p>
+      {error.includes("expiré") && (
+        <p>
+          Besoin d'aide&nbsp;? Écrivez-nous à
+          <a href="mailto:bonjour@ligerianlabs.fr">bonjour@ligerianlabs.fr</a>.
+        </p>
+      )}
     </div>
+  ) : (
+    <>
+      <p style="margin:0;font-size:15.5px;line-height:1.55;color:var(--ink-soft)">
+        Choisissez un mot de passe pour accéder à votre espace.
+      </p>
 
-    <div class="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
-      <div class="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
-        {error ? (
-          <div class="rounded-md bg-red-50 p-4 mb-6">
-            <div class="flex">
-              <div class="ml-3">
-                <h3 class="text-sm font-medium text-red-800">
-                  {error}
-                </h3>
-                {error.includes("expiré") && (
-                  <div class="mt-2 text-sm text-red-700">
-                    <p>
-                      Besoin d'aide ? Contactez-nous sur 
-                      <a href="mailto:bonjour@ligerianlabs.fr" class="font-medium underline">
-                        bonjour@ligerianlabs.fr
-                      </a>
-                    </p>
-                  </div>
-                )}
-              </div>
-            </div>
-          </div>
-        ) : tokenData ? (
-          <>
-            <div class="mb-6">
-              <h2 class="text-xl font-semibold text-gray-900 mb-2">
-                Bienvenue !
-              </h2>
-              <p class="text-gray-600">
-                Choisissez un mot de passe pour accéder à vos formations.
-              </p>
-            </div>
+      <input type="hidden" name="token" value={token} />
 
-            <form method="POST" class="space-y-6">
-              <input type="hidden" name="token" value={token} />
-              
-              <div>
-                <label for="password" class="block text-sm font-medium text-gray-700">
-                  Mot de passe
-                </label>
-                <div class="mt-1">
-                  <input
-                    id="password"
-                    name="password"
-                    type="password"
-                    autocomplete="new-password"
-                    required
-                    minlength="8"
-                    class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                    placeholder="Au moins 8 caractères"
-                  />
-                </div>
-              </div>
+      <label class="ll-field">
+        <span class="ll-label">Mot de passe</span>
+        <input
+          class="ll-input"
+          id="password"
+          name="password"
+          type="password"
+          autocomplete="new-password"
+          required
+          minlength="8"
+          placeholder="Au moins 8 caractères"
+        />
+      </label>
 
-              <div>
-                <label for="confirmPassword" class="block text-sm font-medium text-gray-700">
-                  Confirmer le mot de passe
-                </label>
-                <div class="mt-1">
-                  <input
-                    id="confirmPassword"
-                    name="confirmPassword"
-                    type="password"
-                    autocomplete="new-password"
-                    required
-                    class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                    placeholder="Répétez votre mot de passe"
-                  />
-                </div>
-              </div>
+      <label class="ll-field">
+        <span class="ll-label">Confirmer le mot de passe</span>
+        <input
+          class="ll-input"
+          id="confirmPassword"
+          name="confirmPassword"
+          type="password"
+          autocomplete="new-password"
+          required
+          placeholder="Répétez votre mot de passe"
+        />
+      </label>
 
-              <div>
-                <button
-                  type="submit"
-                  class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors"
-                >
-                  Configurer mon mot de passe
-                </button>
-              </div>
-            </form>
-            
-            <div class="mt-6">
-              <div class="relative">
-                <div class="absolute inset-0 flex items-center">
-                  <div class="w-full border-t border-gray-300"></div>
-                </div>
-              </div>
-            </div>
+      <button type="submit" class="ll-btn ll-btn--lg ll-btn--block">
+        Configurer mon mot de passe →
+      </button>
+    </>
+  )}
 
-            <div class="mt-6 text-center text-sm text-gray-600">
-              <p>
-                Une fois configuré, vous pourrez accéder à vos formations.<br>
-                Des questions ? 
-                <a href="mailto:bonjour@ligerianlabs.fr" class="font-medium text-blue-600 hover:text-blue-500">
-                  Contactez-nous
-                </a>
-              </p>
-            </div>
-          </>
-        ) : (
-          <div class="text-center">
-            <p class="text-gray-600">Chargement...</p>
-          </div>
-        )}
-      </div>
-    </div>
+  <div
+    style="border-top:1px solid var(--rule-hair);padding-top:18px;font-size:14.5px;line-height:1.55;color:var(--ink-soft)"
+  >
+    Des questions&nbsp;? <a href="mailto:bonjour@ligerianlabs.fr">bonjour@ligerianlabs.fr</a>
   </div>
+</AuthSplit>
 
-  <script>
-    // Client-side password validation
-    const form = document.querySelector('form');
-    const password = document.getElementById('password') as HTMLInputElement;
-    const confirmPassword = document.getElementById('confirmPassword') as HTMLInputElement;
+<script>
+  // Client-side password confirmation
+  const password = document.getElementById("password") as HTMLInputElement | null;
+  const confirmPassword = document.getElementById("confirmPassword") as HTMLInputElement | null;
 
-    if (form && password && confirmPassword) {
-      const validatePasswords = () => {
-        if (confirmPassword.value && password.value !== confirmPassword.value) {
-          confirmPassword.setCustomValidity('Les mots de passe ne correspondent pas');
-        } else {
-          confirmPassword.setCustomValidity('');
-        }
-      };
+  if (password && confirmPassword) {
+    const validatePasswords = () => {
+      confirmPassword.setCustomValidity(
+        confirmPassword.value && password.value !== confirmPassword.value
+          ? "Les mots de passe ne correspondent pas"
+          : "",
+      );
+    };
 
-      password.addEventListener('input', validatePasswords);
-      confirmPassword.addEventListener('input', validatePasswords);
-    }
-  </script>
-</Base>
+    password.addEventListener("input", validatePasswords);
+    confirmPassword.addEventListener("input", validatePasswords);
+  }
+</script>

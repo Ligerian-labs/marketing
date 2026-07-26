@@ -2,29 +2,53 @@
 export const prerender = true;
 import { getCollection } from "astro:content";
 import BlogPost from "../../layouts/BlogPost.astro";
+import { category, readingTimeFromBody, relatedOffer } from "../../lib/blog";
 
 export async function getStaticPaths() {
-  const posts = await getCollection("blog");
-  return posts.map((post) => ({
-    params: { slug: post.slug },
-    props: { post },
-  }));
+  const posts = (await getCollection("blog")).sort(
+    (a, b) => new Date(b.data.date).getTime() - new Date(a.data.date).getTime(),
+  );
+
+  return posts.map((post) => {
+    const own = category(post.data.tags);
+
+    // Prefer same-category neighbours, fall back to the most recent others.
+    const pool = posts.filter((other) => other.slug !== post.slug);
+    const sameTopic = pool.filter((other) => category(other.data.tags) === own);
+    const related = [...sameTopic, ...pool.filter((other) => !sameTopic.includes(other))]
+      .slice(0, 2)
+      .map((other) => ({
+        slug: other.slug,
+        title: other.data.title,
+        date: other.data.date,
+        minutes: readingTimeFromBody(other.body),
+      }));
+
+    return { params: { slug: post.slug }, props: { post, related } };
+  });
 }
 
-const { post } = Astro.props;
-const { Content } = await post.render();
+const { post, related } = Astro.props;
+// `headings` carries Astro's own slugs, so the sidebar anchors always resolve.
+const { Content, headings } = await post.render();
+const toc = headings
+  .filter((heading) => heading.depth === 2)
+  .map((heading) => ({ id: heading.slug, text: heading.text }));
 ---
 
-<BlogPost frontmatter={post.data}>
+<BlogPost
+  frontmatter={post.data}
+  category={category(post.data.tags)}
+  minutes={readingTimeFromBody(post.body)}
+  toc={toc}
+  offerSlug={relatedOffer(post.data.tags)}
+  related={related}
+>
   <Content />
 </BlogPost>
 
 <script is:inline define:vars={{ slug: post.slug, title: post.data.title, tags: post.data.tags || [] }}>
   if (window.posthog) {
-    window.posthog.capture('blog_post_viewed', {
-      slug: slug,
-      title: title,
-      tags: tags
-    });
+    window.posthog.capture("blog_post_viewed", { slug: slug, title: title, tags: tags });
   }
 </script>

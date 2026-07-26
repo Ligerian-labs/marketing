@@ -1,26 +1,160 @@
 ---
 import Base from "./Base.astro";
+import CtaBand from "../components/CtaBand.astro";
+import { offers } from "../data/offers";
+import { formatDate, isoDate, type TocEntry } from "../lib/blog";
 
-const { frontmatter } = Astro.props;
+interface Related {
+  slug: string;
+  title: string;
+  date: string;
+  minutes: number;
+}
+
+interface Props {
+  frontmatter: {
+    title: string;
+    date: string;
+    excerpt: string;
+    author?: string;
+    tags?: string[];
+  };
+  category: string;
+  minutes: number;
+  toc: TocEntry[];
+  offerSlug: string;
+  related: Related[];
+}
+
+const { frontmatter, category, minutes, toc, offerSlug, related } = Astro.props;
+const offer = offers.find((item) => item.slug === offerSlug) ?? offers[0];
+const author = frontmatter.author || "Ligerian Labs";
+
+const articleSchema = {
+  "@type": "BlogPosting",
+  headline: frontmatter.title,
+  description: frontmatter.excerpt,
+  datePublished: isoDate(frontmatter.date),
+  dateModified: isoDate(frontmatter.date),
+  inLanguage: "fr-FR",
+  articleSection: category,
+  keywords: frontmatter.tags?.join(", "),
+  author: { "@type": "Organization", name: author },
+  publisher: { "@id": "https://ligerianlabs.fr/#organization" },
+  isPartOf: { "@id": "https://ligerianlabs.fr/blog#blog" },
+  image: "https://ligerianlabs.fr/brand/og/og-article.png",
+};
+
+const breadcrumbSchema = {
+  "@type": "BreadcrumbList",
+  itemListElement: [
+    { "@type": "ListItem", position: 1, name: "Accueil", item: "https://ligerianlabs.fr/" },
+    { "@type": "ListItem", position: 2, name: "Blog", item: "https://ligerianlabs.fr/blog" },
+    { "@type": "ListItem", position: 3, name: frontmatter.title },
+  ],
+};
 ---
 
-<Base title={`${frontmatter.title} — Ligerian Labs`} description={frontmatter.excerpt}>
-  <article class="max-w-3xl mx-auto px-6 py-24">
-    <div class="mb-10">
-      <a href="/blog" class="text-sm text-muted hover:text-text transition mb-6 inline-block">← Retour au blog</a>
-      <p class="text-sm text-muted mb-3">{frontmatter.date}</p>
-      <h1 class="text-4xl font-bold mb-4 text-text">{frontmatter.title}</h1>
-      {frontmatter.author && <p class="text-text-secondary">Par {frontmatter.author}</p>}
-      {frontmatter.tags && (
-        <div class="flex gap-2 mt-4">
-          {frontmatter.tags.map((tag: string) => (
-            <span class="text-xs bg-surface text-text-secondary px-2 py-0.5 rounded-full">{tag}</span>
-          ))}
+<Base
+  title={`${frontmatter.title} | Ligerian Labs`}
+  description={frontmatter.excerpt}
+  ogImage="og-article"
+  ogType="article"
+  active="blog"
+  structuredData={[articleSchema, breadcrumbSchema]}
+>
+  <header class="ll-sec">
+    <div class="ll-wrap">
+      <nav class="ll-crumbs" aria-label="Fil d'Ariane">
+        <a href="/blog">Blog</a><span>/</span><span>{category}</span>
+      </nav>
+      <div class="ll-hero ll-hero--wide">
+        <div class="ll-hero__main" style="gap:20px">
+          <div class="ll-mono" style="font-size:11.5px">
+            <time datetime={isoDate(frontmatter.date)}>{formatDate(frontmatter.date)}</time>
+            · {minutes} min de lecture
+          </div>
+          <h1 class="ll-h1" style="font-size:clamp(28px,3.8vw,50px);line-height:.96">
+            {frontmatter.title}
+          </h1>
+          <p class="ll-lede ll-lede--strong" style="max-width:50ch">{frontmatter.excerpt}</p>
         </div>
-      )}
+        <div class="ll-hero__aside ll-hero__aside--bare">
+          <div style="display:flex;flex-direction:column;gap:5px">
+            <span class="ll-label">Écrit par</span>
+            <span style="font-weight:700;font-size:16px">{author}</span>
+            <span style="font-size:14px;color:#555">Ingénierie IA · Angers</span>
+          </div>
+          {toc.length > 1 && (
+            <div style="display:flex;flex-direction:column;gap:9px">
+              <span class="ll-label">Au sommaire</span>
+              {toc.map((entry, i) => (
+                <a href={`#${entry.id}`} style="font-size:14.5px;color:var(--ink)">
+                  {String(i + 1).padStart(2, "0")} — {entry.text}
+                </a>
+              ))}
+            </div>
+          )}
+        </div>
+      </div>
     </div>
-    <div class="prose max-w-none">
-      <slot />
+  </header>
+
+  <article class="ll-sec">
+    <div class="ll-wrap">
+      <div class="ll-article">
+        <div class="ll-article__body ll-prose">
+          <slot />
+        </div>
+        <aside class="ll-article__aside">
+          <div class="ll-article__sticky">
+            <div
+              style="background:var(--cobalt);color:var(--cream);padding:24px;display:flex;flex-direction:column;gap:13px"
+            >
+              <div class="ll-label" style="color:inherit">L'offre liée</div>
+              <div
+                style="font-family:var(--font-display);font-weight:700;font-size:20px;text-transform:uppercase;line-height:1.04"
+              >
+                {offer.name}
+              </div>
+              <p style="margin:0;font-size:14.5px;line-height:1.5">
+                {offer.promise} — {offer.duration}. {offer.teaser}
+              </p>
+              <a
+                href={`/offres#${offer.slug}`}
+                style="font-family:var(--font-mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--cream);margin-top:4px"
+              >
+                Voir l'offre →
+              </a>
+            </div>
+
+            {related.length > 0 && (
+              <div style="display:flex;flex-direction:column;gap:12px">
+                <div class="ll-label">Sur le même sujet</div>
+                <div>
+                  {related.map((post) => (
+                    <a href={`/blog/${post.slug}`} class="ll-related">
+                      <b>{post.title}</b>
+                      <span class="ll-mono ll-mono--plain" style="font-size:10.5px">
+                        {formatDate(post.date)} · {post.minutes} min
+                      </span>
+                    </a>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            <a href="/blog" class="ll-mono ll-mono--plain" style="font-size:11.5px">
+              ← Tous les articles
+            </a>
+          </div>
+        </aside>
+      </div>
     </div>
   </article>
+
+  <CtaBand
+    title="Et chez vous,<br />ça donne quoi&nbsp;?"
+    body="Deux semaines de cadrage pour savoir ce qui manque et ce que ça coûterait de le poser."
+  />
 </Base>

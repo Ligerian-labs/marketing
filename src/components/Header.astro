@@ -2,96 +2,89 @@
 import Logo from "./Logo.astro";
 
 interface Props {
+  /** Underlines the matching tab in cobalt. */
+  active?: "offres" | "approche" | "apropos" | "blog" | "";
   user?: { name: string; email: string } | null;
 }
 
-const { user = null } = Astro.props;
+const { active = "", user = null } = Astro.props;
+
+const tabs = [
+  { key: "offres", href: "/offres", label: "Offres" },
+  { key: "approche", href: "/approche", label: "Approche" },
+  { key: "apropos", href: "/a-propos", label: "À propos" },
+  { key: "blog", href: "/blog", label: "Blog" },
+] as const;
 ---
 
-<header class="border-b border-black/5 bg-white sticky top-0 z-50">
-  <nav class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
-    <Logo />
+<div class="ll-nav">
+  <div class="ll-wrap">
+    <div class="ll-nav__bar">
+      <Logo />
 
-    <!-- Mobile menu button -->
-    <button id="mobile-menu-btn" class="md:hidden p-2" aria-label="Menu">
-      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
-      </svg>
-    </button>
+      <nav class="ll-nav__links" aria-label="Navigation principale">
+        {tabs.map((tab) => (
+          <a
+            href={tab.href}
+            class="ll-nav__link"
+            aria-current={active === tab.key ? "page" : undefined}
+          >
+            {tab.label}
+          </a>
+        ))}
+      </nav>
 
-    <!-- Desktop nav -->
-    <div class="hidden md:flex items-center gap-8 text-sm">
-      <a href="/services" class="text-text-secondary hover:text-text transition">Offres</a>
-      <a href="/ia-angers" class="text-text-secondary hover:text-text transition">IA Angers</a>
-      <a href="/a-propos" class="text-text-secondary hover:text-text transition">À propos</a>
-      <a href="/blog" class="text-text-secondary hover:text-text transition">Blog</a>
-      <a href="/contact" class="text-text-secondary hover:text-text transition">Contact</a>
+      <div class="ll-nav__end">
+        {user ? (
+          <a href="/dashboard" class="ll-nav__minor">{user.name.split(" ")[0]}</a>
+        ) : (
+          <a href="/auth/connexion" class="ll-nav__minor">Connexion</a>
+        )}
+        <a href="/contact" class="ll-nav__cta">Parlons de votre projet</a>
+        <button
+          type="button"
+          class="ll-nav__burger"
+          id="ll-burger"
+          aria-label="Ouvrir le menu"
+          aria-expanded="false"
+          aria-controls="ll-nav-panel"
+        >
+          <svg width="22" height="16" viewBox="0 0 22 16" aria-hidden="true">
+            <rect width="22" height="2" y="0" fill="currentColor"></rect>
+            <rect width="22" height="2" y="7" fill="currentColor"></rect>
+            <rect width="22" height="2" y="14" fill="currentColor"></rect>
+          </svg>
+        </button>
+      </div>
     </div>
-
-    {user ? (
-      <div class="hidden md:flex items-center gap-4">
-        <a href="/formations" class="text-sm text-text-secondary hover:text-text transition">Mes formations</a>
-        <div class="relative" id="user-menu-container">
-          <button id="user-menu-btn" class="flex items-center gap-2 text-sm text-text-secondary hover:text-text transition">
-            <span class="w-8 h-8 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center font-medium text-xs">
-              {user.name.charAt(0).toUpperCase()}
-            </span>
-          </button>
-          <div id="user-dropdown" class="hidden absolute right-0 top-full mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-100 py-1 z-50">
-            <div class="px-4 py-2 border-b border-gray-50">
-              <p class="text-sm font-medium text-gray-900 truncate">{user.name}</p>
-              <p class="text-xs text-gray-500 truncate">{user.email}</p>
-            </div>
-            <a href="/formations" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">Mes formations</a>
-            <a href="/api/auth/logout" class="block px-4 py-2 text-sm text-red-600 hover:bg-red-50">Déconnexion</a>
-          </div>
-        </div>
-      </div>
-    ) : (
-      <div class="hidden md:flex items-center gap-3">
-        <a href="/auth/connexion" class="text-sm text-text-secondary hover:text-text transition">Connexion</a>
-        <a href="/contact" class="bg-accent hover:bg-accent-light text-white px-5 py-2.5 rounded-lg text-sm font-medium transition">
-          Parlons de votre projet
-        </a>
-      </div>
-    )}
-  </nav>
-
-  <!-- Mobile nav -->
-  <div id="mobile-menu" class="hidden md:hidden border-t border-black/5 bg-white px-6 py-4 space-y-3">
-    <a href="/services" class="block text-text-secondary hover:text-text transition">Offres</a>
-    <a href="/ia-angers" class="block text-text-secondary hover:text-text transition">IA Angers</a>
-    <a href="/ia-angers-pme" class="block text-text-secondary hover:text-text transition">IA PME</a>
-    <a href="/a-propos" class="block text-text-secondary hover:text-text transition">À propos</a>
-    <a href="/blog" class="block text-text-secondary hover:text-text transition">Blog</a>
-    <a href="/contact" class="block text-text-secondary hover:text-text transition">Contact</a>
-    {user ? (
-      <>
-        <a href="/formations" class="block text-text-secondary hover:text-text transition">Mes formations</a>
-        <a href="/api/auth/logout" class="block text-red-600 hover:text-red-700 transition">Déconnexion</a>
-      </>
-    ) : (
-      <>
-        <a href="/auth/connexion" class="block text-text-secondary hover:text-text transition">Connexion</a>
-        <a href="/contact" class="block bg-accent text-white px-5 py-2.5 rounded-lg text-sm font-medium text-center mt-2">
-          Parlons de votre projet
-        </a>
-      </>
-    )}
   </div>
-</header>
+
+  <div class="ll-nav__panel" id="ll-nav-panel">
+    <div class="ll-wrap">
+      {tabs.map((tab) => <a href={tab.href}>{tab.label}</a>)}
+      <a href="/ia-angers">Agence IA à Angers</a>
+      <a href="/ia-angers-pme">IA pour PME</a>
+      {user ? (
+        <>
+          <a href="/dashboard">Espace client</a>
+          <a href="/api/auth/logout">Déconnexion</a>
+        </>
+      ) : (
+        <a href="/auth/connexion">Connexion</a>
+      )}
+    </div>
+  </div>
+</div>
 
 <script is:inline>
-  document.getElementById('mobile-menu-btn')?.addEventListener('click', function() {
-    document.getElementById('mobile-menu')?.classList.toggle('hidden');
-  });
-  
-  // User dropdown toggle
-  document.getElementById('user-menu-btn')?.addEventListener('click', function(e) {
-    e.stopPropagation();
-    document.getElementById('user-dropdown')?.classList.toggle('hidden');
-  });
-  document.addEventListener('click', function() {
-    document.getElementById('user-dropdown')?.classList.add('hidden');
-  });
+  (function () {
+    var btn = document.getElementById("ll-burger");
+    var panel = document.getElementById("ll-nav-panel");
+    if (!btn || !panel) return;
+    btn.addEventListener("click", function () {
+      var open = panel.classList.toggle("open");
+      btn.setAttribute("aria-expanded", open ? "true" : "false");
+      btn.setAttribute("aria-label", open ? "Fermer le menu" : "Ouvrir le menu");
+    });
+  })();
 </script>

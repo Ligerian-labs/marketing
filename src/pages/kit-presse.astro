@@ -1,0 +1,500 @@
+---
+export const prerender = true;
+import Base from "../layouts/Base.astro";
+import SectionBar from "../components/SectionBar.astro";
+import CtaBand from "../components/CtaBand.astro";
+import { openSource } from "../data/offers";
+
+const toc = [
+  { id: "telechargements", label: "01 — Téléchargements" },
+  { id: "logo", label: "02 — Logo" },
+  { id: "couleurs", label: "03 — Couleurs" },
+  { id: "typo", label: "04 — Typographie" },
+  { id: "textes", label: "05 — Textes de présentation" },
+  { id: "fondateur", label: "06 — Le fondateur" },
+  { id: "faits", label: "07 — Faits & chiffres" },
+  { id: "oss", label: "08 — Open source" },
+];
+
+const ogPacks = [
+  { file: "og-accueil", label: "Accueil" },
+  { file: "og-offres", label: "Offres" },
+  { file: "og-a-propos", label: "À propos" },
+  { file: "og-approche", label: "Approche" },
+  { file: "og-contact", label: "Contact" },
+  { file: "og-blog", label: "Blog" },
+  { file: "og-article", label: "Article" },
+  { file: "og-ia-angers", label: "IA Angers" },
+  { file: "og-ia-angers-pme", label: "IA Angers PME" },
+];
+
+const colours = [
+  {
+    name: "Cobalt · accent",
+    hex: "#1E2BE6",
+    lines: ["RGB 30 43 230", "CMJN 87 81 0 0", "PANTONE 2728 C"],
+    cell: "cobalt",
+  },
+  {
+    name: "Crème · fond",
+    hex: "#ECE8DF",
+    lines: ["RGB 236 232 223", "CMJN 6 6 11 0", "Le papier"],
+    cell: "cream",
+  },
+  {
+    name: "Ink · texte",
+    hex: "#0E0E0E",
+    lines: ["RGB 14 14 14", "CMJN 0 0 0 100", "Pas un noir pur"],
+    cell: "ink",
+  },
+  {
+    name: "Panel · encart",
+    hex: "#DED9CD",
+    lines: ["RGB 222 217 205", "CMJN 12 11 18 0", "Aparté, note"],
+    cell: "panel",
+  },
+];
+
+const dos = [
+  "Laisser autour du logo une zone libre égale à la hauteur d'un « L ».",
+  "Utiliser la version horizontale sous 200 px de large.",
+  "Poser le logo sur crème, cobalt ou ink — jamais sur une photo chargée.",
+  "Écrire « Ligerian Labs » en deux mots, capitale initiale.",
+];
+
+const donts = [
+  "Recolorer « Labs » dans une autre teinte que le cobalt.",
+  "Étirer, incliner, arrondir ou ajouter une ombre.",
+  "Recomposer le nom dans une autre fonte qu'Unbounded 800.",
+  "Ajouter un symbole, un picto ou un encadré autour du logotype.",
+];
+
+const facts = [
+  ["Nom", "Ligerian Labs — de <em>Liger</em>, nom latin de la Loire"],
+  ["Siège", "Angers, Pays de la Loire, France"],
+  ["Secteur", "Ingénierie logicielle et intelligence artificielle"],
+  ["Clients types", "Éditeurs de logiciels, PME industrielles et de services, équipes produit"],
+  ["Langues", "Français, anglais"],
+  ["Site", '<a href="https://ligerianlabs.fr">ligerianlabs.fr</a>'],
+];
+---
+
+<Base
+  title="Kit presse — Ligerian Labs"
+  description="Logos, couleurs, typographie, textes de présentation et biographies. Tout ce qu'il faut pour parler de Ligerian Labs."
+  ogImage="og-accueil"
+>
+  <header class="ll-sec">
+    <div class="ll-wrap ll-hero">
+      <div class="ll-hero__main">
+        <div class="ll-mono" style="font-size:12px;letter-spacing:.16em">Kit presse · v1.0</div>
+        <h1 class="ll-h1">Tout ce qu'il<br />faut pour<br />parler de nous</h1>
+        <p class="ll-lede">
+          Logos, couleurs, typographie, textes prêts à publier et biographies. Servez-vous — et
+          écrivez-nous si vous avez besoin d'un format qui n'est pas là.
+        </p>
+      </div>
+      <div class="ll-hero__aside ll-hero__aside--cobalt">
+        <div class="ll-mono" style="color:inherit">Sommaire</div>
+        <div style="display:flex;flex-direction:column;gap:9px;font-family:var(--font-mono);font-size:13px">
+          {toc.map((item) => (
+            <a href={`#${item.id}`} style="color:var(--cream)">{item.label}</a>
+          ))}
+        </div>
+        <div style="font-family:var(--font-mono);font-size:11px;line-height:1.7;opacity:.85">
+          ANGERS · PAYS DE LA LOIRE<br />47.4784 N · −0.5632 E
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <SectionBar
+    id="telechargements"
+    label="01 — Téléchargements"
+    note="PNG · SVG · libres d'usage éditorial"
+  />
+
+  <section class="ll-sec">
+    <div class="ll-wrap">
+      <div class="ll-grid ll-grid--3">
+        <div class="ll-cell" style="min-height:250px;gap:13px">
+          <span class="ll-mono ll-mono--cobalt" style="letter-spacing:.1em">Pack 01</span>
+          <h3 class="ll-offer__name">Logos</h3>
+          <p>
+            Lockup empilé et horizontal, versions crème, cobalt et ink, marque LL carrée, favicons.
+          </p>
+          <div class="ll-dl">
+            <a href="/brand/logo/logo-stacked-cream.png" download>↓ Empilé · PNG 600px</a>
+            <a href="/brand/logo/ligerian-labs-stacked.svg" download>↓ Empilé · SVG</a>
+            <a href="/brand/logo/ligerian-labs-horizontal.svg" download>↓ Horizontal · SVG</a>
+            <a href="/brand/logo/ligerian-labs-mark-ll.svg" download>↓ Marque LL · SVG</a>
+          </div>
+        </div>
+
+        <div class="ll-cell" style="min-height:250px;gap:13px">
+          <span class="ll-mono ll-mono--cobalt" style="letter-spacing:.1em">Pack 02</span>
+          <h3 class="ll-offer__name">Images OG</h3>
+          <p>Neuf visuels 1200 × 630 pour les partages sociaux, un par page du site.</p>
+          <div class="ll-dl">
+            {ogPacks.map((pack) => (
+              <a href={`/brand/og/${pack.file}.png`} download>↓ {pack.label}</a>
+            ))}
+          </div>
+        </div>
+
+        <div class="ll-cell ll-cell--cobalt" style="min-height:250px;gap:13px">
+          <span class="ll-mono" style="color:inherit;letter-spacing:.1em">Pack 03</span>
+          <h3 class="ll-offer__name">Portrait</h3>
+          <p>Photo du fondateur en haute définition, utilisable en presse avec crédit.</p>
+          <div class="ll-dl ll-dl--invert">
+            <a href="/brand/valentin-dosimont.jpg" download>↓ Valentin Dosimont · JPG</a>
+            <span style="opacity:.8">Crédit : Ligerian Labs</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <SectionBar id="logo" label="02 — Logo" note="Un logotype, pas de symbole" />
+
+  <section class="ll-sec">
+    <div class="ll-wrap" style="padding-top:clamp(30px,4vw,52px)">
+      <div class="ll-intro">
+        <h2 class="ll-h2 ll-h2--tight">Le nom<br />fait le signe</h2>
+        <p class="ll-body ll-body--lg" style="max-width:56ch">
+          Ligerian Labs n'a pas de symbole. Le logotype est le nom composé en Unbounded 800,
+          «&nbsp;Labs&nbsp;» en cobalt. C'est cohérent avec un système visuel qui exclut déjà
+          l'illustration : blocs, filets et typographie, rien d'autre.
+        </p>
+      </div>
+    </div>
+
+    <div class="ll-wrap">
+      <div class="ll-grid ll-grid--3 ll-grid--boxed">
+        <div class="ll-lockup">
+          <div class="ll-lockup__stack">
+            <span style="color:var(--ink)">Ligerian</span><span style="color:var(--cobalt)">Labs</span>
+          </div>
+          <span class="ll-lockup__cap">Empilé · principal</span>
+        </div>
+        <div class="ll-lockup" style="background:var(--cobalt)">
+          <div class="ll-lockup__stack">
+            <span style="color:var(--cream)">Ligerian</span><span style="color:var(--ink)">Labs</span>
+          </div>
+          <span class="ll-lockup__cap" style="color:var(--cream)">Sur cobalt</span>
+        </div>
+        <div class="ll-lockup" style="background:var(--ink)">
+          <div class="ll-lockup__stack">
+            <span style="color:var(--cream)">Ligerian</span><span style="color:var(--cobalt)">Labs</span>
+          </div>
+          <span class="ll-lockup__cap" style="color:var(--meta-invert)">Sur ink</span>
+        </div>
+        <div class="ll-lockup">
+          <span class="ll-lockup__inline">Ligerian <span style="color:var(--cobalt)">Labs</span></span>
+          <span class="ll-lockup__cap">Horizontal · barres étroites</span>
+        </div>
+        <div class="ll-lockup" style="background:var(--cobalt)">
+          <span class="ll-lockup__mark">LL</span>
+          <span class="ll-lockup__cap" style="color:var(--cream)">Marque · avatar &amp; favicon</span>
+        </div>
+        <div class="ll-lockup" style="background:var(--panel);justify-content:center">
+          <div style="display:flex;align-items:flex-end;gap:18px">
+            <span class="ll-lockup__inline" style="font-size:20px">
+              Ligerian <span style="color:var(--cobalt)">Labs</span>
+            </span>
+            <span class="ll-lockup__inline" style="font-size:13px">
+              Ligerian <span style="color:var(--cobalt)">Labs</span>
+            </span>
+          </div>
+          <span class="ll-lockup__cap">Taille mini : 110 px de large</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="ll-wrap" style="padding-top:clamp(26px,3.4vw,44px);padding-bottom:clamp(30px,4vw,52px)">
+      <div class="ll-grid ll-grid--2 ll-grid--boxed">
+        <div class="ll-cell" style="gap:14px">
+          <div class="ll-mono ll-mono--cobalt">À faire</div>
+          <div class="ll-bullets" style="font-size:15px">
+            {dos.map((item) => <div class="ll-bullet"><span>{item}</span></div>)}
+          </div>
+        </div>
+        <div class="ll-cell ll-cell--panel" style="gap:14px">
+          <div class="ll-mono">À éviter</div>
+          <div class="ll-bullets" style="font-size:15px">
+            {donts.map((item) => (
+              <div class="ll-bullet ll-bullet--dash" style="--dash:var(--ink)"><span>{item}</span></div>
+            ))}
+          </div>
+        </div>
+      </div>
+      <div class="ll-technote">
+        NOTE TECHNIQUE — les SVG contiennent du texte vivant et nécessitent la fonte Unbounded. Pour
+        une impression ou un envoi à un tiers, vectorisez le texte ou utilisez les PNG fournis.
+      </div>
+    </div>
+  </section>
+
+  <SectionBar id="couleurs" label="03 — Couleurs" note="Une seule chromie : le cobalt" />
+
+  <section class="ll-sec">
+    <div class="ll-wrap">
+      <div class="ll-grid ll-grid--4">
+        {colours.map((colour) => (
+          <div
+            class:list={[
+              "ll-cell",
+              colour.cell === "cobalt" && "ll-cell--cobalt",
+              colour.cell === "ink" && "ll-cell--ink",
+              colour.cell === "panel" && "ll-cell--panel",
+            ]}
+            style="min-height:210px;justify-content:space-between"
+          >
+            <span class="ll-mono" style="color:inherit;letter-spacing:.1em">{colour.name}</span>
+            <div>
+              <div style="font-family:var(--font-display);font-weight:700;font-size:23px">
+                {colour.hex}
+              </div>
+              <div
+                style="font-family:var(--font-mono);font-size:10.5px;line-height:1.7;margin-top:8px;opacity:.85"
+              >
+                {colour.lines.map((line, i) => (
+                  <>{i > 0 && <br />}{line}</>
+                ))}
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+      <div class="ll-technote" style="background:transparent;color:var(--meta);border-top:0">
+        Le cobalt est la seule couleur d'accent. Un bloc cobalt par écran, jamais deux côte à côte.
+        Les valeurs Pantone sont indicatives et à valider sur épreuve.
+      </div>
+    </div>
+  </section>
+
+  <SectionBar id="typo" label="04 — Typographie" note="Trois fontes · toutes en Google Fonts" />
+
+  <section class="ll-sec">
+    <div class="ll-wrap">
+      <div class="ll-grid ll-grid--3">
+        <div class="ll-cell">
+          <div style="font-family:var(--font-display);font-weight:800;font-size:52px;line-height:.9">Aa</div>
+          <div class="ll-mono ll-mono--cobalt" style="letter-spacing:.1em;margin-top:16px">
+            Unbounded 600 · 700 · 800
+          </div>
+          <p>Titres et logotype uniquement. Toujours en capitales, interlignage sous 1, approche resserrée.</p>
+        </div>
+        <div class="ll-cell">
+          <div style="font-family:var(--font-text);font-weight:700;font-size:52px;line-height:.9">Aa</div>
+          <div class="ll-mono ll-mono--cobalt" style="letter-spacing:.1em;margin-top:16px">
+            Archivo 400 → 700
+          </div>
+          <p>Intertitres et texte courant. Casse normale, interlignage 1,5 à 1,6, mesure limitée à 56 signes.</p>
+        </div>
+        <div class="ll-cell">
+          <div style="font-family:var(--font-mono);font-weight:700;font-size:52px;line-height:.9">Aa</div>
+          <div class="ll-mono ll-mono--cobalt" style="letter-spacing:.1em;margin-top:16px">
+            Space Mono 400 · 700
+          </div>
+          <p>Étiquettes, métadonnées, chiffres et repères de section. Capitales, interlettrage large.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <SectionBar id="textes" label="05 — Textes de présentation" note="Prêts à copier · FR & EN" />
+
+  <section class="ll-sec">
+    <div class="ll-wrap ll-pad">
+      <div class="ll-rows">
+        <div class="ll-row ll-row--copy">
+          <span class="ll-label">Une ligne · FR</span>
+          <p style="margin:0;font-size:18px;line-height:1.5;font-weight:500;max-width:62ch">
+            Ligerian Labs met l'IA en production et rend aux équipes la main sur ce qu'elle coûte,
+            ce qu'elle fait et si elle s'améliore.
+          </p>
+        </div>
+        <div class="ll-row ll-row--copy">
+          <span class="ll-label">50 mots · FR</span>
+          <p class="ll-body ll-body--lg" style="max-width:66ch;line-height:1.6">
+            Ligerian Labs est un laboratoire d'ingénierie IA basé à Angers. Il accompagne des
+            entreprises qui ont déjà de l'IA en production et qui en ont perdu la maîtrise : coûts
+            illisibles, qualité invisible, architecture fragile. Quatre offres — supervision, mise
+            en production, refonte autour de l'IA, développement d'agents — livrées avec la
+            documentation qui permet à l'équipe de reprendre la main.
+          </p>
+        </div>
+        <div class="ll-row ll-row--copy">
+          <span class="ll-label">100 mots · FR</span>
+          <div style="display:flex;flex-direction:column;gap:12px;max-width:66ch">
+            <p class="ll-body ll-body--lg" style="line-height:1.6;max-width:none">
+              Fondé par Valentin Dosimont à Angers, Ligerian Labs est un laboratoire d'ingénierie
+              qui met l'intelligence artificielle en production — et la garde sous contrôle. Là où
+              beaucoup d'entreprises ont livré une fonctionnalité IA sans savoir ce qu'elle coûte
+              par client, ni si elle s'améliore, Ligerian Labs installe la mesure d'abord :
+              instrumentation des appels, évaluations dans la chaîne d'intégration, plafonds de
+              dépense appliqués par le code.
+            </p>
+            <p class="ll-body ll-body--lg" style="line-height:1.6;max-width:none">
+              Le cabinet intervient ensuite sur l'architecture — remettre l'IA au cœur d'un produit
+              existant — et sur les agents. Chaque mission se termine par une passation documentée :
+              l'objectif déclaré est que le client n'ait plus besoin du prestataire.
+            </p>
+          </div>
+        </div>
+        <div class="ll-row ll-row--copy ll-row--panel">
+          <span class="ll-label">One line · EN</span>
+          <p style="margin:0;font-size:18px;line-height:1.5;font-weight:500;max-width:62ch">
+            Ligerian Labs puts AI into production and gives teams back control of what it costs,
+            what it does, and whether it is getting better.
+          </p>
+        </div>
+        <div class="ll-row ll-row--copy ll-row--panel">
+          <span class="ll-label">50 words · EN</span>
+          <p class="ll-body ll-body--lg" style="max-width:66ch;line-height:1.6">
+            Ligerian Labs is an AI engineering studio based in Angers, France. It works with
+            companies that already run AI in production and have lost their grip on it:
+            unattributable cost, invisible quality, brittle architecture. Four services —
+            observability, production delivery, AI-centric re-architecture, and agents — each handed
+            over with the documentation the team needs to take it from there.
+          </p>
+        </div>
+        <div class="ll-row ll-row--copy ll-row--panel">
+          <span class="ll-label">Boilerplate</span>
+          <p class="ll-body" style="max-width:66ch;font-style:italic">
+            Ligerian Labs — AI engineering, from Angers. ligerianlabs.fr
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <SectionBar id="fondateur" label="06 — Le fondateur" note="Valentin Dosimont" />
+
+  <section class="ll-sec">
+    <div class="ll-wrap">
+      <div class="ll-portrait">
+        <div class="ll-portrait__img">
+          <img
+            src="/brand/valentin-dosimont.jpg"
+            alt="Valentin Dosimont, fondateur de Ligerian Labs"
+            loading="lazy"
+            decoding="async"
+          />
+        </div>
+        <div class="ll-portrait__text" style="justify-content:flex-start;gap:18px">
+          <div>
+            <div
+              style="font-family:var(--font-display);font-weight:700;font-size:clamp(22px,2.4vw,30px);text-transform:uppercase;line-height:1;margin-bottom:8px"
+            >
+              Valentin Dosimont
+            </div>
+            <div class="ll-mono ll-mono--cobalt" style="font-size:12px;letter-spacing:.1em">
+              Fondateur · CTO à temps partagé
+            </div>
+          </div>
+          <div style="border-top:1px solid var(--rule-hair);padding-top:16px">
+            <div class="ll-label" style="margin-bottom:9px">Bio courte</div>
+            <p class="ll-body ll-body--lg" style="max-width:62ch;line-height:1.6">
+              Valentin Dosimont est ingénieur logiciel depuis douze ans et fondateur de Ligerian
+              Labs. Il a porté des systèmes en production dans le gaming, l'IA et la blockchain, en
+              France et à l'international.
+            </p>
+          </div>
+          <div style="border-top:1px solid var(--rule-hair);padding-top:16px">
+            <div class="ll-label" style="margin-bottom:9px">Bio longue</div>
+            <p class="ll-body ll-body--lg" style="max-width:62ch;line-height:1.6;margin-bottom:11px">
+              Après douze ans passés à livrer des systèmes critiques — responsable technique chez un
+              fournisseur national d'énergie, CTO d'une plateforme SaaS, ingénieur sur
+              l'infrastructure onchain de Cartridge — Valentin Dosimont fonde Ligerian Labs à Angers
+              pour traiter un problème qu'il voit partout : des entreprises qui ont livré de l'IA
+              sans en garder la mesure.
+            </p>
+            <p class="ll-body ll-body--lg" style="max-width:62ch;line-height:1.6">
+              Il maintient une soixantaine de dépôts publics, dont marathon, un runner Zig qui
+              exécute des tâches d'agent dans des machines virtuelles isolées. Il travaille en
+              français et en anglais, à distance depuis les bords de Loire.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <SectionBar id="faits" label="07 — Faits & chiffres" note="Vérifiables" />
+
+  <section class="ll-sec">
+    <div class="ll-wrap">
+      <div class="ll-stats">
+        <div class="ll-stat">
+          <div class="ll-stat__n">12+</div>
+          <div class="ll-stat__k">Ans en production</div>
+        </div>
+        <div class="ll-stat ll-stat--on">
+          <div class="ll-stat__n">60+</div>
+          <div class="ll-stat__k">Dépôts publics</div>
+        </div>
+        <div class="ll-stat">
+          <div class="ll-stat__n">04</div>
+          <div class="ll-stat__k">Offres</div>
+        </div>
+        <div class="ll-stat">
+          <div class="ll-stat__n">2021</div>
+          <div class="ll-stat__k">Début de l'activité</div>
+        </div>
+      </div>
+      <div class="ll-factsheet">
+        {facts.map(([label, value]) => (
+          <div class="ll-factsheet__row">
+            <span class="ll-mono ll-mono--plain" style="text-transform:uppercase;letter-spacing:.06em">
+              {label}
+            </span>
+            <span style="font-size:15.5px" set:html={value} />
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="ll-sec ll-sec--ink ll-anchor" id="oss">
+    <div class="ll-wrap ll-pad">
+      <div class="ll-proof">
+        <div style="display:flex;flex-direction:column;gap:16px">
+          <div class="ll-mono ll-mono--invert" style="letter-spacing:.16em;font-size:11.5px">
+            08 — Open source
+          </div>
+          <h2 class="ll-h2 ll-h2--tight">Le code<br />est lisible</h2>
+          <p class="ll-body" style="max-width:40ch;font-size:16px">
+            L'outillage déployé chez les clients vient de projets maintenus publiquement. Libre à
+            vous de les citer ou de les inspecter.
+          </p>
+          <a
+            href="https://github.com/Ligerian-labs"
+            rel="noopener"
+            target="_blank"
+            style="font-family:var(--font-mono);font-size:12.5px;letter-spacing:.06em;margin-top:4px"
+          >
+            github.com/Ligerian-labs →
+          </a>
+        </div>
+        <div class="ll-stack">
+          {openSource.map((project) => (
+            <div class="ll-oss">
+              <div class="ll-oss__name">{project.name}</div>
+              <div class="ll-oss__what">{project.what}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <CtaBand
+    label="09 — Contact presse"
+    title="Une question,<br />une interview&nbsp;?"
+    body="Valentin Dosimont répond directement. Disponible pour interviews, tribunes et interventions, en français et en anglais."
+    cta="bonjour@ligerianlabs.fr"
+    href="mailto:bonjour@ligerianlabs.fr"
+  />
+</Base>

@@ -8,75 +8,110 @@ interface Props {
   title: string;
   description?: string;
   robots?: string;
+  /** File name under /brand/og/, without extension. */
+  ogImage?: string;
+  ogType?: "website" | "article";
+  /** Underlines the matching nav tab. */
+  active?: "offres" | "approche" | "apropos" | "blog" | "";
+  /** Set false for full-bleed screens that draw their own shell (connexion). */
+  chrome?: boolean;
   structuredData?: Record<string, unknown> | Record<string, unknown>[];
 }
 
 const {
   title,
-  description = "Ligerian Labs — agence IA à Angers pour PME et TPE. Audit, automatisation, agents IA sur mesure et formation en Pays de la Loire.",
+  description = "Ligerian Labs met l'IA en production et vous rend la main sur ce qu'elle coûte, ce qu'elle fait et si elle s'améliore. Angers, Pays de la Loire.",
   robots = "index, follow, max-image-preview:large",
-  structuredData = []
+  ogImage = "og-accueil",
+  ogType = "website",
+  active = "",
+  chrome = true,
+  structuredData = [],
 } = Astro.props;
 
-const canonicalUrl = new URL(Astro.url.pathname, Astro.site ?? "https://ligerianlabs.fr").href;
+const site = Astro.site ?? new URL("https://ligerianlabs.fr");
+const canonicalUrl = new URL(Astro.url.pathname, site).href;
+const ogImageUrl = new URL(`/brand/og/${ogImage}.png`, site).href;
+
 const schemaGraph = [
   {
-    "@context": "https://schema.org",
-    "@type": ["LocalBusiness", "ProfessionalService"],
-    "@id": "https://ligerianlabs.fr/#business",
-    "name": "Ligerian Labs",
-    "url": "https://ligerianlabs.fr",
-    "email": "bonjour@ligerianlabs.fr",
-    "description": "Agence IA à Angers pour PME, TPE, artisans et entreprises des Pays de la Loire.",
-    "image": "https://ligerianlabs.fr/favicon.svg",
-    "priceRange": "€€",
-    "address": {
-      "@type": "PostalAddress",
-      "addressLocality": "Angers",
-      "addressRegion": "Pays de la Loire",
-      "addressCountry": "FR"
+    "@type": "Organization",
+    "@id": "https://ligerianlabs.fr/#organization",
+    name: "Ligerian Labs",
+    url: "https://ligerianlabs.fr",
+    email: "bonjour@ligerianlabs.fr",
+    logo: "https://ligerianlabs.fr/brand/logo/logo-stacked-ink.png",
+    description:
+      "Laboratoire d'ingénierie IA à Angers : token ops, mise en production, architecture IA et agents.",
+    founder: {
+      "@type": "Person",
+      name: "Valentin Dosimont",
+      jobTitle: "Fondateur",
     },
-    "geo": {
-      "@type": "GeoCoordinates",
-      "latitude": 47.4784,
-      "longitude": -0.5632
-    },
-    "areaServed": [
-      { "@type": "City", "name": "Angers" },
-      { "@type": "AdministrativeArea", "name": "Maine-et-Loire" },
-      { "@type": "AdministrativeArea", "name": "Pays de la Loire" }
-    ],
-    "knowsAbout": [
-      "intelligence artificielle",
-      "IA pour PME",
-      "agents IA",
-      "automatisation IA",
-      "formation IA",
-      "audit IA"
-    ],
-    "sameAs": [
+    foundingDate: "2021",
+    sameAs: [
       "https://github.com/Ligerian-labs",
       "https://x.com/LigerianLabs",
       "https://www.tiktok.com/@ligerianlabs",
-      "https://www.instagram.com/ligerianlabs"
-    ]
+      "https://www.instagram.com/ligerianlabs",
+    ],
   },
   {
-    "@context": "https://schema.org",
+    "@type": ["LocalBusiness", "ProfessionalService"],
+    "@id": "https://ligerianlabs.fr/#business",
+    name: "Ligerian Labs",
+    url: "https://ligerianlabs.fr",
+    email: "bonjour@ligerianlabs.fr",
+    parentOrganization: { "@id": "https://ligerianlabs.fr/#organization" },
+    description:
+      "Agence et laboratoire d'ingénierie IA à Angers pour équipes produit, PME et collectivités des Pays de la Loire.",
+    image: "https://ligerianlabs.fr/brand/og/og-accueil.png",
+    priceRange: "€€€",
+    address: {
+      "@type": "PostalAddress",
+      addressLocality: "Angers",
+      addressRegion: "Pays de la Loire",
+      addressCountry: "FR",
+    },
+    geo: {
+      "@type": "GeoCoordinates",
+      latitude: 47.4784,
+      longitude: -0.5632,
+    },
+    areaServed: [
+      { "@type": "City", name: "Angers" },
+      { "@type": "AdministrativeArea", name: "Maine-et-Loire" },
+      { "@type": "AdministrativeArea", name: "Pays de la Loire" },
+    ],
+    knowsAbout: [
+      "ingénierie IA",
+      "token ops",
+      "observabilité des modèles",
+      "mise en production IA",
+      "architecture IA",
+      "agents IA",
+    ],
+  },
+  {
     "@type": "WebSite",
     "@id": "https://ligerianlabs.fr/#website",
-    "name": "Ligerian Labs",
-    "url": "https://ligerianlabs.fr",
-    "inLanguage": "fr-FR",
-    "publisher": { "@id": "https://ligerianlabs.fr/#business" }
+    name: "Ligerian Labs",
+    url: "https://ligerianlabs.fr",
+    inLanguage: "fr-FR",
+    publisher: { "@id": "https://ligerianlabs.fr/#organization" },
   },
-  ...(Array.isArray(structuredData) ? structuredData : [structuredData])
+  ...(Array.isArray(structuredData) ? structuredData : [structuredData]),
 ].filter(Boolean);
 
+// Prerendered routes have no request, so don't even look for a session there.
 let user = null;
-try {
-  user = getAuthenticatedUser(Astro.cookies) || null;
-} catch { /* prerendered pages have no cookies */ }
+if (!Astro.isPrerendered) {
+  try {
+    user = getAuthenticatedUser(Astro.cookies) || null;
+  } catch {
+    /* no readable session */
+  }
+}
 ---
 
 <!doctype html>
@@ -84,27 +119,42 @@ try {
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{title}</title>
     <meta name="description" content={description} />
     <meta name="robots" content={robots} />
+    <link rel="canonical" href={canonicalUrl} />
 
-    <!-- SEO Geo targeting -->
+    <!-- Geo targeting -->
     <meta name="geo.region" content="FR-PDL" />
     <meta name="geo.placename" content="Angers" />
     <meta name="geo.position" content="47.4784;-0.5632" />
     <meta name="ICBM" content="47.4784, -0.5632" />
 
     <!-- Open Graph -->
+    <meta property="og:type" content={ogType} />
+    <meta property="og:site_name" content="Ligerian Labs" />
+    <meta property="og:locale" content="fr_FR" />
+    <meta property="og:url" content={canonicalUrl} />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
-    <meta property="og:locale" content="fr_FR" />
-    <meta property="og:type" content="website" />
-    <meta property="og:url" content={canonicalUrl} />
-    <meta property="og:site_name" content="Ligerian Labs" />
-    <meta name="twitter:card" content="summary" />
+    <meta property="og:image" content={ogImageUrl} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImageUrl} />
 
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <link rel="canonical" href={canonicalUrl} />
-    <title>{title}</title>
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href="/brand/logo/favicon-32.png" sizes="32x32" />
+    <link rel="apple-touch-icon" href="/brand/logo/favicon-180.png" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Unbounded:wght@600;700;800&family=Archivo:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
 
     <!-- PostHog Analytics & A/B Testing -->
     <script is:inline>
@@ -119,14 +169,23 @@ try {
       });
     </script>
 
-    <!-- JSON-LD Structured Data -->
-    <script type="application/ld+json" set:html={JSON.stringify(schemaGraph.length === 1 ? schemaGraph[0] : { "@context": "https://schema.org", "@graph": schemaGraph })} />
+    <script
+      type="application/ld+json"
+      set:html={JSON.stringify({ "@context": "https://schema.org", "@graph": schemaGraph })}
+    />
   </head>
-  <body class="min-h-screen flex flex-col">
-    <Header user={user} />
-    <main class="flex-1">
+  <body>
+    {chrome ? (
+      <>
+        <a class="ll-skip" href="#contenu">Aller au contenu</a>
+        <Header active={active} user={user} />
+        <main id="contenu">
+          <slot />
+        </main>
+        <Footer />
+      </>
+    ) : (
       <slot />
-    </main>
-    <Footer />
+    )}
   </body>
 </html>

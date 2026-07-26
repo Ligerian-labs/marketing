@@ -1,0 +1,21 @@
+---
+interface Props {
+  label: string;
+  note?: string;
+  noteHref?: string;
+  id?: string;
+}
+
+const { label, note, noteHref, id } = Astro.props;
+---
+
+<section class="ll-sec ll-sec--panel" id={id} class:list={[id && "ll-anchor"]}>
+  <div class="ll-wrap">
+    <div class="ll-bar">
+      <span class="ll-bar__label">{label}</span>
+      {note && (noteHref
+        ? <a class="ll-bar__note" href={noteHref}>{note}</a>
+        : <span class="ll-bar__note">{note}</span>)}
+    </div>
+  </div>
+</section>

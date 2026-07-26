@@ -10,17 +10,17 @@ if (!user) {
 }
 
 const { id } = Astro.params;
-const subscription = db.prepare(
-  "SELECT * FROM subscriptions WHERE id = ? AND user_id = ?"
-).get(id, user.id) as any;
+const subscription = db
+  .prepare("SELECT * FROM subscriptions WHERE id = ? AND user_id = ?")
+  .get(id, user.id) as any;
 
 if (!subscription) {
   return Astro.redirect("/dashboard");
 }
 
-const resources = db.prepare(
-  "SELECT * FROM resources WHERE subscription_id = ? ORDER BY created_at DESC"
-).all(subscription.id) as any[];
+const resources = db
+  .prepare("SELECT * FROM resources WHERE subscription_id = ? ORDER BY created_at DESC")
+  .all(subscription.id) as any[];
 
 const statusSteps = [
   { key: "pending", label: "Commande reçue" },
@@ -31,99 +31,96 @@ const statusSteps = [
 ];
 
 const currentStepIndex = statusSteps.findIndex((s) => s.key === subscription.status);
+
+const infra = [
+  ["Adresse serveur", subscription.server_ip, true],
+  ["Fournisseur", subscription.server_provider, false],
+  ["Réseau Tailscale", subscription.tailscale_hostname, true],
+  ["Version OpenClaw", subscription.openclaw_version && `v${subscription.openclaw_version}`, false],
+  [
+    "Canal",
+    subscription.channel_type &&
+      `${subscription.channel_type} — ${subscription.channel_connected ? "connecté" : "en attente"}`,
+    false,
+  ],
+].filter(([, value]) => Boolean(value)) as [string, string, boolean][];
 ---
 
-<Base title={`${subscription.pack} — Espace client`}>
-  <section class="max-w-4xl mx-auto px-6 py-20">
-    <a href="/dashboard" class="text-sm text-muted hover:text-white transition">← Retour au dashboard</a>
-
-    <div class="mt-6 mb-10">
-      <h1 class="text-3xl font-bold">{subscription.pack}</h1>
-      <p class="text-muted mt-1">Souscrit le {new Date(subscription.created_at).toLocaleDateString('fr-FR')}</p>
-    </div>
-
-    <!-- Progress Steps -->
-    <div class="bg-surface border border-white/5 rounded-xl p-6 mb-8">
-      <h2 class="font-semibold mb-4">Statut du déploiement</h2>
-      <div class="flex gap-4">
-        {statusSteps.map((step, i) => {
-          const done = currentStepIndex >= i;
-          const active = currentStepIndex === i;
-          const barClass = done ? "bg-accent" : "bg-white/10";
-          const textClass = active ? "text-accent font-medium" : done ? "text-white" : "text-muted";
-          return (
-            <div class="flex-1">
-              <div class={`h-2 rounded-full mb-2 ${barClass}`} />
-              <p class={`text-sm ${textClass}`}>{step.label}</p>
-            </div>
-          );
-        })}
+<Base title={`${subscription.pack} — Espace client | Ligerian Labs`} robots="noindex, nofollow">
+  <header class="ll-sec">
+    <div class="ll-wrap">
+      <nav class="ll-crumbs" aria-label="Fil d'Ariane">
+        <a href="/dashboard">Espace client</a><span>/</span><span>{subscription.pack}</span>
+      </nav>
+      <div class="ll-pad" style="display:flex;flex-direction:column;gap:12px">
+        <h1 class="ll-h1" style="font-size:clamp(26px,3vw,40px)">{subscription.pack}</h1>
+        <p class="ll-mono ll-mono--plain">
+          Souscrit le {new Date(subscription.created_at).toLocaleDateString("fr-FR")}
+        </p>
       </div>
     </div>
+  </header>
 
-    <!-- Infrastructure Details -->
-    {subscription.server_ip && (
-      <div class="bg-surface border border-white/5 rounded-xl p-6 mb-8">
-        <h2 class="font-semibold mb-4">Infrastructure</h2>
-        <div class="grid md:grid-cols-2 gap-6">
-          {subscription.server_ip && (
-            <div>
-              <span class="text-muted text-sm">Adresse serveur</span>
-              <p class="text-white font-mono mt-1">{subscription.server_ip}</p>
-            </div>
-          )}
-          {subscription.server_provider && (
-            <div>
-              <span class="text-muted text-sm">Fournisseur</span>
-              <p class="text-white mt-1">{subscription.server_provider}</p>
-            </div>
-          )}
-          {subscription.tailscale_hostname && (
-            <div>
-              <span class="text-muted text-sm">Réseau Tailscale</span>
-              <p class="text-white font-mono mt-1">{subscription.tailscale_hostname}</p>
-            </div>
-          )}
-          {subscription.openclaw_version && (
-            <div>
-              <span class="text-muted text-sm">Version OpenClaw</span>
-              <p class="text-white mt-1">v{subscription.openclaw_version}</p>
-            </div>
-          )}
-          {subscription.channel_type && (
-            <div>
-              <span class="text-muted text-sm">Canal</span>
-              <p class="text-white mt-1">{subscription.channel_type} {subscription.channel_connected ? '✅' : '⏳'}</p>
-            </div>
-          )}
-        </div>
-      </div>
-    )}
-
-    <!-- Resources -->
-    {resources.length > 0 && (
-      <div class="bg-surface border border-white/5 rounded-xl p-6">
-        <h2 class="font-semibold mb-4">Ressources</h2>
-        <div class="space-y-3">
-          {resources.map((r: any) => (
-            <div class="flex items-center justify-between py-3 border-b border-white/5 last:border-0">
-              <div>
-                <p class="font-medium">{r.title}</p>
-                <p class="text-muted text-sm">{r.type}</p>
-              </div>
-              {r.file_path && (
-                <span class="text-accent text-sm">📄 Télécharger</span>
-              )}
+  <section class="ll-sec">
+    <div class="ll-wrap ll-pad" style="display:flex;flex-direction:column;gap:clamp(24px,3vw,36px)">
+      <div class="ll-box">
+        <h2 class="ll-box__title">Statut du déploiement</h2>
+        <div class="ll-progress">
+          {statusSteps.map((step, i) => (
+            <div
+              class:list={[
+                "ll-progress__step",
+                currentStepIndex >= i && "ll-progress__step--done",
+                currentStepIndex === i && "ll-progress__step--now",
+              ]}
+            >
+              <span></span>
+              <b>{step.label}</b>
             </div>
           ))}
         </div>
       </div>
-    )}
 
-    {resources.length === 0 && !subscription.server_ip && (
-      <div class="bg-surface border border-white/5 rounded-xl p-8 text-center">
-        <p class="text-muted">Votre déploiement est en cours de préparation. Vous recevrez un email dès que tout sera prêt.</p>
-      </div>
-    )}
+      {infra.length > 0 && (
+        <div class="ll-box">
+          <h2 class="ll-box__title">Infrastructure</h2>
+          <dl class="ll-defs">
+            {infra.map(([label, value, mono]) => (
+              <>
+                <dt>{label}</dt>
+                <dd style={mono ? "font-family:var(--font-mono);font-size:14px" : ""}>{value}</dd>
+              </>
+            ))}
+          </dl>
+        </div>
+      )}
+
+      {resources.length > 0 && (
+        <div class="ll-box" style="padding:0">
+          <h2 class="ll-box__title" style="padding:clamp(22px,2.6vw,32px) 22px 0">Ressources</h2>
+          <div style="margin-top:16px">
+            {resources.map((resource: any) => (
+              <div class="ll-listrow">
+                <div>
+                  <div class="ll-listrow__name">{resource.title}</div>
+                  <div class="ll-listrow__meta">{resource.type}</div>
+                </div>
+                {resource.file_path && <span class="ll-badge">Télécharger</span>}
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {resources.length === 0 && infra.length === 0 && (
+        <div class="ll-note">
+          <div class="ll-label">En préparation</div>
+          <p>
+            Votre déploiement est en cours de préparation. Vous recevrez un email dès que tout sera
+            prêt.
+          </p>
+        </div>
+      )}
+    </div>
   </section>
 </Base>

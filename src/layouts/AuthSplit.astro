@@ -1,0 +1,68 @@
+---
+import Base from "./Base.astro";
+import Logo from "../components/Logo.astro";
+
+interface Props {
+  title: string;
+  /** Mono kicker above the form heading. */
+  kicker: string;
+  heading: string;
+}
+
+const { title, kicker, heading } = Astro.props;
+
+const promises = [
+  "L'avancement des tranches, en direct",
+  "Vos tableaux de bord coûts, latence et évaluations",
+  "Les livrables et la documentation, téléchargeables",
+];
+---
+
+<Base title={title} robots="noindex, nofollow" chrome={false}>
+  <div class="ll-split">
+    <div class="ll-split__brand">
+      <Logo />
+
+      <div style="display:flex;flex-direction:column;gap:24px">
+        <h1 class="ll-h1" style="font-size:clamp(28px,3.4vw,46px);line-height:.94">Espace<br />client</h1>
+        <p style="margin:0;font-size:17px;line-height:1.5;max-width:38ch">
+          Le suivi de votre mission : tableaux de bord, tranches livrées, décisions d'architecture
+          et documentation de passation.
+        </p>
+        <div style="display:flex;flex-direction:column;gap:11px;margin-top:6px">
+          {promises.map((promise, i) => (
+            <div style="display:grid;grid-template-columns:26px 1fr;gap:12px">
+              <span style="font-family:var(--font-mono);font-size:11px;opacity:.8;padding-top:3px">
+                {String(i + 1).padStart(2, "0")}
+              </span>
+              <span style="font-size:15.5px;line-height:1.5">{promise}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div style="font-family:var(--font-mono);font-size:11px;line-height:1.7;opacity:.85">
+        ANGERS · PAYS DE LA LOIRE<br />47.4784 N · −0.5632 E
+      </div>
+    </div>
+
+    <div class="ll-split__form">
+      <form method="POST">
+        <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:4px">
+          <div class="ll-mono" style="font-size:11px;letter-spacing:.16em">{kicker}</div>
+          <h2
+            style="font-family:var(--font-display);font-weight:700;font-size:26px;margin:0;text-transform:uppercase;line-height:1.02"
+          >
+            {heading}
+          </h2>
+        </div>
+
+        <slot />
+
+        <a href="/" class="ll-mono ll-mono--plain" style="font-size:11.5px;text-transform:uppercase">
+          ← Retour au site
+        </a>
+      </form>
+    </div>
+  </div>
+</Base>

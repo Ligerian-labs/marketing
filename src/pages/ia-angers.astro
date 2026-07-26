@@ -1,125 +1,196 @@
 ---
 export const prerender = true;
 import Base from "../layouts/Base.astro";
+import SectionBar from "../components/SectionBar.astro";
+import OfferGrid from "../components/OfferGrid.astro";
+import CtaBand from "../components/CtaBand.astro";
 
-const services = [
-  "Audit IA de vos processus métier et de vos données",
-  "Automatisation des tâches répétitives avec agents IA",
-  "Outils IA sur mesure connectés à vos logiciels",
-  "Formation IA pratique pour équipes non techniques",
+const zone = ["Angers", "Cholet", "Saumur", "Nantes", "Le Mans", "Laval"];
+
+const reasons = [
+  {
+    n: "01",
+    title: "Un interlocuteur technique",
+    body: "Vous parlez à celui qui écrit le code, pas à un chargé de compte qui transmet.",
+    lead: false,
+  },
+  {
+    n: "02",
+    title: "Sur site quand il faut",
+    body: "Ateliers de cadrage et revues en présentiel dans un rayon d'une heure.",
+    lead: false,
+  },
+  {
+    n: "03",
+    title: "Vos données restent vôtres",
+    body: "Hébergement européen, rétention documentée, revue RGPD incluse.",
+    lead: false,
+  },
+  {
+    n: "04",
+    title: "Pas de dépendance",
+    body: "La passation est un livrable. Votre équipe reprend la main, c'est le but.",
+    lead: true,
+  },
+];
+
+const faq = [
+  {
+    q: "Travaillez-vous avec des entreprises hors des Pays de la Loire ?",
+    a: "Oui, la majorité de nos missions sont à distance. L'ancrage angevin dit d'où nous venons, pas où nous nous arrêtons.",
+  },
+  {
+    q: "Faites-vous de la formation ou de la sensibilisation à l'IA ?",
+    a: "Des ateliers pratiques sur votre propre code, oui. Des conférences de sensibilisation générale, non — d'autres le font mieux et moins cher.",
+  },
+  {
+    q: "Nos données partent-elles chez un fournisseur américain ?",
+    a: "C'est une décision d'architecture que nous prenons avec vous en semaine 1, documentée. Hébergement européen et modèles auto-hébergés sont des options réelles, avec leurs compromis chiffrés.",
+  },
+  {
+    q: "Nous sommes une PME, est-ce que c'est pour nous ?",
+    a: "Si vous avez déjà un logiciel en production et un vrai problème à résoudre, oui. Nous avons une page dédiée aux PME du bassin angevin.",
+    html: 'Si vous avez déjà un logiciel en production et un vrai problème à résoudre, oui. Nous avons une page dédiée aux <a href="/ia-angers-pme">PME du bassin angevin</a>.',
+  },
+  {
+    q: "Combien de temps avant de voir quelque chose ?",
+    a: "Deux semaines pour un diagnostic écrit et un plan. Ensuite, la première tranche livrée en production arrive généralement entre la quatrième et la sixième semaine.",
+  },
 ];
 
 const structuredData = [
   {
     "@type": "Service",
-    "@id": "https://ligerianlabs.fr/ia-angers/#service",
-    "name": "Agence IA à Angers",
-    "serviceType": "Conseil, automatisation et développement IA",
-    "provider": { "@id": "https://ligerianlabs.fr/#business" },
-    "areaServed": [
-      { "@type": "City", "name": "Angers" },
-      { "@type": "AdministrativeArea", "name": "Maine-et-Loire" },
-      { "@type": "AdministrativeArea", "name": "Pays de la Loire" }
+    "@id": "https://ligerianlabs.fr/ia-angers#service",
+    name: "Agence IA à Angers",
+    serviceType: "Ingénierie IA en production : supervision, déploiement, architecture, agents",
+    provider: { "@id": "https://ligerianlabs.fr/#business" },
+    areaServed: [
+      { "@type": "City", name: "Angers" },
+      { "@type": "AdministrativeArea", name: "Maine-et-Loire" },
+      { "@type": "AdministrativeArea", name: "Pays de la Loire" },
     ],
-    "description": "Accompagnement IA à Angers : audit, agents IA, automatisation, formation et outils sur mesure pour entreprises locales."
+    description:
+      "Laboratoire d'ingénierie IA à Angers : mise en production, supervision des coûts, architecture IA et développement d'agents.",
+  },
+  {
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Accueil", item: "https://ligerianlabs.fr/" },
+      { "@type": "ListItem", position: 2, name: "Agence IA à Angers" },
+    ],
   },
   {
     "@type": "FAQPage",
-    "@id": "https://ligerianlabs.fr/ia-angers/#faq",
-    "mainEntity": [
-      {
-        "@type": "Question",
-        "name": "Que fait une agence IA à Angers ?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "Elle identifie les cas d'usage IA rentables, automatise les tâches répétitives, développe des agents IA sur mesure et forme les équipes locales."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "Ligerian Labs travaille avec quelles entreprises ?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "Ligerian Labs accompagne les PME, TPE, artisans, commerçants, collectivités et startups d'Angers, du Maine-et-Loire et des Pays de la Loire."
-        }
-      }
-    ]
-  }
+    "@id": "https://ligerianlabs.fr/ia-angers#faq",
+    mainEntity: faq.map((item) => ({
+      "@type": "Question",
+      name: item.q,
+      acceptedAnswer: { "@type": "Answer", text: item.a },
+    })),
+  },
 ];
 ---
 
 <Base
-  title="Agence IA à Angers — Audit, agents IA & automatisation | Ligerian Labs"
-  description="Agence IA à Angers pour PME, TPE et entreprises locales. Audit IA, agents IA sur mesure, automatisation métier et formation en Pays de la Loire."
+  title="Agence IA à Angers — ingénierie IA en production | Ligerian Labs"
+  description="Ligerian Labs est un laboratoire d'ingénierie IA à Angers (Maine-et-Loire). Mise en production, supervision des coûts, architecture IA et agents, pour les entreprises des Pays de la Loire."
+  ogImage="og-ia-angers"
   structuredData={structuredData}
 >
-  <section class="max-w-5xl mx-auto px-6 py-24 md:py-32">
-    <p class="section-label mb-6">IA Angers — Maine-et-Loire</p>
-    <h1 class="text-4xl md:text-6xl font-bold tracking-tight mb-6 leading-tight">
-      Agence IA à Angers pour entreprises qui veulent du concret
-    </h1>
-    <p class="text-xl text-text-secondary max-w-3xl leading-relaxed mb-10">
-      Ligerian Labs aide les entreprises d'Angers à intégrer l'intelligence artificielle là où elle rapporte vraiment : gain de temps, automatisation, meilleurs process, agents IA connectés à vos outils.
-    </p>
-    <div class="flex flex-col sm:flex-row gap-4">
-      <a href="/contact" class="bg-accent hover:bg-accent-light text-white px-8 py-3 rounded-lg font-medium transition inline-block text-center">
-        Demander un audit IA à Angers
-      </a>
-      <a href="/ia-angers-pme" class="text-text-secondary hover:text-text transition px-8 py-3 text-center">
-        Voir l'offre IA pour PME →
-      </a>
+  <header class="ll-sec">
+    <div class="ll-wrap">
+      <nav class="ll-crumbs" aria-label="Fil d'Ariane">
+        <a href="/">Accueil</a><span>/</span><span>Agence IA à Angers</span>
+      </nav>
+      <div class="ll-hero">
+        <div class="ll-hero__main" style="gap:20px">
+          <div class="ll-mono" style="font-size:12px;letter-spacing:.16em">
+            Angers · Maine-et-Loire
+          </div>
+          <h1 class="ll-h1" style="font-size:clamp(30px,4vw,54px);line-height:.94">
+            Agence IA<br />à Angers
+          </h1>
+          <p class="ll-lede">
+            Ligerian Labs est un laboratoire d'ingénierie IA basé à Angers. Nous ne vendons pas de
+            la sensibilisation à l'IA : nous mettons des systèmes en production et nous les rendons
+            mesurables.
+          </p>
+          <div class="ll-btn-row" style="margin-top:6px">
+            <a href="/contact" class="ll-btn">Parler à un ingénieur →</a>
+            <a href="/offres" class="ll-btn ll-btn--ghost">Les offres</a>
+          </div>
+        </div>
+        <div class="ll-hero__aside ll-hero__aside--panel">
+          <div class="ll-mono">Zone d'intervention</div>
+          <div class="ll-chips">
+            {zone.map((city) => <span class="ll-chip">{city}</span>)}
+            <span class="ll-chip ll-chip--on">Partout à distance</span>
+          </div>
+          <div class="ll-mono ll-mono--plain" style="line-height:1.7">
+            47.4784 N · −0.5632 E<br />SUR SITE QUAND ÇA SE JUSTIFIE
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <SectionBar label="01 — Pourquoi une agence IA locale" note="Et ce que ça change vraiment" />
+
+  <section class="ll-sec">
+    <div class="ll-wrap ll-pad">
+      <div class="ll-intro" style="grid-template-columns:1fr 1.15fr;margin-bottom:0">
+        <div style="display:flex;flex-direction:column;gap:16px">
+          <h2 class="ll-h2 ll-h2--tight">Proche, mais<br />pas provincial</h2>
+          <p class="ll-body ll-body--lg">
+            Être à Angers ne veut pas dire faire de l'IA au rabais. Nous travaillons avec des
+            équipes produit ailleurs en France et à l'étranger, et les entreprises du Maine-et-Loire
+            ont accès exactement aux mêmes méthodes.
+          </p>
+          <p class="ll-body ll-body--lg">
+            Ce que la proximité change : on peut venir s'asseoir avec vos équipes quand la
+            conversation le mérite, et on connaît le tissu économique local — industrie, végétal,
+            santé, services.
+          </p>
+        </div>
+        <div class="ll-grid ll-grid--2 ll-grid--boxed">
+          {reasons.map((reason) => (
+            <div class:list={["ll-cell", reason.lead && "ll-cell--cobalt"]} style="gap:9px">
+              <div class="ll-step__num" style="font-size:11px">{reason.n}</div>
+              <div style="font-weight:700;font-size:17px;line-height:1.2">{reason.title}</div>
+              <p>{reason.body}</p>
+            </div>
+          ))}
+        </div>
+      </div>
     </div>
   </section>
 
-  <section class="bg-surface py-20">
-    <div class="max-w-6xl mx-auto px-6">
-      <p class="section-label mb-4">Ce qu'on corrige</p>
-      <h2 class="text-3xl md:text-4xl font-bold mb-12">Pas de chatbot gadget. Des systèmes utiles.</h2>
-      <div class="grid md:grid-cols-2 gap-6">
-        {services.map((service) => (
-          <div class="bg-white rounded-2xl p-6 border border-black/5">
-            <h3 class="text-xl font-bold mb-2">{service}</h3>
-            <p class="text-text-secondary">
-              On part de vos vrais irritants métier, puis on livre une solution IA mesurable : moins de saisie, moins d'allers-retours, moins de temps perdu.
-            </p>
+  <SectionBar label="02 — Nos interventions" note="Le détail des offres →" noteHref="/offres" />
+
+  <section class="ll-sec">
+    <div class="ll-wrap">
+      <OfferGrid variant="short" />
+    </div>
+  </section>
+
+  <SectionBar label="03 — Questions fréquentes" note="Angers & Pays de la Loire" />
+
+  <section class="ll-sec">
+    <div class="ll-wrap ll-pad">
+      <div class="ll-rows">
+        {faq.map((item) => (
+          <div class="ll-row">
+            <h3 class="ll-row__q">{item.q}</h3>
+            <p class="ll-row__a" set:html={item.html ?? item.a} />
           </div>
         ))}
       </div>
     </div>
   </section>
 
-  <section class="max-w-6xl mx-auto px-6 py-24">
-    <div class="grid md:grid-cols-2 gap-16 items-start">
-      <div>
-        <p class="section-label mb-4">Pourquoi local</p>
-        <h2 class="text-3xl md:text-4xl font-bold mb-6">Une agence IA basée à Angers, pas un cabinet hors-sol</h2>
-        <p class="text-text-secondary text-lg leading-relaxed mb-6">
-          Les PME angevines n'ont pas besoin d'un deck de 80 slides sur “la transformation digitale”. Elles ont besoin d'un partenaire technique qui comprend le terrain, les contraintes de budget, les équipes petites, les outils déjà en place.
-        </p>
-        <p class="text-text-secondary text-lg leading-relaxed">
-          Notre zone naturelle : Angers, Avrillé, Trélazé, Beaucouzé, Les Ponts-de-Cé, le Maine-et-Loire et les Pays de la Loire.
-        </p>
-      </div>
-      <div class="bg-surface rounded-2xl p-8">
-        <h3 class="text-2xl font-bold mb-6">Pour quels besoins ?</h3>
-        <ul class="space-y-3 text-text-secondary">
-          <li>• Comprendre où l'IA peut vraiment faire gagner du temps</li>
-          <li>• Automatiser un process qui bloque l'équipe chaque semaine</li>
-          <li>• Brancher un agent IA à vos documents, emails ou outils métier</li>
-          <li>• Former vos équipes sans jargon ni théorie hors-sol</li>
-          <li>• Déployer une solution IA utile sans exploser le budget</li>
-        </ul>
-      </div>
-    </div>
-  </section>
-
-  <section class="bg-accent text-white py-20 mx-6 md:mx-auto max-w-6xl rounded-2xl">
-    <div class="max-w-3xl mx-auto px-6 text-center">
-      <h2 class="text-3xl md:text-4xl font-bold mb-4">Vous êtes à Angers et vous voulez tester l'IA ?</h2>
-      <p class="text-white/70 mb-8 text-lg">On audite vos process, on priorise les cas d'usage, puis on construit ce qui peut vraiment tourner.</p>
-      <a href="/contact" class="bg-white text-accent hover:bg-white/90 px-8 py-3 rounded-lg font-medium transition inline-block">
-        Parler de mon projet IA
-      </a>
-    </div>
-  </section>
+  <CtaBand
+    title="Un café à Angers,<br />ou un appel de 30 min"
+    body="Décrivez votre situation. Vous aurez une réponse d'ingénieur sous 48 h ouvrées — y compris si ce n'est pas pour nous."
+  />
 </Base>

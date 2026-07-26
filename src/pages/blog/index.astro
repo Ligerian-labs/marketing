@@ -1,39 +1,173 @@
 ---
 export const prerender = true;
 import Base from "../../layouts/Base.astro";
+import CtaBand from "../../components/CtaBand.astro";
 import { getCollection } from "astro:content";
+import { formatDate, readingTimeFromBody, category, categoriesOf, slug } from "../../lib/blog";
 
-const posts = (await getCollection("blog"))
-  .sort((a, b) => new Date(b.data.date).getTime() - new Date(a.data.date).getTime());
+const all = (await getCollection("blog")).sort(
+  (a, b) => new Date(b.data.date).getTime() - new Date(a.data.date).getTime(),
+);
+
+const [featured, ...rest] = all;
+const categories = categoriesOf(all.map((post) => post.data.tags ?? []));
+
+const posts = rest.map((post) => ({
+  slug: post.slug,
+  title: post.data.title,
+  excerpt: post.data.excerpt,
+  date: formatDate(post.data.date),
+  minutes: readingTimeFromBody(post.body),
+  category: category(post.data.tags),
+  categoryKey: slug(category(post.data.tags)),
+}));
+
+const featuredCategory = featured ? category(featured.data.tags) : "";
+
+const blogSchema = {
+  "@type": "Blog",
+  "@id": "https://ligerianlabs.fr/blog#blog",
+  name: "Notes d'ingénierie — Ligerian Labs",
+  description: "Notes d'ingénierie sur l'IA en production : coûts, évaluations, architecture, agents.",
+  inLanguage: "fr-FR",
+  publisher: { "@id": "https://ligerianlabs.fr/#organization" },
+};
 ---
 
-<Base title="Blog — Ligerian Labs | IA & Innovation en Pays de la Loire" description="Articles sur l'intelligence artificielle, les outils que nous construisons et retours d'expérience du terrain.">
-  <section class="max-w-6xl mx-auto px-6 py-24">
-    <p class="section-label mb-4">Le blog</p>
-    <h1 class="text-4xl md:text-5xl font-bold mb-4">Articles & réflexions</h1>
-    <p class="text-text-secondary mb-16 max-w-xl">
-      Réflexions sur l'IA, outils qu'on construit, et histoires du terrain.
-    </p>
+<Base
+  title="Blog — notes d'ingénierie sur l'IA en production | Ligerian Labs"
+  description="Notes d'ingénierie sur l'IA en production : coûts, évaluations, architecture, agents, MCP. Écrit depuis des missions réelles, pas depuis la veille LinkedIn."
+  ogImage="og-blog"
+  active="blog"
+  structuredData={blogSchema}
+>
+  <header class="ll-sec">
+    <div class="ll-wrap ll-hero">
+      <div class="ll-hero__main" style="gap:20px">
+        <div class="ll-mono" style="font-size:12px;letter-spacing:.16em">Blog</div>
+        <h1 class="ll-h1">Notes<br />d'ingénierie</h1>
+        <p class="ll-lede" style="max-width:50ch">
+          Ce que nous apprenons en mettant de l'IA en production chez des clients. Écrit depuis le
+          terrain, pas depuis la veille LinkedIn.
+        </p>
+      </div>
+      <div class="ll-hero__aside ll-hero__aside--panel" style="gap:20px">
+        <div class="ll-mono">Sujets</div>
+        <div class="ll-chips" id="ll-filters">
+          <button type="button" class="ll-chip ll-chip--on" data-filter="all">Tout</button>
+          {categories.map((name) => (
+            <button type="button" class="ll-chip" data-filter={slug(name)}>{name}</button>
+          ))}
+        </div>
+        <div class="ll-mono ll-mono--plain">
+          {String(all.length).padStart(2, "0")} articles
+        </div>
+      </div>
+    </div>
+  </header>
 
-    {posts.length === 0 ? (
-      <p class="text-muted">Pas encore d'articles. Revenez bientôt.</p>
-    ) : (
-      <div class="grid md:grid-cols-2 gap-8">
-        {posts.map((post) => (
-          <a href={`/blog/${post.slug}`} class="group">
-            <div class="bg-surface rounded-2xl p-8 h-full border border-transparent hover:border-black/5 transition">
-              <div class="flex items-center gap-3 mb-4">
-                <span class="text-sm text-muted">{post.data.date}</span>
-                {post.data.tags?.map((tag) => (
-                  <span class="text-xs bg-black/5 text-text-secondary px-2 py-0.5 rounded-full">{tag}</span>
-                ))}
+  {featured && (
+    <section class="ll-sec">
+      <div class="ll-wrap">
+        <a href={`/blog/${featured.slug}`} class="ll-feature">
+          <div class="ll-feature__text">
+            <div style="display:flex;gap:14px;align-items:baseline;flex-wrap:wrap">
+              <span
+                class="ll-mono ll-mono--cobalt"
+                style="font-size:11px;letter-spacing:.12em">À la une</span
+              >
+              <span class="ll-mono ll-mono--plain" style="font-size:11px">
+                {formatDate(featured.data.date)} · {readingTimeFromBody(featured.body)} min
+              </span>
+            </div>
+            <h2 class="ll-h2" style="font-size:clamp(24px,2.9vw,38px);line-height:1;letter-spacing:-.01em">
+              {featured.data.title}
+            </h2>
+            <p class="ll-body ll-body--lg" style="max-width:52ch">{featured.data.excerpt}</p>
+            <span
+              class="ll-mono ll-mono--cobalt"
+              style="font-size:11.5px;letter-spacing:.08em;margin-top:6px">Lire l'article →</span
+            >
+          </div>
+          <div class="ll-feature__side">
+            <div class="ll-mono" style="color:inherit">Ce que vous en retirez</div>
+            <div class="ll-bullets" style="font-size:15.5px">
+              <div class="ll-bullet ll-bullet--cream">
+                <span>Le raisonnement d'ingénierie, pas la tendance du mois</span>
               </div>
-              <h2 class="text-xl font-bold mb-3 group-hover:text-accent-light transition">{post.data.title}</h2>
-              <p class="text-text-secondary">{post.data.excerpt}</p>
+              <div class="ll-bullet ll-bullet--cream">
+                <span>Ce qu'il faut mesurer avant d'ajouter une fonctionnalité</span>
+              </div>
+              <div class="ll-bullet ll-bullet--cream">
+                <span>Un test simple pour savoir si ça vaut le coup</span>
+              </div>
+            </div>
+            <div class="ll-mono ll-mono--sm" style="color:inherit;opacity:.85">
+              {featuredCategory}
+            </div>
+          </div>
+        </a>
+      </div>
+    </section>
+  )}
+
+  <section class="ll-sec">
+    <div class="ll-wrap">
+      <div class="ll-grid ll-grid--3 ll-grid--fill" id="ll-posts">
+        {posts.map((post) => (
+          <a
+            href={`/blog/${post.slug}`}
+            class="ll-cell"
+            style="min-height:270px;gap:13px"
+            data-category={post.categoryKey}
+          >
+            <div style="display:flex;justify-content:space-between;align-items:baseline;gap:12px">
+              <span class="ll-mono ll-mono--plain" style="font-size:11px">{post.date}</span>
+              <span class="ll-mono ll-mono--plain" style="font-size:10.5px">{post.minutes} min</span>
+            </div>
+            <h3 style="font-weight:700;font-size:20px;line-height:1.16;margin:0;letter-spacing:-.01em">
+              {post.title}
+            </h3>
+            <p style="font-size:15px">{post.excerpt}</p>
+            <div class="ll-cell__foot">
+              <span>{post.category}</span>
+              <span style="color:var(--cobalt)">Lire →</span>
             </div>
           </a>
         ))}
       </div>
-    )}
+      <p id="ll-empty" class="ll-mono ll-mono--plain" hidden style="padding:26px 0;text-align:center">
+        Aucun article dans ce sujet.
+      </p>
+    </div>
   </section>
+
+  <CtaBand
+    title="Une question que<br />le blog ne traite pas&nbsp;?"
+    cta="Parlons de votre projet →"
+  />
 </Base>
+
+<script>
+  const filters = document.getElementById("ll-filters");
+  const grid = document.getElementById("ll-posts");
+  const empty = document.getElementById("ll-empty");
+
+  filters?.addEventListener("click", (event) => {
+    const button = (event.target as HTMLElement).closest<HTMLButtonElement>("[data-filter]");
+    if (!button || !grid) return;
+
+    const wanted = button.dataset.filter;
+    filters.querySelectorAll(".ll-chip").forEach((chip) => chip.classList.remove("ll-chip--on"));
+    button.classList.add("ll-chip--on");
+
+    let shown = 0;
+    grid.querySelectorAll<HTMLElement>("[data-category]").forEach((card) => {
+      const match = wanted === "all" || card.dataset.category === wanted;
+      card.hidden = !match;
+      if (match) shown++;
+    });
+
+    if (empty) empty.hidden = shown > 0;
+  });
+</script>

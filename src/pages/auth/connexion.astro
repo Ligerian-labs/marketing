@@ -1,6 +1,6 @@
 ---
 export const prerender = false;
-import Base from "../../layouts/Base.astro";
+import AuthSplit from "../../layouts/AuthSplit.astro";
 import { getUserByEmail, verifyPassword, createSession, setSessionCookie } from "../../lib/auth";
 
 const redirectTo = Astro.url.searchParams.get("redirect") || "/dashboard";
@@ -10,14 +10,14 @@ if (Astro.request.method === "POST") {
   const formData = await Astro.request.formData();
   const email = formData.get("email") as string;
   const password = formData.get("password") as string;
-  const redirect = formData.get("redirect") as string || redirectTo;
+  const redirect = (formData.get("redirect") as string) || redirectTo;
 
   if (!email || !password) {
     error = "Email et mot de passe requis.";
   } else {
     const user = getUserByEmail(email);
     if (!user || !verifyPassword(password, user.password_hash)) {
-      error = "Email ou mot de passe incorrect.";
+      error = "Identifiants non reconnus. Vérifiez votre email et votre mot de passe.";
     } else {
       const sessionId = createSession(user.id);
       setSessionCookie(Astro.cookies, sessionId);
@@ -25,40 +25,40 @@ if (Astro.request.method === "POST") {
     }
   }
 }
+
+const signupHref = `/auth/inscription${redirectTo !== "/dashboard" ? `?redirect=${encodeURIComponent(redirectTo)}` : ""}`;
 ---
 
-<Base title="Connexion — Ligerian Labs" robots="noindex, follow">
-  <section class="max-w-md mx-auto px-6 py-20">
-    <h1 class="text-3xl font-bold mb-2 text-center">Connexion</h1>
-    <p class="text-gray-400 text-center mb-8">Accédez à votre espace client</p>
+<AuthSplit title="Connexion — espace client | Ligerian Labs" kicker="Connexion" heading="Bon retour">
+  <input type="hidden" name="redirect" value={redirectTo} />
 
-    {error && (
-      <div class="bg-red-900/30 border border-red-500/30 rounded-lg p-4 mb-6 text-red-400 text-sm text-center">
-        {error}
-      </div>
-    )}
+  {error && (
+    <div class="ll-alert ll-alert--err" role="alert">
+      <p>{error}</p>
+    </div>
+  )}
 
-    <form method="POST" class="space-y-5">
-      <input type="hidden" name="redirect" value={redirectTo} />
-      <div>
-        <label for="email" class="form-label">Email</label>
-        <input type="email" id="email" name="email" required class="form-input" placeholder="votre@email.fr" />
-      </div>
-      <div>
-        <label for="password" class="form-label">Mot de passe</label>
-        <input type="password" id="password" name="password" required class="form-input" placeholder="••••••••" />
-      </div>
-      <button type="submit" class="w-full bg-accent hover:bg-accent-light text-white px-6 py-3 rounded-lg font-medium transition">
-        Se connecter
-      </button>
-    </form>
+  <label class="ll-field">
+    <span class="ll-label">Email</span>
+    <input class="ll-input" type="email" name="email" required placeholder="vous@entreprise.fr" autocomplete="email" />
+  </label>
 
-    <p class="text-center text-sm text-muted mt-4">
-      <a href="/auth/mot-de-passe-oublie" class="text-accent hover:text-accent-light">Mot de passe oublié ?</a>
-    </p>
+  <label class="ll-field">
+    <span class="ll-label">Mot de passe</span>
+    <input class="ll-input" type="password" name="password" required placeholder="••••••••" autocomplete="current-password" />
+  </label>
 
-    <p class="text-center text-sm text-muted mt-2">
-      Pas encore de compte ? <a href={`/auth/inscription${redirectTo !== '/dashboard' ? `?redirect=${encodeURIComponent(redirectTo)}` : ''}`} class="text-accent hover:text-accent-light">Créer un compte</a>
-    </p>
-  </section>
-</Base>
+  <div style="display:flex;justify-content:flex-end;align-items:center;gap:14px;flex-wrap:wrap">
+    <a href="/auth/mot-de-passe-oublie" style="font-size:14px">Mot de passe oublié&nbsp;?</a>
+  </div>
+
+  <button type="submit" class="ll-btn ll-btn--lg ll-btn--block">Se connecter →</button>
+
+  <div
+    style="border-top:1px solid var(--rule-hair);padding-top:18px;font-size:14.5px;line-height:1.55;color:var(--ink-soft)"
+  >
+    Pas encore de compte&nbsp;? <a href={signupHref}>Créer un compte</a>. L'accès est ouvert au
+    démarrage d'une mission — sinon,
+    <a href="/contact">parlons de votre projet</a>.
+  </div>
+</AuthSplit>

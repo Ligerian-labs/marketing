@@ -1,17 +1,25 @@
 @import "tailwindcss";
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+@import "./cobalt.css";
 
 @theme {
-  --color-primary: #FFFFFF;
-  --color-primary-alt: #F5F5F5;
-  --color-primary-muted: #FAFAFA;
-  --color-surface: #F5F5F5;
-  --color-accent: #000000;
-  --color-accent-light: #333333;
-  --color-muted: #6B7280;
-  --color-text: #000000;
-  --color-text-secondary: #666666;
-  --font-sans: "Inter", system-ui, sans-serif;
+  /* Cobalt Bold Blocks — one chromatic accent, no gradients, no radii. */
+  --color-primary: #ece8df;
+  --color-primary-alt: #ded9cd;
+  --color-primary-muted: #ded9cd;
+  --color-surface: #ded9cd;
+  --color-accent: #1e2be6;
+  --color-accent-light: #0e0e0e;
+  --color-muted: #3a3a3a;
+  --color-text: #0e0e0e;
+  --color-text-secondary: #333333;
+  --color-cobalt: #1e2be6;
+  --color-cream: #ece8df;
+  --color-ink: #0e0e0e;
+  --color-panel: #ded9cd;
+  --font-sans: "Archivo", system-ui, sans-serif;
+  --font-display: "Unbounded", "Arial Black", sans-serif;
+  --font-mono: "Space Mono", ui-monospace, monospace;
+  --radius-none: 0;
 }
 
 @layer base {
@@ -20,36 +28,45 @@
   }
 }
 
+/* Space Mono label used by the app screens. */
 .section-label {
-  @apply uppercase font-semibold text-muted tracking-[3px] text-xs;
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--meta);
 }
 
-/* Blog prose styles */
-.prose h1 { @apply text-4xl font-bold mb-6 mt-12 text-text; }
-.prose h2 { @apply text-2xl font-semibold mb-4 mt-10 text-text; }
-.prose h3 { @apply text-xl font-semibold mb-3 mt-8 text-text; }
-.prose p { @apply text-text-secondary leading-relaxed mb-6; }
-.prose a { @apply text-text underline hover:text-accent-light; }
-.prose ul { @apply list-disc list-inside mb-6 text-text-secondary; }
-.prose ol { @apply list-decimal list-inside mb-6 text-text-secondary; }
-.prose code { @apply bg-surface px-2 py-0.5 rounded text-sm text-text; }
-.prose pre { @apply bg-surface p-4 rounded-lg mb-6 overflow-x-auto; }
-.prose blockquote { @apply border-l-4 border-text pl-4 italic text-text-secondary mb-6; }
-.prose img { @apply rounded-lg my-8; }
-.prose li { @apply mb-2; }
-
-/* Form styles */
+/* Form controls on the app screens (auth, dashboard, formations). */
 .form-input {
-  @apply w-full bg-white border border-black/10 rounded-lg px-4 py-3 text-text placeholder-muted focus:outline-none focus:border-text focus:ring-1 focus:ring-text transition;
+  border: 2px solid var(--ink);
+  background: var(--cream);
+  padding: 13px 14px;
+  font-size: 16px;
+  width: 100%;
+  border-radius: 0;
+  color: var(--ink);
+}
+
+.form-input:focus {
+  border-color: var(--cobalt);
+  outline: none;
 }
 
 select.form-input {
   appearance: none;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23888' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%230E0E0E' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
   background-repeat: no-repeat;
-  background-position: right 12px center;
-  padding-right: 40px;
+  background-position: right 14px center;
+  padding-right: 42px;
 }
+
 .form-label {
-  @apply block text-xs font-semibold uppercase tracking-[3px] text-muted mb-2;
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--meta);
+  margin-bottom: 8px;
 }
