@@ -4,10 +4,9 @@ dist/
 .DS_Store
 .env
 .env.*
-leads/*.json
-leads/*.jsonl
-data/
-data/*.db
-data/*.db-wal
-data/*.db-shm
-data/formations-cache/
+
+# Anchored to the repo root: an unanchored `data/` also matched `src/data/`,
+# which silently kept source files out of the repo.
+/leads/*.json
+/leads/*.jsonl
+/data/
