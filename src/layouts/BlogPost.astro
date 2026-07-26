@@ -58,8 +58,14 @@ const breadcrumbSchema = {
 <Base
   title={`${frontmatter.title} | Ligerian Labs`}
   description={frontmatter.excerpt}
+  ogTitle={frontmatter.title}
+  ogDescription={frontmatter.excerpt}
   ogImage="og-article"
+  ogImageAlt={`Ligerian Labs — ${category}`}
   ogType="article"
+  publishedTime={isoDate(frontmatter.date)}
+  section={category}
+  tags={frontmatter.tags ?? []}
   active="blog"
   structuredData={[articleSchema, breadcrumbSchema]}
 >
