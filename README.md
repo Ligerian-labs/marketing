@@ -1,6 +1,7 @@
 # Ligerian Labs — site marketing
 
-Laboratoire d'ingénierie IA basé à Angers, Pays de la Loire.
+Création, reprise et suivi de logiciels, avec une expertise en ingénierie IA.
+Basé à Angers, Pays de la Loire.
 Le site tourne sur le système visuel **Cobalt Bold Blocks**.
 
 ## Stack
@@ -47,19 +48,21 @@ Règles de composition :
 - Un seul bloc cobalt par écran. Jamais deux côte à côte.
 - Chaque page publique se termine par le bandeau CTA → `<CtaBand />`.
 
-Composants partagés : `Header`, `Footer`, `SectionBar`, `CtaBand`, `OfferGrid`,
-`DiagnosticTable`, `ProofSection`. Les quatre offres et le diagnostic en quatre
-stades vivent dans `src/data/offers.ts` — une seule source de vérité.
+Composants partagés : `Header`, `Footer`, `SectionBar`, `CtaBand`, `ProjectOffers`,
+`OfferGrid`, `DiagnosticTable`, `ProofSection`. Les offres de création, reprise et
+suivi, ainsi que les catégories du formulaire, vivent dans `src/data/project-offers.ts`.
+Les expertises IA et leur diagnostic restent dans `src/data/offers.ts`.
 
 ## Pages
 
 | Route | Contenu |
 | --- | --- |
-| `/` | Accueil : hero, quatre questions, offres, diagnostic, preuve, ancrage, blog |
-| `/offres` | Les quatre offres (Voir, Livrer, Reconstruire, Automatiser) + formats d'engagement |
-| `/approche` | Diagnostic, méthode en quatre temps, cinq principes |
+| `/` | Accueil : création à 2 000 €/mois, reprise, suivi, exemples de besoins, méthode, blog |
+| `/offres` | Création, reprise après diagnostic, abonnement de suivi, budget et FAQ |
+| `/approche` | Cadrage, construction, mise en service, suivi et méthode de production |
+| `/expertise` | Les quatre expertises IA et leurs formats de mission |
 | `/a-propos` | Le labo, le fondateur, le parcours, la stack |
-| `/contact` | Formulaire (lead capture) |
+| `/contact` | Formulaire de qualification, présélection via `?projet=creation`, `reprise`, `suivi` ou `expertise` |
 | `/blog`, `/blog/<slug>` | Notes d'ingénierie |
 | `/ia-angers`, `/ia-angers-pme` | Pages locales (fil d'Ariane + FAQ, JSON-LD) |
 | `/kit-presse` | Logos, couleurs, typographie, textes et bios prêts à publier |
@@ -73,7 +76,7 @@ stades vivent dans `src/data/offers.ts` — une seule source de vérité.
 Les fichiers de marque sont servis depuis `public/brand/` :
 
 - `brand/logo/` — lockups SVG et PNG, marque LL, favicons
-- `brand/og/` — neuf visuels 1200 × 630, un par page
+- `brand/og/` — visuels de partage 1200 × 630, un par page
 - `brand/valentin-dosimont.jpg` — portrait du fondateur
 
 ⚠️ Les SVG de logo contiennent du **texte vivant** et nécessitent la fonte
@@ -106,6 +109,22 @@ Les soumissions du formulaire de contact sont stockées dans :
 
 Les leads sont gitignorés. La notification email part via Resend ; sans
 `RESEND_API_KEY`, le lead est quand même enregistré et un avertissement est logué.
+
+Le formulaire enregistre le besoin, l'outil actuel, l'échéance et le budget dans
+les deux fichiers du lead et les inclut dans la notification. L'ancien champ
+`stade` reste accepté par l'API pour les formulaires déjà chargés.
+
+## Vérification du formulaire
+
+```bash
+npm run build
+npm test
+```
+
+Les tests démarrent le serveur construit dans un répertoire temporaire et
+désactivent Resend. Ils vérifient les catégories, les informations enregistrées,
+la validation, le champ anti-spam et la compatibilité des anciennes demandes.
+Le projet ne configure pas de commande distincte de lint ou de typecheck.
 
 ## Build & deploy
 

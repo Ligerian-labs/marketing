@@ -25,7 +25,7 @@ interface Props {
   section?: string;
   tags?: string[];
   /** Underlines the matching nav tab. */
-  active?: "offres" | "approche" | "apropos" | "blog" | "";
+  active?: "offres" | "approche" | "expertise" | "apropos" | "blog" | "";
   /** Set false for full-bleed screens that draw their own shell (connexion). */
   chrome?: boolean;
   structuredData?: Record<string, unknown> | Record<string, unknown>[];
@@ -33,7 +33,7 @@ interface Props {
 
 const {
   title,
-  description = "Ligerian Labs met l'IA en production et vous rend la main sur ce qu'elle coûte, ce qu'elle fait et si elle s'améliore. Angers, Pays de la Loire.",
+  description = "Ligerian Labs crée, reprend et maintient vos logiciels. Construction à 2 000 € par mois, puis abonnement de suivi adapté. À Angers et à distance.",
   robots = "index, follow, max-image-preview:large",
   ogTitle,
   ogDescription,
@@ -66,7 +66,7 @@ const schemaGraph = [
     email: "bonjour@ligerianlabs.fr",
     logo: "https://ligerianlabs.fr/brand/logo/logo-stacked-ink.png",
     description:
-      "Laboratoire d'ingénierie IA à Angers : token ops, mise en production, architecture IA et agents.",
+      "Création, reprise et maintenance de logiciels à Angers. Expertise en ingénierie IA et automatisation.",
     founder: {
       "@type": "Person",
       name: "Valentin Dosimont",
@@ -88,7 +88,7 @@ const schemaGraph = [
     email: "bonjour@ligerianlabs.fr",
     parentOrganization: { "@id": "https://ligerianlabs.fr/#organization" },
     description:
-      "Agence et laboratoire d'ingénierie IA à Angers pour équipes produit, PME et collectivités des Pays de la Loire.",
+      "Développement et suivi de logiciels sur mesure à Angers pour équipes produit, PME et collectivités. Expertise IA et automatisation.",
     image: "https://ligerianlabs.fr/brand/og/og-accueil.png",
     priceRange: "€€€",
     address: {

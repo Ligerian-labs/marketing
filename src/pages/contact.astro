@@ -1,20 +1,13 @@
 ---
 export const prerender = true;
 import Base from "../layouts/Base.astro";
-
-const stages = [
-  { value: "00", strong: "Expérimentation", rest: " — des démos, pas encore de production" },
-  { value: "01", strong: "En prod, à l'aveugle", rest: " — ça tourne, mais on ne mesure rien" },
-  { value: "02", strong: "Mesurée, mais greffée", rest: " — l'IA est à côté du produit" },
-  { value: "03", strong: "Nativement IA", rest: " — on veut déléguer du travail à des agents" },
-  { value: "ns", strong: "", rest: "Je ne sais pas — c'est justement la question" },
-];
+import { projectTypes } from "../data/project-offers";
 
 const next = [
-  "Nous lisons votre message et répondons sous 48 h ouvrées.",
-  "Un appel de 30 minutes, sans support de présentation.",
-  "Si c'est pertinent : une proposition de sprint de cadrage, périmètre écrit.",
-  "Si ça ne l'est pas, nous vous le disons — et nous disons qui appeler.",
+  "Nous lisons votre demande et répondons sous 48 h ouvrées.",
+  "Un premier échange précise votre besoin, les priorités et l'existant.",
+  "Nous vous proposons un périmètre, une durée estimée et un budget. Tout diagnostic payant est chiffré avant de commencer.",
+  "Si nous construisons le logiciel, le tarif de suivi prévu est également précisé avant le démarrage.",
 ];
 
 const contactSchema = {
@@ -26,10 +19,10 @@ const contactSchema = {
 ---
 
 <Base
-  title="Contact — parlons de votre projet IA | Ligerian Labs"
-  description="Décrivez votre situation en quelques lignes. Réponse sous 48 h ouvrées, par un ingénieur, pas par un commercial. Angers, Pays de la Loire."
-  ogTitle="Contact — parlons de votre projet IA"
-  ogDescription="Une réponse d'ingénieur sous 48 h ouvrées. Y compris si ce n'est pas pour nous."
+  title="Contact · parlons de votre logiciel | Ligerian Labs"
+  description="Création, reprise ou suivi de logiciel : décrivez le besoin, votre outil actuel, votre échéance et votre budget. Réponse sous 48 h ouvrées."
+  ogTitle="Contact · parlons de votre logiciel"
+  ogDescription="Décrivez votre projet de création, de reprise ou de suivi de logiciel. Réponse sous 48 h ouvrées."
   ogImage="og-contact"
   structuredData={contactSchema}
 >
@@ -39,8 +32,8 @@ const contactSchema = {
         <div class="ll-mono" style="font-size:12px;letter-spacing:.16em">Contact</div>
         <h1 class="ll-h1">Parlons de<br />votre projet</h1>
         <p class="ll-lede" style="max-width:50ch">
-          Décrivez votre situation en quelques lignes. Vous aurez une réponse d'un ingénieur, pas
-          d'un commercial — et une réponse honnête si ce n'est pas pour nous.
+          Vous voulez créer un outil, reprendre un logiciel ou organiser son suivi ? Décrivez le
+          besoin et vos priorités. Nous vous aidons à définir une première étape et son budget.
         </p>
       </div>
       <div class="ll-hero__aside ll-hero__aside--panel" style="justify-content:center;gap:18px">
@@ -86,31 +79,40 @@ const contactSchema = {
               <input class="ll-input" type="text" name="company" placeholder="Nom de la structure" autocomplete="organization" />
             </label>
             <label class="ll-field">
-              <span class="ll-label">Rôle</span>
-              <input class="ll-input" type="text" name="role" placeholder="CTO, dirigeant, produit…" autocomplete="organization-title" />
+              <span class="ll-label">Outil ou logiciel actuel</span>
+              <input class="ll-input" type="text" name="currentTool" maxlength="500" placeholder="Tableur, application, adresse du site…" />
             </label>
           </div>
 
           <fieldset class="ll-fieldset">
-            <legend>Où en êtes-vous&nbsp;?</legend>
-            {stages.map((stage) => (
-              <label class="ll-check">
-                <input type="radio" name="stade" value={stage.value} />
-                <span>
-                  {stage.strong && <strong>{stage.strong}</strong>}{stage.rest}
-                </span>
+            <legend>Votre besoin *</legend>
+            {projectTypes.map((type) => (
+              <label class="ll-check project-choice">
+                <input type="radio" name="projectType" value={type.value} required />
+                <span>{type.label}</span>
               </label>
             ))}
           </fieldset>
 
+          <div class="ll-pair">
+            <label class="ll-field">
+              <span class="ll-label">Échéance souhaitée</span>
+              <input class="ll-input" type="text" name="deadline" maxlength="200" placeholder="Une date, un trimestre, sans urgence…" />
+            </label>
+            <label class="ll-field">
+              <span class="ll-label">Budget envisagé</span>
+              <input class="ll-input" type="text" name="budget" maxlength="200" placeholder="Une enveloppe ou à définir ensemble" />
+            </label>
+          </div>
+
           <label class="ll-field">
-            <span class="ll-label">Votre situation *</span>
+            <span class="ll-label">Le problème à résoudre *</span>
             <textarea
               class="ll-input"
               name="message"
               required
               rows="6"
-              placeholder="Ce qui tourne aujourd'hui, ce qui vous inquiète, et ce que vous aimeriez pouvoir dire dans six mois."
+              placeholder="Qui utilisera le logiciel ? Que doit-il permettre de faire ? Quelles fonctionnalités sont indispensables ?"
             ></textarea>
           </label>
 
@@ -154,11 +156,11 @@ const contactSchema = {
           <div class="ll-contact__aside">
             <div class="ll-mono ll-mono--invert">Pas encore prêt&nbsp;?</div>
             <p style="margin:0;font-size:15.5px;line-height:1.55;color:var(--ink-invert)">
-              Regardez d'abord les quatre offres et le diagnostic en quatre stades. Vous saurez plus
-              vite ce dont vous avez besoin — et le message sera meilleur.
+              La construction est facturée 2 000 € par mois sur un périmètre convenu. La reprise
+              commence par un diagnostic. Le suivi après livraison est chiffré selon votre logiciel.
             </p>
             <div class="ll-stack" style="gap:9px;margin-top:4px">
-              <a href="/offres" style="font-size:15px;font-weight:700;color:var(--cream)">Les quatre offres →</a>
+              <a href="/offres" style="font-size:15px;font-weight:700;color:var(--cream)">Les offres et tarifs →</a>
               <a href="/approche" style="font-size:15px;font-weight:700;color:var(--cream)">Notre approche →</a>
               <a
                 href="https://github.com/Ligerian-labs"
@@ -175,17 +177,17 @@ const contactSchema = {
 </Base>
 
 <script>
+  import { projectTypes } from "../data/project-offers";
+
   const form = document.getElementById("contact-form") as HTMLFormElement | null;
   const status = document.getElementById("form-status");
   const submit = document.getElementById("contact-submit") as HTMLButtonElement | null;
 
-  const STAGE_LABELS: Record<string, string> = {
-    "00": "Stade 00 — Expérimentation",
-    "01": "Stade 01 — En prod, à l'aveugle",
-    "02": "Stade 02 — Mesurée, mais greffée",
-    "03": "Stade 03 — Nativement IA",
-    ns: "Ne sait pas",
-  };
+  const requestedType = new URLSearchParams(window.location.search).get("projet");
+  if (requestedType && projectTypes.some((type) => type.value === requestedType)) {
+    const input = form?.querySelector<HTMLInputElement>(`input[name="projectType"][value="${requestedType}"]`);
+    if (input) input.checked = true;
+  }
 
   function render(kind: "ok" | "err", title: string, body: string) {
     if (!status) return;
@@ -202,21 +204,22 @@ const contactSchema = {
     const formData = new FormData(form);
     if (formData.get("website")) return; // honeypot
 
-    const stade = String(formData.get("stade") ?? "");
     const payload = {
       name: formData.get("name"),
       email: formData.get("email"),
       company: formData.get("company") || null,
-      role: formData.get("role") || null,
-      stade,
+      projectType: formData.get("projectType"),
+      currentTool: formData.get("currentTool") || null,
+      deadline: formData.get("deadline") || null,
+      budget: formData.get("budget") || null,
       message: formData.get("message"),
     };
 
     if ((window as any).posthog) {
       (window as any).posthog.capture("contact_form_submitted", {
-        stade: payload.stade,
+        project_type: payload.projectType,
         has_company: !!payload.company,
-        has_role: !!payload.role,
+        has_current_tool: !!payload.currentTool,
       });
     }
 
@@ -239,7 +242,7 @@ const contactSchema = {
         "Message envoyé",
         "Merci. Nous revenons vers vous sous 48 h ouvrées, depuis bonjour@ligerianlabs.fr.",
       );
-      status?.scrollIntoView({ behavior: "smooth", block: "center" });
+      status?.scrollIntoView({ behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "instant" : "smooth", block: "center" });
     } catch {
       render(
         "err",
@@ -253,3 +256,8 @@ const contactSchema = {
     }
   });
 </script>
+
+<style>
+  .project-choice { min-height:44px; align-items:center; }
+  .project-choice input { margin-top:0; }
+</style>

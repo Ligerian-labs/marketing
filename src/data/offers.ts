@@ -1,6 +1,6 @@
 /**
  * The four offers and the four-stage diagnostic.
- * Single source of truth: the homepage, /offres, /ia-angers and the article
+ * Single source of truth: /expertise, /ia-angers and the article
  * sidebar all read from here so a wording change lands everywhere at once.
  */
 
