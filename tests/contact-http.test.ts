@@ -1,48 +1,13 @@
 // Real-HTTP checks against the built standalone server (`npm run build` first).
 // Run: node --test tests/contact-http.test.ts
-//
-// The server runs in a throwaway cwd with no RESEND_API_KEY, so nothing is
-// emailed and every lead lands in a directory this file deletes afterwards.
 import assert from "node:assert/strict";
-import { spawn, type ChildProcess } from "node:child_process";
-import { existsSync } from "node:fs";
-import { mkdtemp, readdir, readFile, rm } from "node:fs/promises";
-import { createServer } from "node:net";
-import { tmpdir } from "node:os";
-import { join, resolve } from "node:path";
 import { after, before, beforeEach, describe, test } from "node:test";
-import { fileURLToPath } from "node:url";
+import { startServer, type TestServer } from "./contact-helpers.ts";
 
-const ENTRY = resolve(fileURLToPath(new URL("../dist/server/entry.mjs", import.meta.url)));
-
-let server: ChildProcess;
+let srv: TestServer;
 let base = "";
-let workDir = "";
-let leadsDir = "";
-let serverLog = "";
-
-async function freePort(): Promise<number> {
-  return new Promise((done, fail) => {
-    const probe = createServer();
-    probe.once("error", fail);
-    probe.listen(0, "127.0.0.1", () => {
-      const { port } = probe.address() as { port: number };
-      probe.close(() => done(port));
-    });
-  });
-}
-
-async function waitForServer(url: string): Promise<void> {
-  for (let attempt = 0; attempt < 100; attempt++) {
-    try {
-      await fetch(url);
-      return;
-    } catch {
-      await new Promise((r) => setTimeout(r, 100));
-    }
-  }
-  throw new Error(`server did not start:\n${serverLog}`);
-}
+const storedLeads = () => srv.storedLeads();
+const leadFiles = () => srv.leadFiles();
 
 const valid = {
   name: "Camille Synthétique",
@@ -64,44 +29,14 @@ function post(body: unknown, headers: Record<string, string> = { "Content-Type":
   });
 }
 
-async function storedLeads(): Promise<Record<string, unknown>[]> {
-  if (!existsSync(leadsDir)) return [];
-  const index = join(leadsDir, "leads.jsonl");
-  if (!existsSync(index)) return [];
-  const text = await readFile(index, "utf8");
-  return text
-    .split("\n")
-    .filter(Boolean)
-    .map((line) => JSON.parse(line));
-}
-
-async function leadFiles(): Promise<string[]> {
-  if (!existsSync(leadsDir)) return [];
-  return (await readdir(leadsDir)).filter((f) => f.startsWith("lead_") && f.endsWith(".json"));
-}
-
 before(async () => {
-  assert.ok(existsSync(ENTRY), "dist/server/entry.mjs is missing: run `npm run build` first");
-  workDir = await mkdtemp(join(tmpdir(), "contact-http-"));
-  leadsDir = join(workDir, "leads");
-  const port = await freePort();
-  base = `http://127.0.0.1:${port}`;
-  const env = { ...process.env, HOST: "127.0.0.1", PORT: String(port), CONTACT_LEADS_DIR: leadsDir };
-  delete env.RESEND_API_KEY;
-  server = spawn(process.execPath, [ENTRY], { cwd: workDir, env, stdio: ["ignore", "pipe", "pipe"] });
-  server.stdout?.on("data", (d) => (serverLog += d));
-  server.stderr?.on("data", (d) => (serverLog += d));
-  await waitForServer(`${base}/contact/`);
+  srv = await startServer();
+  base = srv.base;
 });
 
-after(async () => {
-  server?.kill();
-  if (workDir) await rm(workDir, { recursive: true, force: true });
-});
+after(() => srv?.stop());
 
-beforeEach(async () => {
-  await rm(leadsDir, { recursive: true, force: true });
-});
+beforeEach(() => srv.resetLeads());
 
 describe("contact page", () => {
   test("asks for a project type and no AI-maturity stage", async () => {
@@ -151,8 +86,8 @@ describe("accepted enquiry", () => {
 
   test("does not log the visitor's name or email", async () => {
     assert.equal((await post(valid)).status, 200);
-    assert.doesNotMatch(serverLog, /Camille/);
-    assert.doesNotMatch(serverLog, /camille@example\.invalid/);
+    assert.doesNotMatch(srv.log(), /Camille/);
+    assert.doesNotMatch(srv.log(), /camille@example\.invalid/);
   });
 });
 

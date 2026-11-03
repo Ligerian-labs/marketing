@@ -4,7 +4,7 @@
  * `src/pages/api/contact.ts` only wires in the environment.
  */
 import { randomBytes } from "node:crypto";
-import { appendFile, mkdir, unlink, writeFile } from "node:fs/promises";
+import { appendFile, mkdir, open, stat, truncate, unlink, writeFile } from "node:fs/promises";
 import { join } from "node:path";
 import {
   LIMITS,
@@ -114,6 +114,58 @@ export function buildNotification(lead: Lead): Notification {
   };
 }
 
+// Index appends run one at a time (per process) so a rollback cannot cut off a
+// concurrent request's row. The index is written by a single server process.
+let indexQueue: Promise<unknown> = Promise.resolve();
+const TAIL_SCAN = 64 * 1024; // longer than any row the body limit allows
+
+/**
+ * Make sure the index ends on a row boundary before appending. A row that was
+ * only part-written (failed rollback, crash) is cut back to the last newline.
+ * Throws when it cannot be repaired, so a new row is never glued onto a corrupt tail.
+ */
+async function ensureRowBoundary(path: string, size: number): Promise<void> {
+  if (size === 0) return;
+  const handle = await open(path, "r");
+  let start = 0;
+  let tail: Buffer;
+  try {
+    start = Math.max(0, size - TAIL_SCAN);
+    tail = Buffer.alloc(size - start);
+    await handle.read(tail, 0, tail.length, start);
+  } finally {
+    await handle.close();
+  }
+  if (tail[tail.length - 1] === 0x0a) return;
+  const lastNewline = tail.lastIndexOf(0x0a);
+  if (lastNewline < 0 && start > 0) throw new Error("leads index has an unterminated row that cannot be repaired");
+  await truncate(path, lastNewline < 0 ? 0 : start + lastNewline + 1);
+}
+
+/**
+ * Append one JSONL row. If the write fails part-way (disk full, I/O error) the
+ * file is cut back to its previous length. If even that fails, the next call
+ * repairs the tail first, or refuses to write, so the index stays parseable.
+ */
+export function appendIndexLine(path: string, line: string): Promise<void> {
+  const run = indexQueue.then(async () => {
+    const before = await stat(path).then(
+      (info) => info.size,
+      (err) => (err?.code === "ENOENT" ? 0 : Promise.reject(err)),
+    );
+    await ensureRowBoundary(path, before);
+    const safe = await stat(path).then((info) => info.size, () => 0);
+    try {
+      await appendFile(path, line);
+    } catch (err) {
+      await truncate(path, safe).catch(() => {}); // a failed rollback is repaired by the next call
+      throw err;
+    }
+  });
+  indexQueue = run.catch(() => {});
+  return run;
+}
+
 /**
  * Store the lead durably: the per-lead file first (`wx`, never overwrites),
  * then the index line. If the index append fails the file is removed so a
@@ -124,7 +176,7 @@ async function persist(lead: Lead, leadsDir: string): Promise<void> {
   const file = join(leadsDir, `${lead.id}.json`);
   await writeFile(file, JSON.stringify(lead, null, 2), { flag: "wx" });
   try {
-    await appendFile(join(leadsDir, "leads.jsonl"), JSON.stringify(lead) + "\n");
+    await appendIndexLine(join(leadsDir, "leads.jsonl"), JSON.stringify(lead) + "\n");
   } catch (err) {
     await unlink(file).catch(() => {});
     throw err;

@@ -19,22 +19,26 @@ export interface Visit {
   automated?: boolean;
 }
 
-const PRIVATE_IPV4 = /^(10\.|127\.|192\.168\.|169\.254\.|172\.(1[6-9]|2\d|3[01])\.)/;
+const IPV4_LITERAL = /^\d{1,3}(\.\d{1,3}){3}$/;
 
-/** Local development, LAN previews and automated browsers must not skew counts. */
+/**
+ * Local development, LAN previews and automated browsers must not skew counts.
+ * The public site is always reached by name, so any IP literal (IPv4, or IPv6
+ * in any spelling: loopback, mapped, unique-local, link-local) counts as internal.
+ * Browsers already normalise numeric and mapped forms in `location.hostname`.
+ */
 export function isInternalVisit({ hostname, automated }: Visit): boolean {
   if (automated) return true;
   const host = hostname.toLowerCase().replace(/^\[|\]$/g, "");
   return (
     host === "" ||
     host === "localhost" ||
-    host === "0.0.0.0" ||
-    host === "::1" ||
+    host.includes(":") ||
+    IPV4_LITERAL.test(host) ||
     host.endsWith(".localhost") ||
     host.endsWith(".local") ||
     host.endsWith(".test") ||
-    host.endsWith(".invalid") ||
-    PRIVATE_IPV4.test(host)
+    host.endsWith(".invalid")
   );
 }
 
