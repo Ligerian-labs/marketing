@@ -64,7 +64,6 @@ export const projects: Project[] = [
     decisions: [
       "Prévoir des sources dans le contrat de réponse pour permettre leur vérification par le lecteur.",
       "Séparer recherche documentaire, génération et interface dans l'architecture prévue.",
-      "Commencer par un prototype ; évaluer la recherche, les erreurs et les coûts avant de proposer un usage métier.",
     ],
     limits: "À la version examinée, l'API renvoie un message d'attente et une liste de sources vide. La recherche documentaire et la génération sont marquées TODO. Le dépôt ne démontre donc pas un assistant fonctionnel, des réponses fiables, un déploiement ou des résultats clients. Aucun calendrier de réalisation ni résultat mesuré n'est publié ici.",
     diagram: [
