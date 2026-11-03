@@ -5,6 +5,7 @@ import MarketingFrame from "../components/MarketingFrame.astro";
 import SectionBar from "../components/SectionBar.astro";
 import CtaBand from "../components/CtaBand.astro";
 import { offers } from "../data/offers";
+import { projects } from "../data/projects";
 
 const toc = offers.map((offer, i) => ({
   slug: offer.slug,
@@ -27,9 +28,9 @@ const serviceSchema = offers.map((offer) => ({
 
 <Base
   title="Services · Logiciels sur mesure et IA | Ligerian Labs"
-  description="Quatre offres d'ingénierie IA : supervision et token ops, déploiement en production, architecture IA au cœur du produit, développement d'agents. Périmètre écrit, livrables nommés."
-  ogTitle="Offres — token ops, mise en production, architecture IA, agents"
-  ogDescription="Quatre offres. Périmètre écrit, livrables nommés, documentation de passation incluse."
+  description="Applications métier, évolution de logiciels et intégration IA à Angers. Découvrez les services sur mesure et les offres pour fiabiliser votre IA en production."
+  ogTitle="Services · Logiciels sur mesure et intégration IA à Angers"
+  ogDescription="Applications métier, évolution de logiciels, intégration IA et fiabilité en production. Un périmètre défini avec vous, du cadrage à l'exploitation."
   ogImage="og-offres"
   active="offres"
   structuredData={serviceSchema}
@@ -463,20 +464,14 @@ const serviceSchema = offers.map((offer) => ({
           </div>
 
           <div class="ll-offerbody__extra" style="border-top:2px solid var(--ink)">
-            <div class="ll-mono" style="margin-bottom:14px">Nous construisons ça en public</div>
+            <div class="ll-mono" style="margin-bottom:14px">Travaux indépendants à examiner</div>
             <div class="ll-stack" style="gap:10px">
-              <div class="ll-ossline">
-                <span>marathon</span>
-                <span>Runner Zig, tâches d'agent en VM Firecracker isolées</span>
-              </div>
-              <div class="ll-ossline">
-                <span>claudeswarm</span>
-                <span>Du ticket à la PR, avec points de contrôle humains</span>
-              </div>
-              <div class="ll-ossline ll-ossline--last">
-                <span>atelier</span>
-                <span>Studio Rust pilotant quatre agents de code</span>
-              </div>
+              {projects.map((project) => (
+                <a href={`/realisations/${project.slug}/`} class="ll-ossline">
+                  <span>{project.name}</span>
+                  <span>{project.status}. {project.summary}</span>
+                </a>
+              ))}
             </div>
           </div>
         </div>

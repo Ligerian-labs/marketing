@@ -38,6 +38,8 @@ const routes = ["/", "/offres/", "/a-propos/", "/ia-angers/", "/developpement-lo
       assert.equal((await page.locator("h1").textContent()).replace(/\s+/g, " "), "Développement de logiciels sur mesure et de solutions IA à Angers");
       assert.ok(await page.getByRole("link", { name: "Voir les réalisations", exact: true }).isVisible());
       if (width <= 1100) {
+        const contactTarget = await page.locator(".mobile-contact").boundingBox();
+        assert.ok(contactTarget && contactTarget.height >= 44 && contactTarget.width >= 44, `mobile Contact target at ${width}: ${JSON.stringify(contactTarget)}`);
         const button = page.locator("#ll-burger");
         assert.equal(await button.getAttribute("aria-label"), "Ouvrir le menu");
         await button.click();
