@@ -2,13 +2,14 @@
 // Run: node --test tests/contact.test.ts
 import assert from "node:assert/strict";
 import { existsSync } from "node:fs";
-import { mkdir, mkdtemp, readdir, readFile, rm, writeFile } from "node:fs/promises";
+import fsp, { mkdir, mkdtemp, readdir, readFile, rm, writeFile } from "node:fs/promises";
+import { syncBuiltinESMExports } from "node:module";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { afterEach, beforeEach, describe, test } from "node:test";
 import { LIMITS, PROJECT_TYPES, validateContact } from "../src/lib/contact.ts";
 import { isInternalVisit, submittedEvent } from "../src/lib/contact-analytics.ts";
-import { buildNotification, handleContact, type ContactDeps, type Notification } from "../src/lib/contact-server.ts";
+import { appendIndexLine, buildNotification, handleContact, type ContactDeps, type Notification } from "../src/lib/contact-server.ts";
 
 const valid = {
   name: "Camille Synthétique",
@@ -294,14 +295,150 @@ describe("contact_form_submitted decision", () => {
     assert.deepEqual(Object.keys(event!), ["name", "properties"]);
   });
 
-  test("local, private-network and automated visits are suppressed", () => {
-    for (const hostname of ["localhost", "127.0.0.1", "[::1]", "::1", "0.0.0.0", "app.localhost", "mac.local", "192.168.1.20", "10.0.0.5", "172.16.4.1", "172.31.255.1", "site.test", "x.invalid", ""]) {
+  test("local, private-network, IP-literal and automated visits are suppressed", () => {
+    const internal = [
+      "localhost", "app.localhost", "mac.local", "site.test", "x.invalid", "",
+      "127.0.0.1", "10.0.0.5", "192.168.1.20", "172.16.4.1", "172.31.255.1", "172.32.0.1", "8.8.8.8", "0.0.0.0",
+      "[::1]", "::1", "[::]", "[::ffff:7f00:1]", "[::ffff:c0a8:101]", "[::ffff:808:808]", "[fd00::1]", "[fc00::1234]", "[fe80::1]", "[2001:db8::1]",
+    ];
+    for (const hostname of internal) {
       assert.equal(isInternalVisit({ hostname }), true, hostname);
       assert.equal(submittedEvent(accepted, "other", { hostname }), null, hostname);
     }
     assert.equal(submittedEvent(accepted, "other", { ...prod, automated: true }), null);
-    for (const hostname of ["ligerianlabs.fr", "www.ligerianlabs.fr", "172.32.0.1", "preview-123.vercel.app"]) {
+    for (const hostname of ["ligerianlabs.fr", "www.ligerianlabs.fr", "preview-123.vercel.app", "localhost.example.com", "10.example.org"]) {
       assert.equal(isInternalVisit({ hostname }), false, hostname);
+    }
+  });
+});
+
+describe("index append", () => {
+  let dir: string;
+  let index: string;
+  const row = (n: number) => JSON.stringify({ id: `lead_${n}`, pad: "x".repeat(200) }) + "\n";
+  const parse = async () => (await readFile(index, "utf8")).split("\n").filter(Boolean).map((l) => JSON.parse(l).id);
+  const realAppend = fsp.appendFile;
+  const realTruncateAll = fsp.truncate;
+
+  /** Fail the nth append (1-based) after writing half of its bytes, like a disk filling up. */
+  function failPartially(nth: number) {
+    let calls = 0;
+    fsp.appendFile = (async (file: string, data: string, options?: unknown) => {
+      if (String(file).endsWith("leads.jsonl") && ++calls === nth) {
+        await realAppend(file, String(data).slice(0, Math.floor(String(data).length / 2)), options as never);
+        throw Object.assign(new Error("ENOSPC"), { code: "ENOSPC" });
+      }
+      return realAppend(file, data, options as never);
+    }) as typeof fsp.appendFile;
+    syncBuiltinESMExports();
+  }
+
+  beforeEach(async () => {
+    dir = await mkdtemp(join(tmpdir(), "contact-index-"));
+    index = join(dir, "leads.jsonl");
+  });
+  afterEach(async () => {
+    fsp.appendFile = realAppend;
+    fsp.truncate = realTruncateAll;
+    syncBuiltinESMExports();
+    await rm(dir, { recursive: true, force: true });
+  });
+
+  test("a part-written failure leaves the index byte-identical and the next row readable", async () => {
+    await appendIndexLine(index, row(1));
+    const before = await readFile(index);
+    failPartially(1);
+    await assert.rejects(appendIndexLine(index, row(2)), /ENOSPC/);
+    assert.deepEqual(await readFile(index), before);
+    await appendIndexLine(index, row(3));
+    assert.deepEqual(await parse(), ["lead_1", "lead_3"]);
+  });
+
+  test("a part-written failure on a new index leaves no stray bytes", async () => {
+    failPartially(1);
+    await assert.rejects(appendIndexLine(index, row(1)), /ENOSPC/);
+    assert.equal((await readFile(index, "utf8")).length, 0);
+    await appendIndexLine(index, row(2));
+    assert.deepEqual(await parse(), ["lead_2"]);
+  });
+
+  test("a failed rollback is repaired by the next append, never built upon", async () => {
+    await appendIndexLine(index, row(1));
+    const realTruncate = fsp.truncate;
+    failPartially(1);
+    fsp.truncate = (async () => {
+      throw new Error("rollback failed");
+    }) as typeof fsp.truncate;
+    syncBuiltinESMExports();
+    await assert.rejects(appendIndexLine(index, row(2)), /ENOSPC/);
+    assert.notEqual((await readFile(index, "utf8")).at(-1), "\n"); // corrupt tail really is there
+    fsp.truncate = realTruncate;
+    syncBuiltinESMExports();
+    await appendIndexLine(index, row(3));
+    assert.deepEqual(await parse(), ["lead_1", "lead_3"]);
+  });
+
+  test("when the tail cannot be repaired the append is refused and writes nothing", async () => {
+    await appendIndexLine(index, row(1));
+    await writeFile(index, (await readFile(index, "utf8")) + '{"id":"lead_half'); // crash tail
+    const realTruncate = fsp.truncate;
+    fsp.truncate = (async () => {
+      throw new Error("read-only");
+    }) as typeof fsp.truncate;
+    syncBuiltinESMExports();
+    const before = await readFile(index);
+    await assert.rejects(appendIndexLine(index, row(2)), /read-only/);
+    assert.deepEqual(await readFile(index), before);
+    fsp.truncate = realTruncate;
+    syncBuiltinESMExports();
+    await appendIndexLine(index, row(3));
+    assert.deepEqual(await parse(), ["lead_1", "lead_3"]);
+  });
+
+  test("a crash-truncated row from an earlier run is cut back before the next row", async () => {
+    await writeFile(index, row(1) + row(2) + '{"id":"lead_3","pad":"xx');
+    await appendIndexLine(index, row(4));
+    assert.deepEqual(await parse(), ["lead_1", "lead_2", "lead_4"]);
+    await writeFile(index, '{"only":"a part');
+    await appendIndexLine(index, row(5));
+    assert.deepEqual(await parse(), ["lead_5"]);
+  });
+
+  test("concurrent appends keep every successful row whole when one of them fails", async () => {
+    failPartially(4);
+    const results = await Promise.allSettled(Array.from({ length: 12 }, (_, i) => appendIndexLine(index, row(i))));
+    assert.equal(results.filter((r) => r.status === "rejected").length, 1);
+    const ids = await parse();
+    assert.equal(ids.length, 11);
+    assert.equal(new Set(ids).size, 11);
+  });
+
+  test("a part-written index failure in the handler is a 500 and later enquiries stay readable", async () => {
+    const leads = await mkdtemp(join(tmpdir(), "contact-index-h-"));
+    const deps: ContactDeps = { leadsDir: leads, notify: null, log: { warn() {}, error() {}, info() {} } };
+    const send = () =>
+      handleContact(
+        new Request("http://localhost/api/contact", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(valid),
+        }),
+        deps,
+      );
+    try {
+      assert.equal((await send()).status, 200);
+      failPartially(1);
+      const failed = await send();
+      assert.equal(failed.status, 500);
+      assert.equal((await failed.json()).id, undefined);
+      const next = await send();
+      assert.equal(next.status, 200);
+      const rows = (await readFile(join(leads, "leads.jsonl"), "utf8")).split("\n").filter(Boolean).map((l) => JSON.parse(l));
+      assert.equal(rows.length, 2);
+      const files = (await readdir(leads)).filter((f) => f.startsWith("lead_"));
+      assert.deepEqual(files.sort(), rows.map((r) => `${r.id}.json`).sort());
+    } finally {
+      await rm(leads, { recursive: true, force: true });
     }
   });
 });

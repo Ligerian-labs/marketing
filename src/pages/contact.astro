@@ -251,11 +251,10 @@ const contactSchema = {
 </style>
 
 <script>
-  import { validateContact, type ContactField } from "../lib/contact.ts";
-  import { submittedEvent } from "../lib/contact-analytics.ts";
+  import type { ContactErrors, ContactField } from "../lib/contact.ts";
+  import { submitEnquiry } from "../lib/contact-client.ts";
 
   const FIELDS: ContactField[] = ["name", "email", "company", "projectType", "description", "timing", "budget", "consent"];
-  const CONTACT_EMAIL = "bonjour@ligerianlabs.fr";
 
   const form = document.getElementById("contact-form") as HTMLFormElement | null;
   const success = document.getElementById("form-success");
@@ -278,7 +277,7 @@ const contactSchema = {
     controls(field).forEach((el) => el.removeAttribute("aria-invalid"));
   }
 
-  function showErrors(errors: Partial<Record<ContactField, string>>) {
+  function showErrors(errors: ContactErrors) {
     let first: HTMLElement | undefined;
     for (const field of FIELDS) {
       clearError(field);
@@ -312,20 +311,6 @@ const contactSchema = {
     form?.removeAttribute("aria-busy");
   }
 
-  function track(result: unknown, projectType: unknown) {
-    // Analytics must never affect the visitor: absent or throwing posthog is fine.
-    try {
-      const event = submittedEvent(result, projectType, {
-        hostname: location.hostname,
-        automated: navigator.webdriver,
-      });
-      const posthog = (window as any).posthog;
-      if (event) posthog?.capture?.(event.name, event.properties);
-    } catch {
-      /* ignore */
-    }
-  }
-
   FIELDS.forEach((field) => {
     controls(field).forEach((el) => {
       el.addEventListener("input", () => clearError(field));
@@ -352,13 +337,6 @@ const contactSchema = {
       website: text("website"),
     };
 
-    const verdict = validateContact(payload);
-    if (!verdict.ok) {
-      showErrors(verdict.errors);
-      return;
-    }
-    showErrors({});
-
     sending = true;
     form.setAttribute("aria-busy", "true");
     if (submit) {
@@ -366,44 +344,30 @@ const contactSchema = {
       submit.textContent = "Envoi…";
     }
 
-    let response: Response;
-    try {
-      response = await fetch("/api/contact", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-        signal: AbortSignal.timeout(20000),
-      });
-    } catch {
-      finish();
-      showFailure("L'envoi a échoué", "Le serveur ne répond pas. Vérifiez votre connexion et réessayez.");
-      return;
-    }
+    const outcome = await submitEnquiry(payload, {
+      fetch: window.fetch.bind(window),
+      visit: { hostname: location.hostname, automated: navigator.webdriver },
+      capture: (name, properties) => (window as any).posthog?.capture?.(name, properties),
+    });
 
-    let result: any = null;
-    try {
-      result = await response.json();
-    } catch {
-      /* non-JSON error page */
-    }
-
-    if (response.status === 400 && result?.fields && typeof result.fields === "object") {
+    if (outcome.status === "invalid" || outcome.status === "fields") {
       finish();
-      showErrors(result.fields);
-      return;
-    }
-    if (!response.ok) {
+      showErrors(outcome.errors);
+    } else if (outcome.status === "failed") {
       finish();
-      showFailure("L'envoi a échoué", "Votre message n'a pas été enregistré. Réessayez dans un instant.");
-      return;
+      showFailure(
+        "L'envoi a échoué",
+        outcome.reason === "network"
+          ? "Le serveur ne répond pas. Vérifiez votre connexion et réessayez."
+          : "Votre message n'a pas été enregistré. Réessayez dans un instant.",
+      );
+    } else {
+      form.hidden = true;
+      sending = false;
+      if (success) {
+        success.hidden = false;
+        success.focus();
+      }
     }
-
-    form.hidden = true;
-    if (success) {
-      success.hidden = false;
-      success.focus();
-    }
-    sending = false;
-    track(result, payload.projectType);
   });
 </script>
