@@ -29,7 +29,8 @@ const IPV4_LITERAL = /^\d{1,3}(\.\d{1,3}){3}$/;
  */
 export function isInternalVisit({ hostname, automated }: Visit): boolean {
   if (automated) return true;
-  const host = hostname.toLowerCase().replace(/^\[|\]$/g, "");
+  // `location.hostname` can keep a root dot ("localhost."), which must not defeat the rules.
+  const host = hostname.toLowerCase().replace(/^\[|\]$/g, "").replace(/\.+$/, "");
   return (
     host === "" ||
     host === "localhost" ||
