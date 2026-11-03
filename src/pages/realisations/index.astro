@@ -1,0 +1,21 @@
+---
+export const prerender = true;
+import Base from "../../layouts/Base.astro";
+import MarketingFrame from "../../components/MarketingFrame.astro";
+import PageHero from "../../components/PageHero.astro";
+import ProjectCards from "../../components/ProjectCards.astro";
+import CtaBand from "../../components/CtaBand.astro";
+---
+<Base title="Réalisations · Logiciels et projets IA indépendants | Ligerian Labs"
+  description="Examinez les projets indépendants de Ligerian Labs : besoin, contribution, code public, état et limites. Aucun résultat client n'est déduit de ces travaux.">
+  <MarketingFrame>
+    <PageHero heading="Des projets à examiner" label="Réalisations · Travaux indépendants"
+      intro="Voici des travaux publics pour comprendre notre démarche : le problème visé, les choix de construction et ce qui reste à vérifier.">
+      <div class="ll-mono" style="color:inherit">Une lecture précise</div>
+      <p>Ces projets indépendants ne sont pas des études de cas clients. Chaque page distingue le code disponible, les intentions et les limites constatées.</p>
+      <a href="https://github.com/Ligerian-labs">Voir l'organisation sur GitHub →</a>
+    </PageHero>
+    <section class="ll-sec"><div class="ll-wrap marketing-section"><ProjectCards /></div></section>
+    <CtaBand title="Partons de votre besoin" body="Un projet public peut ouvrir la discussion. Votre périmètre, vos données et vos critères de réussite restent à définir ensemble." />
+  </MarketingFrame>
+</Base>
