@@ -31,6 +31,15 @@ const routes = ["/", "/offres/", "/a-propos/", "/ia-angers/", "/developpement-lo
           return !pathname.startsWith("/api/") && !pathname.split("/").pop().includes(".") && !pathname.endsWith("/");
         }));
         assert.deepEqual(badLinks, [], `page links normalized: ${path}`);
+        if (path === "/offres/") {
+          const projectNames = await page.locator('.ll-offerbody__extra a[href^="/realisations/"] > span:first-child').evaluateAll((names) => names.map((name) => {
+            const range = document.createRange();
+            range.selectNodeContents(name);
+            return { name: name.textContent, lines: new Set([...range.getClientRects()].map((rect) => Math.round(rect.top))).size };
+          }));
+          assert.equal(projectNames.length, 2);
+          assert.ok(projectNames.every((name) => name.lines === 1), `project names wrap at ${width}: ${JSON.stringify(projectNames)}`);
+        }
         checks++;
       }
       await page.goto(origin + "/");
