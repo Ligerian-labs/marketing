@@ -86,7 +86,7 @@ const faq = [
 const structuredData = [
   {
     "@type": "Service",
-    "@id": "https://ligerianlabs.fr/ia-angers-pme#service",
+    "@id": "https://ligerianlabs.fr/ia-angers-pme/#service",
     name: "IA pour PME à Angers",
     serviceType: "Automatisation mesurée d'un processus métier avec de l'IA",
     provider: { "@id": "https://ligerianlabs.fr/#business" },
@@ -107,14 +107,14 @@ const structuredData = [
         "@type": "ListItem",
         position: 2,
         name: "IA à Angers",
-        item: "https://ligerianlabs.fr/ia-angers",
+        item: "https://ligerianlabs.fr/ia-angers/",
       },
       { "@type": "ListItem", position: 3, name: "PME" },
     ],
   },
   {
     "@type": "FAQPage",
-    "@id": "https://ligerianlabs.fr/ia-angers-pme#faq",
+    "@id": "https://ligerianlabs.fr/ia-angers-pme/#faq",
     mainEntity: faq.map((item) => ({
       "@type": "Question",
       name: item.q,
@@ -135,7 +135,7 @@ const structuredData = [
   <header class="ll-sec">
     <div class="ll-wrap">
       <nav class="ll-crumbs" aria-label="Fil d'Ariane">
-        <a href="/">Accueil</a><span>/</span><a href="/ia-angers">IA à Angers</a><span>/</span
+        <a href="/">Accueil</a><span>/</span><a href="/ia-angers/">IA à Angers</a><span>/</span
         ><span>PME</span>
       </nav>
       <div class="ll-hero">
@@ -152,7 +152,7 @@ const structuredData = [
             prestataire.
           </p>
           <div class="ll-btn-row" style="margin-top:6px">
-            <a href="/contact" class="ll-btn">Décrire votre situation →</a>
+            <a href="/contact/" class="ll-btn">Décrire votre situation →</a>
           </div>
         </div>
         <div class="ll-hero__aside ll-hero__aside--ink">

@@ -15,7 +15,7 @@ Le site tourne sur le système visuel **Cobalt Bold Blocks**.
 ## Getting started
 
 ```bash
-npm install
+npm ci --legacy-peer-deps --no-audit --no-fund
 npm run dev
 ```
 
@@ -66,7 +66,8 @@ stades vivent dans `src/data/offers.ts` — une seule source de vérité.
 | `/mentions-legales` | Informations légales |
 | `/formations`, `/dashboard`, `/auth/*` | Espace client |
 
-`/services` redirige en 301 vers `/offres`.
+Les pages publiques canoniques ont un slash final. `/services` et `/services/`
+redirigent en 301 vers `/offres/`, avec les paramètres conservés.
 
 ## Marque
 
@@ -111,8 +112,35 @@ Les leads sont gitignorés. La notification email part via Resend ; sans
 
 ```bash
 npm run build
-npm run preview
+HOST=127.0.0.1 PORT=4327 npm start
 ```
+
+`npm start` exécute `node scripts/server/entry.mjs`, également utilisé par le
+Dockerfile. Cette entrée applique les redirections publiques avant le handler
+standalone natif qui conserve les assets, le SSR et les sessions. Livrer `scripts/`
+avec `dist/`. L'ancien démarrage direct `node dist/server/entry.mjs` et le preview
+natif contournent les redirections des pages prérendues ; ne pas les utiliser pour
+valider une release. `RESEND_API_KEY` et les clés Stripe doivent être retirées de
+l'environnement des tests locaux.
+
+```bash
+npm run test:seo
+# Même serveur isolé, port distinct pour une vérification indépendante :
+SEO_TEST_PORT=4328 npm run test:seo
+# Optionnel, si Playwright est installé hors de ce dépôt :
+PLAYWRIGHT_MODULE=/absolute/path/to/@playwright/test node tests/seo-browser.mjs
+```
+
+Le test Node démarre l'entrée de production avec une base locale éphémère, retire
+les clés email/Stripe puis nettoie son serveur et ses données. Le contrôle
+navigateur utilise des contextes isolés à 1440/390 px et bloque toute requête
+analytics externe. `CHROMIUM_EXECUTABLE` peut désigner un Chromium fourni par
+l'hôte. Aucun lint/typecheck n'est configuré dans le dépôt ; ne pas les annoncer
+comme exécutés. Les tests analytics vérifient le bootstrap et son filtre avec un
+SDK simulé, sans envoyer de données à PostHog.
+
+Le [dossier marketing](docs/marketing/README.md) conserve le point de départ
+daté, les faits à confirmer, les permissions externes et le plan des 90 jours.
 
 Le dossier `public/brand/` doit être déployé à la racine du site : les balises
 `og:image` et les téléchargements du kit presse pointent vers `/brand/…`.
