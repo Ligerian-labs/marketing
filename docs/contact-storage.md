@@ -76,13 +76,23 @@ dans la procédure ci-dessous, avec des droits restreints.
 
 1. Arrêter le service, pour qu'aucun processus n'écrive dans le dossier.
 2. Sauvegarder hors du dépôt, avec des droits restreints :
-   `(umask 077; cp -a leads "$HOME/leads-backup-$(date -u +%Y%m%dT%H%M%SZ)")`
+   ```sh
+   BACKUP="$HOME/leads-backup-$(date -u +%Y%m%dT%H%M%SZ)"
+   (umask 077; cp -R leads "$BACKUP")
+   ls -ld "$BACKUP" "$BACKUP"/* | head -3    # doit afficher drwx------ puis -rw-------
+   ```
+   N'utilisez pas `cp -a` : il recopie les droits d'origine (souvent 755 et 644) et `umask`
+   ne les resserre pas. `cp -R` ne conserve pas les dates de modification ; c'est sans importance
+   ici. Si le dossier parent de la sauvegarde est lisible par d'autres comptes, choisissez-en un
+   qui ne l'est pas.
 3. Enregistrer le script ci-dessous sous `rebuild-leads-index.mjs`, hors du dossier `leads/`.
 4. Contrôler sans rien écrire : `node rebuild-leads-index.mjs leads`
 5. Appliquer : `node rebuild-leads-index.mjs leads --write`
    Les fichiers invalides vont dans `leads/quarantine/`. Le nouvel index est écrit
    dans `leads/leads.jsonl.new`, puis remplace `leads/leads.jsonl`. L'ancien index est
-   gardé sous `leads/leads.jsonl.old`.
+   gardé sous `leads/leads.jsonl.old`. Si `leads/leads.jsonl.old` ou un fichier du même nom
+   existe déjà dans `leads/quarantine/`, le script s'arrête avant de modifier quoi que ce soit :
+   déplacez ces fichiers ailleurs (ou renommez-les) et relancez.
 6. Redémarrer le service et envoyer une demande de test depuis un environnement de
    préproduction, pas depuis la production.
 
@@ -117,6 +127,11 @@ console.log(`fichiers invalides : ${invalid.length}${invalid.length ? " (" + inv
 console.log(`lignes dans l'index actuel : ${indexed}`);
 if (!write) process.exit(0);
 
+const clashes = [...invalid.map((f) => join(dir, "quarantine", f)), join(dir, "leads.jsonl.old")].filter((f) => existsSync(f));
+if (clashes.length) {
+  console.error(`arrêt, rien n'a été modifié : existe déjà : ${clashes.join(", ")}`);
+  process.exit(1);
+}
 if (invalid.length) {
   mkdirSync(join(dir, "quarantine"), { recursive: true });
   for (const f of invalid) renameSync(join(dir, f), join(dir, "quarantine", f));
