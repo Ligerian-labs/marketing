@@ -95,15 +95,23 @@ tags: ["ia", "outils"]
 ---
 ```
 
+Le champ facultatif `updated` indique la date d'une modification significative du contenu.
+Sans ce champ, le sitemap et le schéma conservent la date publiée ; une
+normalisation de liens ne doit pas modifier ces dates.
+
 Les tags pilotent la catégorie affichée sur les cartes et l'offre mise en avant
 dans la colonne de l'article — voir `src/lib/blog.ts`.
 
 ## Leads
 
-Les soumissions du formulaire de contact sont stockées dans :
+Le fichier individuel `leads/lead_<id>.json` est la source canonique : son
+écriture complète précède la réponse HTTP 200. `leads/leads.jsonl` est un index
+dérivé, alimenté au mieux ; un échec d'index est signalé sans rejeter la demande
+déjà enregistrée.
 
-- `leads/leads.jsonl` — un JSON par ligne (append-only)
-- `leads/lead_<id>.json` — fichiers individuels
+Le [guide de stockage du contact](https://github.com/Ligerian-labs/marketing/blob/5a839306b315e19378b18ff83343528780a894e0/docs/contact-storage.md),
+livré par la branche contact B, précise l'inspection, le comptage des fichiers
+valides, la reconstruction à service arrêté et la limite à un processus serveur.
 
 Les leads sont gitignorés. La notification email part via Resend ; sans
 `RESEND_API_KEY`, le lead est quand même enregistré et un avertissement est logué.
@@ -123,6 +131,12 @@ natif contournent les redirections des pages prérendues ; ne pas les utiliser p
 valider une release. `RESEND_API_KEY` et les clés Stripe doivent être retirées de
 l'environnement des tests locaux.
 
+Limite de développement vérifiée : `astro dev` retire les paramètres des
+redirections de pages prérendues, même via `context.request.url`. Par exemple
+`/ia-angers?x=1` devient `/ia-angers/`. L'entrée `npm start` conserve ces paramètres
+et doit servir aux contrôles de release. Aucun correctif interne à Astro n'est
+appliqué pour masquer cette différence.
+
 ```bash
 npm run test:seo
 # Même serveur isolé, port distinct pour une vérification indépendante :
@@ -138,6 +152,19 @@ analytics externe. `CHROMIUM_EXECUTABLE` peut désigner un Chromium fourni par
 l'hôte. Aucun lint/typecheck n'est configuré dans le dépôt ; ne pas les annoncer
 comme exécutés. Les tests analytics vérifient le bootstrap et son filtre avec un
 SDK simulé, sans envoyer de données à PostHog.
+
+Contrôle réseau statique facultatif, avec `npm start` déjà lancé :
+
+```bash
+curl --head http://127.0.0.1:4327/ingest/static/array.js
+curl --fail --silent --show-error --output /dev/null http://127.0.0.1:4327/ingest/static/array.js
+```
+
+Ces deux lectures GET/HEAD passent par l'entrée de production vers le fichier
+JavaScript public. Elles n'exécutent pas le SDK et n'envoient ni capture, ni
+soumission, ni donnée personnelle. Les chemins `/static/` et `/array/` vont vers
+`eu-assets.i.posthog.com`, les événements vers `eu.i.posthog.com`, conformément à
+la [documentation du proxy PostHog](https://posthog.com/docs/advanced/proxy/nextjs-middleware).
 
 Le [dossier marketing](docs/marketing/README.md) conserve le point de départ
 daté, les faits à confirmer, les permissions externes et le plan des 90 jours.

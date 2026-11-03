@@ -22,7 +22,7 @@ export async function GET() {
   const posts = await getCollection("blog");
   const pages = [
     ...publicPages.map((page) => ({ path: page.path, lastmod: sourceDate(page.source) })),
-    ...posts.map((post) => ({ path: `/blog/${post.slug}/`, lastmod: sourceDate(`src/content/blog/${post.id}`) ?? post.data.date.slice(0, 10) })),
+    ...posts.map((post) => ({ path: `/blog/${post.slug}/`, lastmod: (post.data.updated ?? post.data.date).slice(0, 10) })),
   ];
   const entries = pages.sort((a, b) => a.path.localeCompare(b.path)).map((page) =>
     `  <url><loc>${escapeXml(canonicalUrl(page.path))}</loc>${page.lastmod ? `<lastmod>${escapeXml(page.lastmod)}</lastmod>` : ""}</url>`,
