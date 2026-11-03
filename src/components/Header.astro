@@ -3,7 +3,7 @@ import Logo from "./Logo.astro";
 
 interface Props {
   /** Underlines the matching tab in cobalt. */
-  active?: "offres" | "approche" | "apropos" | "blog" | "";
+  active?: "offres" | "approche" | "expertise" | "apropos" | "blog" | "";
   user?: { name: string; email: string } | null;
 }
 
@@ -12,6 +12,7 @@ const { active = "", user = null } = Astro.props;
 const tabs = [
   { key: "offres", href: "/offres", label: "Offres" },
   { key: "approche", href: "/approche", label: "Approche" },
+  { key: "expertise", href: "/expertise", label: "Expertise IA" },
   { key: "apropos", href: "/a-propos", label: "À propos" },
   { key: "blog", href: "/blog", label: "Blog" },
 ] as const;
@@ -40,7 +41,7 @@ const tabs = [
         ) : (
           <a href="/auth/connexion" class="ll-nav__minor">Connexion</a>
         )}
-        <a href="/contact" class="ll-nav__cta">Parlons de votre projet</a>
+        <a href="/contact" class="ll-nav__cta">Décrire mon projet</a>
         <button
           type="button"
           class="ll-nav__burger"
@@ -62,6 +63,7 @@ const tabs = [
   <div class="ll-nav__panel" id="ll-nav-panel">
     <div class="ll-wrap">
       {tabs.map((tab) => <a href={tab.href}>{tab.label}</a>)}
+      <a href="/contact">Décrire mon projet</a>
       <a href="/ia-angers">Agence IA à Angers</a>
       <a href="/ia-angers-pme">IA pour PME</a>
       {user ? (
@@ -88,3 +90,9 @@ const tabs = [
     });
   })();
 </script>
+
+<style>
+  @media (max-width: 620px) {
+    .ll-nav__cta { display: none; }
+  }
+</style>

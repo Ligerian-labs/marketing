@@ -7,6 +7,7 @@ const staticPages = [
   { path: "/", priority: "1.0", changefreq: "weekly" },
   { path: "/offres", priority: "0.95", changefreq: "monthly" },
   { path: "/approche", priority: "0.9", changefreq: "monthly" },
+  { path: "/expertise", priority: "0.8", changefreq: "monthly" },
   { path: "/ia-angers", priority: "0.9", changefreq: "monthly" },
   { path: "/ia-angers-pme", priority: "0.9", changefreq: "monthly" },
   { path: "/blog", priority: "0.8", changefreq: "weekly" },

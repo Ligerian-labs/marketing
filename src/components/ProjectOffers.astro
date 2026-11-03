@@ -1,0 +1,30 @@
+---
+import { projectOffers } from "../data/project-offers";
+---
+
+<div class="ll-grid ll-grid--3 ll-project-offers">
+  {projectOffers.map((offer) => (
+    <a href={`/offres#${offer.slug}`} class="ll-cell ll-offer">
+      <div class="ll-mono">{offer.step}</div>
+      <h3 class="ll-h3">{offer.name}</h3>
+      <div>
+        <div class="ll-price">{offer.price}</div>
+        <div class="ll-mono ll-mono--plain">{offer.period}</div>
+      </div>
+      <p>{offer.description}</p>
+      <div class="ll-cell__foot"><span>Voir le détail →</span></div>
+    </a>
+  ))}
+</div>
+
+<style>
+  .ll-price {
+    font-weight: 700;
+    font-size: clamp(28px, 3vw, 40px);
+    letter-spacing: -.03em;
+    line-height: 1.2;
+  }
+  @media (min-width: 621px) and (max-width: 900px) {
+    .ll-project-offers > :last-child { grid-column: 1 / -1; }
+  }
+</style>

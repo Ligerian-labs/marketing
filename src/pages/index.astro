@@ -2,8 +2,7 @@
 export const prerender = true;
 import Base from "../layouts/Base.astro";
 import SectionBar from "../components/SectionBar.astro";
-import OfferGrid from "../components/OfferGrid.astro";
-import DiagnosticTable from "../components/DiagnosticTable.astro";
+import ProjectOffers from "../components/ProjectOffers.astro";
 import ProofSection from "../components/ProofSection.astro";
 import CtaBand from "../components/CtaBand.astro";
 import { getCollection } from "astro:content";
@@ -15,20 +14,16 @@ const posts = (await getCollection("blog"))
 
 const questions = [
   {
-    q: "Combien l'IA nous a-t-elle coûté le mois dernier — par fonctionnalité, par client&nbsp;?",
-    a: "La plupart des équipes n'ont qu'un seul chiffre : la facture du fournisseur. Il ne se rattache ni à une fonctionnalité, ni à un client, ni à une décision.",
+    q: "Vos équipes jonglent avec des tableurs ?",
+    a: "Un outil métier peut réunir le suivi des dossiers, les règles de calcul et les tâches qui passent aujourd'hui d'un fichier à l'autre.",
   },
   {
-    q: "Le changement de prompt de la semaine dernière a-t-il amélioré ou dégradé le produit&nbsp;?",
-    a: "Sans évaluations dans la CI, la qualité est arbitrée par celui qui s'est plaint le plus fort. Vous livrez des régressions invisibles.",
+    q: "Vos clients ont besoin d'un espace à eux ?",
+    a: "Un portail peut leur permettre de déposer des documents, suivre une demande et retrouver les informations que vous leur envoyez par mail.",
   },
   {
-    q: "Que se passe-t-il quand le modèle, le prix ou l'API changent&nbsp;?",
-    a: "Si la réponse est «&nbsp;on réécrit&nbsp;», l'IA n'est pas dans votre architecture — elle est scotchée dessus. Chaque changement de fournisseur devient un trimestre non prévu.",
-  },
-  {
-    q: "Quelle part de votre travail pourrait déjà tourner sans humain&nbsp;?",
-    a: "Tout le monde a une intuition. Personne n'a d'inventaire — la conversation sur l'automatisation ne dépasse donc jamais l'opinion.",
+    q: "Votre application existe, mais elle n'avance plus ?",
+    a: "Nous examinons ce qui fonctionne et ce qui bloque pour proposer une reprise ciblée ou une reconstruction justifiée.",
   },
 ];
 
@@ -37,61 +32,55 @@ const flow = [34, 52, 44, 68, 88, 100, 76, 58, 41, 30, 24];
 ---
 
 <Base
-  title="Agence IA à Angers — l'IA en production, mesurée et tenue | Ligerian Labs"
-  description="Ligerian Labs met l'IA en production et vous rend la main sur ce qu'elle coûte, ce qu'elle fait et si elle s'améliore. Token ops, mise en production, architecture IA, agents. Angers, Pays de la Loire."
-  ogTitle="Agence IA à Angers — l'IA en production, mesurée et tenue"
-  ogDescription="Nous mettons l'IA en production et vous rendons la main sur ce qu'elle coûte, ce qu'elle fait et si elle s'améliore."
+  title="Logiciels sur mesure · création, reprise et suivi | Ligerian Labs"
+  description="Création de logiciels à 2 000 € par mois pendant la construction, reprise de l'existant après diagnostic, puis hébergement et maintenance sur devis. À Angers et à distance."
+  ogTitle="Votre logiciel, construit et maintenu avec un budget clair"
+  ogDescription="2 000 € par mois pendant la construction. Reprise de logiciels existants et abonnement de suivi adapté après livraison."
   ogImage="og-accueil"
 >
   <header class="ll-sec">
     <div class="ll-wrap ll-hero ll-hero--wide">
       <div class="ll-hero__main" style="gap:26px">
         <div class="ll-mono" style="font-size:12px;letter-spacing:.16em">
-          Laboratoire IA — Angers, Pays de la Loire
+          Logiciels sur mesure · Angers, Pays de la Loire
         </div>
         <h1 class="ll-display">
-          Votre IA<br />tourne.<br /><span style="white-space:nowrap">Pouvez-vous</span><br />le
-          prouver&nbsp;?
+          Votre logiciel.<br />Un budget<br />clair.
         </h1>
         <p class="ll-lede ll-lede--strong">
-          Nous mettons l'IA en production et nous vous rendons la main sur ce qu'elle coûte, ce
-          qu'elle fait, et si elle s'améliore. Concrètement, mesurable, sans PowerPoint creux.
+          Application métier, espace client ou outil d'automatisation : nous construisons votre
+          logiciel ou reprenons votre existant, puis assurons son suivi après livraison.
         </p>
         <div class="ll-btn-row" style="margin-top:6px">
-          <a href="/contact" class="ll-btn ll-btn--lg">Parlons de votre projet →</a>
-          <a href="/offres" class="ll-btn ll-btn--lg ll-btn--ghost">Voir les offres</a>
+          <a href="/contact?projet=creation" class="ll-btn ll-btn--lg">Décrire mon projet →</a>
+          <a href="/contact?projet=reprise" class="ll-btn ll-btn--lg ll-btn--ghost">Faire reprendre mon logiciel</a>
         </div>
       </div>
 
       <div class="ll-hero__aside ll-hero__aside--cobalt" style="gap:28px;min-height:340px">
-        <div class="ll-mono" style="color:inherit">Le point de départ</div>
+        <div class="ll-mono" style="color:inherit">Pendant la construction</div>
         <div style="display:flex;flex-direction:column;gap:16px">
-          <div class="ll-kicker">Deux semaines<br />de cadrage</div>
-          <p style="margin:0;font-size:15.5px;line-height:1.55">
-            On lit le code, les tableaux de bord et les factures. Vous repartez avec une évaluation
-            écrite et un plan séquencé — que vous continuiez avec nous ou non.
+          <div class="ll-kicker">2 000 €<br />par mois</div>
+          <p style="margin:0;font-size:16px;line-height:1.55">
+            Un périmètre initial et un budget cible définis ensemble. Après livraison, un abonnement
+            moins élevé prend le relais pour l'hébergement, la maintenance et les évolutions convenues.
           </p>
         </div>
-        <a
-          href="/offres#cadrage"
-          class="ll-btn ll-btn--cream"
-          style="align-self:flex-start;padding:15px 24px;font-size:15.5px"
-        >
-          Le sprint de cadrage →
+        <a href="/offres#budget" class="ll-btn ll-btn--cream" style="align-self:flex-start">
+          Comprendre le tarif →
         </a>
       </div>
     </div>
   </header>
 
-  <SectionBar label="01 — Le problème" note="Posez-les à votre équipe lundi" />
+  <SectionBar label="01 · Votre besoin" note="Exemples de projets possibles" />
 
   <section class="ll-sec">
     <div class="ll-wrap" style="padding-top:clamp(38px,5vw,68px)">
-      <h2 class="ll-h2" style="margin-bottom:16px">Quatre questions<br />sans réponse</h2>
+      <h2 class="ll-h2" style="margin-bottom:16px">Un outil adapté<br />à votre activité</h2>
       <p class="ll-body" style="font-size:17px;margin-bottom:clamp(30px,4vw,48px)">
-        Toutes les entreprises que nous rencontrons ont mis quelque chose avec de l'IA en
-        production. Presque aucune ne sait répondre aux quatre. C'est dans cet écart que se trouve
-        le risque.
+        Nous partons du travail que vous voulez simplifier et des personnes qui utiliseront le
+        logiciel. Voici quelques exemples de besoins que nous pouvons étudier ensemble.
       </p>
     </div>
     <div class="ll-wrap" style="padding-bottom:clamp(38px,5vw,60px)">
@@ -111,32 +100,43 @@ const flow = [34, 52, 44, 68, 88, 100, 76, 58, 41, 30, 24];
 
   <SectionBar
     id="offres"
-    label="02 — Ce que nous vendons"
-    note="Quatre offres · vous en achetez une"
+    label="02 · Les offres"
+    note="Deux points de départ, puis un suivi"
   />
 
   <section class="ll-sec">
     <div class="ll-wrap">
-      <OfferGrid />
+      <ProjectOffers />
     </div>
   </section>
 
-  <SectionBar id="diagnostic" label="03 — Diagnostic" note="Trouvez la ligne qui vous ressemble" />
+  <SectionBar label="03 · Le déroulement" note="Le budget de construction et le coût de suivi sont distincts" />
 
   <section class="ll-sec">
     <div class="ll-wrap ll-pad-lg">
       <div class="ll-intro">
-        <h2 class="ll-h2">Où vous en<br />êtes sans doute</h2>
-        <p class="ll-body" style="font-size:17px;max-width:56ch">
-          Quatre stades, dans l'ordre où les entreprises les traversent réellement. Vous n'achetez
-          pas les quatre offres — vous achetez celle qui vous sort du stade où vous êtes.
-        </p>
+        <h2 class="ll-h2">Construire,<br />puis faire durer.</h2>
+        <div class="ll-stack" style="gap:18px;max-width:56ch">
+          <p class="ll-body" style="font-size:17px">
+            Avant de démarrer, nous précisons le périmètre, la durée estimée et le coût de
+            fonctionnement prévu. Vous testez les versions intermédiaires et validez les étapes.
+          </p>
+          <p class="ll-body" style="font-size:17px">
+            À la livraison, la phase de construction se termine. Le suivi prend le relais selon les
+            services convenus. Les nouvelles fonctionnalités importantes font l'objet d'un chiffrage.
+          </p>
+          <a href="/approche" class="ll-btn ll-btn--ghost" style="align-self:flex-start">Voir comment nous travaillons →</a>
+        </div>
       </div>
-      <DiagnosticTable />
     </div>
   </section>
 
-  <ProofSection stats projects={3} />
+  <ProofSection
+    label="04 · Notre méthode de production"
+    title="Un atelier logiciel,<br />avec un suivi humain"
+    body="Nous développons nos propres outils d'orchestration d'agents de code. Ils soutiennent la construction et les vérifications. Le cadrage, les décisions techniques et la validation des livraisons restent sous notre responsabilité."
+    projects={3}
+  />
 
   <section class="ll-sec">
     <div class="ll-wrap">
@@ -171,7 +171,7 @@ const flow = [34, 52, 44, 68, 88, 100, 76, 58, 41, 30, 24];
 
   {posts.length > 0 && (
     <>
-      <SectionBar label="06 — Le blog" note="Voir tous les articles →" noteHref="/blog" />
+      <SectionBar label="06 · Le blog" note="Voir tous les articles →" noteHref="/blog" />
       <section class="ll-sec">
         <div class="ll-wrap">
           <div class="ll-grid ll-grid--3">
@@ -197,7 +197,8 @@ const flow = [34, 52, 44, 68, 88, 100, 76, 58, 41, 30, 24];
   )}
 
   <CtaBand
-    title="Commencez par<br />deux semaines"
-    body="Vous n'avez pas à choisir une offre aujourd'hui. Le sprint de cadrage dit laquelle il vous faut vraiment — et le livrable est à vous dans tous les cas."
+    title="Décrivez-nous<br />votre projet"
+    body="Ce que vous voulez construire, reprendre ou simplifier. Nous vous aidons à définir une première étape et son budget."
+    cta="Décrire mon projet →"
   />
 </Base>

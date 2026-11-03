@@ -3,6 +3,7 @@ import type { APIRoute } from "astro";
 import { writeFile, mkdir } from "node:fs/promises";
 import { join } from "node:path";
 import { Resend } from "resend";
+import { projectTypes } from "../../data/project-offers";
 
 const LEADS_DIR = join(process.cwd(), "leads");
 
@@ -53,8 +54,22 @@ export const POST: APIRoute = async ({ request }) => {
       return new Response(JSON.stringify({ error: "Champs requis manquants" }), { status: 400 });
     }
 
+    const projectType = body.projectType ?? "";
+    const type = projectTypes.find((type) => type.value === projectType);
+    if (typeof projectType !== "string" || (projectType && !type)) {
+      return new Response(JSON.stringify({ error: "Type de projet invalide" }), { status: 400 });
+    }
+
+    for (const [key, limit] of [["currentTool", 500], ["deadline", 200], ["budget", 200]] as const) {
+      const value = body[key];
+      if (value != null && (typeof value !== "string" || value.length > limit)) {
+        return new Response(JSON.stringify({ error: "Informations de projet invalides" }), { status: 400 });
+      }
+    }
+
     const stade = typeof body.stade === "string" ? body.stade : "";
     const stadeLabel = STAGE_LABELS[stade] ?? "Non renseigné";
+    const projectTypeLabel = type?.label ?? "Non renseigné";
 
     const lead = {
       id: `lead_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`,
@@ -63,6 +78,11 @@ export const POST: APIRoute = async ({ request }) => {
       email,
       company: body.company || null,
       role: body.role || null,
+      projectType: projectType || null,
+      projectTypeLabel,
+      currentTool: body.currentTool?.trim() || null,
+      deadline: body.deadline?.trim() || null,
+      budget: body.budget?.trim() || null,
       stade: stade || null,
       stadeLabel,
       message,
@@ -84,7 +104,7 @@ export const POST: APIRoute = async ({ request }) => {
         from: `Ligerian Labs <${FROM_EMAIL}>`,
         to: [NOTIFY_TO],
         replyTo: email,
-        subject: `🔔 Nouveau lead — ${stadeLabel}`,
+        subject: `Nouveau lead · ${type ? projectTypeLabel : stadeLabel}`,
         html: `
           <h2>Nouveau contact depuis ligerianlabs.fr</h2>
           <table style="border-collapse:collapse;font-family:sans-serif;">
@@ -92,7 +112,11 @@ export const POST: APIRoute = async ({ request }) => {
             ${row("Email", `<a href="mailto:${escapeHtml(String(email))}">${escapeHtml(String(email))}</a>`)}
             ${lead.company ? row("Entreprise", escapeHtml(String(lead.company))) : ""}
             ${lead.role ? row("Rôle", escapeHtml(String(lead.role))) : ""}
-            ${row("Stade", escapeHtml(stadeLabel))}
+            ${row("Besoin", escapeHtml(projectTypeLabel))}
+            ${lead.currentTool ? row("Outil actuel", escapeHtml(lead.currentTool)) : ""}
+            ${lead.deadline ? row("Échéance", escapeHtml(lead.deadline)) : ""}
+            ${lead.budget ? row("Budget", escapeHtml(lead.budget)) : ""}
+            ${stade ? row("Stade", escapeHtml(stadeLabel)) : ""}
           </table>
           <h3 style="margin-top:20px;">Situation décrite</h3>
           <p style="background:#ECE8DF;padding:16px;white-space:pre-wrap;">${escapeHtml(String(message))}</p>
@@ -105,7 +129,7 @@ export const POST: APIRoute = async ({ request }) => {
       // Don't fail the request if email fails — lead is already saved
     }
 
-    console.log(`[LEAD] New lead from ${name} <${email}> — ${stadeLabel}`);
+    console.log(`[LEAD] New lead from ${name} <${email}> · ${type ? projectTypeLabel : stadeLabel}`);
 
     return new Response(JSON.stringify({ ok: true, id: lead.id }), {
       status: 200,
