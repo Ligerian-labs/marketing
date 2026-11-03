@@ -172,12 +172,14 @@ describe("handleContact", () => {
     assert.equal(notified.length, 0);
   });
 
-  test("a failed index append removes the per-lead file", async () => {
+  test("an index that cannot be written does not lose or reject the lead", async () => {
     await mkdir(join(dir, "leads.jsonl")); // appending to a directory fails
     const res = await handleContact(request(valid), deps);
-    assert.equal(res.status, 500);
-    assert.deepEqual(await stored(), []);
-    assert.equal(notified.length, 0);
+    assert.equal(res.status, 200);
+    const { id } = await res.json();
+    assert.ok(existsSync(join(dir, `${id}.json`)));
+    assert.equal(notified.length, 1);
+    assert.ok(logged.some((m) => m.includes(id) && m.includes("index row not written")));
   });
 
   test("rejected input stores and notifies nothing", async () => {
@@ -299,6 +301,7 @@ describe("contact_form_submitted decision", () => {
     const internal = [
       "localhost", "app.localhost", "mac.local", "site.test", "x.invalid", "",
       "127.0.0.1", "10.0.0.5", "192.168.1.20", "172.16.4.1", "172.31.255.1", "172.32.0.1", "8.8.8.8", "0.0.0.0",
+      "localhost.", "app.localhost.", "mac.local.", "lab.test.", "127.0.0.1.", "[::1].",
       "[::1]", "::1", "[::]", "[::ffff:7f00:1]", "[::ffff:c0a8:101]", "[::ffff:808:808]", "[fd00::1]", "[fc00::1234]", "[fe80::1]", "[2001:db8::1]",
     ];
     for (const hostname of internal) {
@@ -306,7 +309,7 @@ describe("contact_form_submitted decision", () => {
       assert.equal(submittedEvent(accepted, "other", { hostname }), null, hostname);
     }
     assert.equal(submittedEvent(accepted, "other", { ...prod, automated: true }), null);
-    for (const hostname of ["ligerianlabs.fr", "www.ligerianlabs.fr", "preview-123.vercel.app", "localhost.example.com", "10.example.org"]) {
+    for (const hostname of ["ligerianlabs.fr", "ligerianlabs.fr.", "www.ligerianlabs.fr", "preview-123.vercel.app", "localhost.example.com", "10.example.org"]) {
       assert.equal(isInternalVisit({ hostname }), false, hostname);
     }
   });
@@ -319,6 +322,8 @@ describe("index append", () => {
   const parse = async () => (await readFile(index, "utf8")).split("\n").filter(Boolean).map((l) => JSON.parse(l).id);
   const realAppend = fsp.appendFile;
   const realTruncateAll = fsp.truncate;
+  const realStatAll = fsp.stat;
+  const realOpenAll = fsp.open;
 
   /** Fail the nth append (1-based) after writing half of its bytes, like a disk filling up. */
   function failPartially(nth: number) {
@@ -340,6 +345,8 @@ describe("index append", () => {
   afterEach(async () => {
     fsp.appendFile = realAppend;
     fsp.truncate = realTruncateAll;
+    fsp.stat = realStatAll;
+    fsp.open = realOpenAll;
     syncBuiltinESMExports();
     await rm(dir, { recursive: true, force: true });
   });
@@ -413,11 +420,72 @@ describe("index append", () => {
     assert.equal(new Set(ids).size, 11);
   });
 
-  test("a part-written index failure in the handler is a 500 and later enquiries stay readable", async () => {
+  test("a short read of the tail never makes the repair discard good rows", async () => {
+    await appendIndexLine(index, row(1));
+    await appendIndexLine(index, row(2));
+    const realOpen = fsp.open;
+    fsp.open = (async (...args: Parameters<typeof realOpen>) => {
+      const handle = await realOpen(...args);
+      const read = handle.read.bind(handle) as (...a: unknown[]) => Promise<unknown>;
+      (handle as any).read = (buf: Buffer, off: number, len: number, pos: number) => read(buf, off, Math.min(len, 16), pos);
+      return handle;
+    }) as typeof fsp.open;
+    syncBuiltinESMExports();
+    try {
+      await appendIndexLine(index, row(3));
+    } finally {
+      fsp.open = realOpen;
+      syncBuiltinESMExports();
+    }
+    assert.deepEqual(await parse(), ["lead_1", "lead_2", "lead_3"]);
+  });
+
+  test("a failed length look-up refuses the append and leaves every row in place", async () => {
+    await appendIndexLine(index, row(1));
+    const realStat = fsp.stat;
+    let failures = 1;
+    fsp.stat = (async (...args: Parameters<typeof realStat>) => {
+      if (failures-- > 0) throw Object.assign(new Error("EIO"), { code: "EIO" });
+      return realStat(...args);
+    }) as typeof fsp.stat;
+    syncBuiltinESMExports();
+    try {
+      await assert.rejects(appendIndexLine(index, row(2)), /EIO/);
+    } finally {
+      fsp.stat = realStat;
+      syncBuiltinESMExports();
+    }
+    assert.deepEqual(await parse(), ["lead_1"]);
+    // Same fault, then a part-written append whose rollback must not use a guessed length.
+    failures = 0;
+    await appendIndexLine(index, row(3));
+    assert.deepEqual(await parse(), ["lead_1", "lead_3"]);
+  });
+
+  test("an append that wrote its whole row before reporting an error leaves a whole row", async () => {
+    await appendIndexLine(index, row(1));
+    const realTruncate = fsp.truncate;
+    fsp.appendFile = (async (file: string, data: string, options?: unknown) => {
+      await realAppend(file, data, options as never);
+      throw Object.assign(new Error("EIO on close"), { code: "EIO" });
+    }) as typeof fsp.appendFile;
+    fsp.truncate = (async () => {
+      throw new Error("rollback failed");
+    }) as typeof fsp.truncate;
+    syncBuiltinESMExports();
+    await assert.rejects(appendIndexLine(index, row(2)), /EIO on close/);
+    fsp.appendFile = realAppend;
+    fsp.truncate = realTruncate;
+    syncBuiltinESMExports();
+    await appendIndexLine(index, row(3));
+    assert.deepEqual(await parse(), ["lead_1", "lead_2", "lead_3"]);
+  });
+
+  test("handler: whatever happens to the index, every accepted lead has its file and every row has a file", async () => {
     const leads = await mkdtemp(join(tmpdir(), "contact-index-h-"));
     const deps: ContactDeps = { leadsDir: leads, notify: null, log: { warn() {}, error() {}, info() {} } };
-    const send = () =>
-      handleContact(
+    const send = async () => {
+      const res = await handleContact(
         new Request("http://localhost/api/contact", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -425,18 +493,35 @@ describe("index append", () => {
         }),
         deps,
       );
+      return { status: res.status, id: (await res.json()).id as string | undefined };
+    };
     try {
-      assert.equal((await send()).status, 200);
-      failPartially(1);
-      const failed = await send();
-      assert.equal(failed.status, 500);
-      assert.equal((await failed.json()).id, undefined);
-      const next = await send();
-      assert.equal(next.status, 200);
-      const rows = (await readFile(join(leads, "leads.jsonl"), "utf8")).split("\n").filter(Boolean).map((l) => JSON.parse(l));
-      assert.equal(rows.length, 2);
-      const files = (await readdir(leads)).filter((f) => f.startsWith("lead_"));
-      assert.deepEqual(files.sort(), rows.map((r) => `${r.id}.json`).sort());
+      const accepted: string[] = [];
+      const collect = (r: { status: number; id?: string }) => {
+        assert.equal(r.status, 200);
+        accepted.push(r.id!);
+      };
+      collect(await send());
+      failPartially(1); // part-written index row, rollback succeeds
+      collect(await send());
+      collect(await send());
+      const realTruncate = fsp.truncate;
+      failPartially(1); // part-written index row and the rollback fails too
+      fsp.truncate = (async () => {
+        throw new Error("rollback failed");
+      }) as typeof fsp.truncate;
+      syncBuiltinESMExports();
+      collect(await send());
+      fsp.truncate = realTruncate;
+      syncBuiltinESMExports();
+      collect(await send());
+
+      const rows = (await readFile(join(leads, "leads.jsonl"), "utf8")).split("\n").filter(Boolean).map((l) => JSON.parse(l).id);
+      const files = (await readdir(leads)).filter((f) => f.startsWith("lead_")).map((f) => f.replace(/\.json$/, ""));
+      assert.deepEqual(files.sort(), [...accepted].sort(), "every accepted lead has its file");
+      for (const id of rows) assert.ok(files.includes(id), `row ${id} has a file`);
+      assert.equal(new Set(rows).size, rows.length);
+      assert.ok(rows.length >= 3 && rows.length <= 5);
     } finally {
       await rm(leads, { recursive: true, force: true });
     }

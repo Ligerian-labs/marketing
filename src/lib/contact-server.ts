@@ -4,7 +4,7 @@
  * `src/pages/api/contact.ts` only wires in the environment.
  */
 import { randomBytes } from "node:crypto";
-import { appendFile, mkdir, open, stat, truncate, unlink, writeFile } from "node:fs/promises";
+import { appendFile, mkdir, open, stat, truncate, writeFile } from "node:fs/promises";
 import { join } from "node:path";
 import {
   LIMITS,
@@ -115,50 +115,62 @@ export function buildNotification(lead: Lead): Notification {
 }
 
 // Index appends run one at a time (per process) so a rollback cannot cut off a
-// concurrent request's row. The index is written by a single server process.
+// concurrent request's row. `leads.jsonl` is written by one server process.
 let indexQueue: Promise<unknown> = Promise.resolve();
 const TAIL_SCAN = 64 * 1024; // longer than any row the body limit allows
 
-/**
- * Make sure the index ends on a row boundary before appending. A row that was
- * only part-written (failed rollback, crash) is cut back to the last newline.
- * Throws when it cannot be repaired, so a new row is never glued onto a corrupt tail.
- */
-async function ensureRowBoundary(path: string, size: number): Promise<void> {
-  if (size === 0) return;
+/** Read exactly `length` bytes at `position`; a read may return fewer, and EOF is an error. */
+async function readExactly(path: string, position: number, length: number): Promise<Buffer> {
   const handle = await open(path, "r");
-  let start = 0;
-  let tail: Buffer;
   try {
-    start = Math.max(0, size - TAIL_SCAN);
-    tail = Buffer.alloc(size - start);
-    await handle.read(tail, 0, tail.length, start);
+    const out = Buffer.alloc(length);
+    let filled = 0;
+    while (filled < length) {
+      const { bytesRead } = await handle.read(out, filled, length - filled, position + filled);
+      if (bytesRead === 0) throw new Error("leads index ended before its tail could be read");
+      filled += bytesRead;
+    }
+    return out;
   } finally {
     await handle.close();
   }
-  if (tail[tail.length - 1] === 0x0a) return;
-  const lastNewline = tail.lastIndexOf(0x0a);
-  if (lastNewline < 0 && start > 0) throw new Error("leads index has an unterminated row that cannot be repaired");
-  await truncate(path, lastNewline < 0 ? 0 : start + lastNewline + 1);
 }
 
 /**
- * Append one JSONL row. If the write fails part-way (disk full, I/O error) the
- * file is cut back to its previous length. If even that fails, the next call
- * repairs the tail first, or refuses to write, so the index stays parseable.
+ * Return the length of the index up to its last complete row, cutting off a
+ * part-written row (failed rollback, crash). Throws when the length or tail
+ * cannot be established, so a new row is never glued onto a corrupt tail and
+ * a failed look-up never truncates good rows.
+ */
+async function safeIndexLength(path: string): Promise<number> {
+  const size = await stat(path).then(
+    (info) => info.size,
+    (err) => (err?.code === "ENOENT" ? 0 : Promise.reject(err)),
+  );
+  if (size === 0) return 0;
+  const start = Math.max(0, size - TAIL_SCAN);
+  const tail = await readExactly(path, start, size - start);
+  if (tail[tail.length - 1] === 0x0a) return size;
+  const lastNewline = tail.lastIndexOf(0x0a);
+  if (lastNewline < 0 && start > 0) throw new Error("leads index has an unterminated row that cannot be repaired");
+  const safe = lastNewline < 0 ? 0 : start + lastNewline + 1;
+  await truncate(path, safe);
+  return safe;
+}
+
+/**
+ * Append one JSONL row. The tail is made whole first. If the write then fails
+ * part-way (disk full, I/O error) the file is cut back to that length; if the
+ * cut-back itself fails, the next call repairs the tail or refuses to write.
+ * Rows are only ever added or cut off at the tail, never rewritten.
  */
 export function appendIndexLine(path: string, line: string): Promise<void> {
   const run = indexQueue.then(async () => {
-    const before = await stat(path).then(
-      (info) => info.size,
-      (err) => (err?.code === "ENOENT" ? 0 : Promise.reject(err)),
-    );
-    await ensureRowBoundary(path, before);
-    const safe = await stat(path).then((info) => info.size, () => 0);
+    const safe = await safeIndexLength(path);
     try {
       await appendFile(path, line);
     } catch (err) {
-      await truncate(path, safe).catch(() => {}); // a failed rollback is repaired by the next call
+      await truncate(path, safe).catch(() => {});
       throw err;
     }
   });
@@ -167,19 +179,18 @@ export function appendIndexLine(path: string, line: string): Promise<void> {
 }
 
 /**
- * Store the lead durably: the per-lead file first (`wx`, never overwrites),
- * then the index line. If the index append fails the file is removed so a
- * failed request leaves nothing half-written for the retry to duplicate.
+ * Store the lead. The per-lead file (`wx`, never overwrites, never removed) is
+ * the durable record: once it exists the enquiry is accepted. `leads.jsonl` is
+ * an index of those files, so it can only ever lack a row, never hold one whose
+ * file is missing. An index failure is logged and does not lose or reject the lead.
  */
-async function persist(lead: Lead, leadsDir: string): Promise<void> {
+async function persist(lead: Lead, leadsDir: string, log: Pick<Console, "error">): Promise<void> {
   await mkdir(leadsDir, { recursive: true });
-  const file = join(leadsDir, `${lead.id}.json`);
-  await writeFile(file, JSON.stringify(lead, null, 2), { flag: "wx" });
+  await writeFile(join(leadsDir, `${lead.id}.json`), JSON.stringify(lead, null, 2), { flag: "wx" });
   try {
     await appendIndexLine(join(leadsDir, "leads.jsonl"), JSON.stringify(lead) + "\n");
   } catch (err) {
-    await unlink(file).catch(() => {});
-    throw err;
+    log.error(`[LEAD] ${lead.id} saved, index row not written: ${err instanceof Error ? err.message : "unknown"}`);
   }
 }
 
@@ -242,7 +253,7 @@ export async function handleContact(request: Request, deps: ContactDeps): Promis
   };
 
   try {
-    await persist(lead, deps.leadsDir);
+    await persist(lead, deps.leadsDir, log);
   } catch (err) {
     log.error(`[LEAD] could not store enquiry: ${err instanceof Error ? err.message : "unknown"}`);
     return fail(500, "storage_failed", "Votre message n'a pas pu être enregistré.");

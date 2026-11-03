@@ -60,8 +60,8 @@ describe("contact page in a browser", { skip: playwright ? false : "Playwright n
         blocked.push(url.href);
         return route.abort();
       }
-      if (url.hostname === origin && origin.startsWith("[")) {
-        // Literal IPv6 origins cannot be resolved to the test server by name: forward them.
+      if (url.hostname === origin && origin !== "127.0.0.1" && origin !== PUBLIC_HOST) {
+        // Local-looking origins (IPv6 literals, "localhost.") are not resolvable to the test server: forward them.
         const target = url.href.replace(`//${origin}`, "//127.0.0.1");
         return route.fulfill({ response: await route.fetch({ url: target }) });
       }
@@ -156,6 +156,10 @@ describe("contact page in a browser", { skip: playwright ? false : "Playwright n
       ["IPv4-mapped loopback", { origin: MAPPED }],
       ["unique-local IPv6", { origin: "[fd00::1]" }],
       ["link-local IPv6", { origin: "[fe80::1]" }],
+      ["root-dotted localhost", { origin: "localhost." }],
+      ["root-dotted .localhost", { origin: "app.localhost." }],
+      ["root-dotted .local", { origin: "mac.local." }],
+      ["root-dotted .test", { origin: "lab.test." }],
       ["automated browser", { human: false }],
     ];
     for (const [label, options] of visits) {
