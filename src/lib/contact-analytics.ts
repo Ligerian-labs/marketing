@@ -39,7 +39,11 @@ export function isInternalVisit({ hostname, automated }: Visit): boolean {
     host.endsWith(".localhost") ||
     host.endsWith(".local") ||
     host.endsWith(".test") ||
-    host.endsWith(".invalid")
+    host.endsWith(".invalid") ||
+    host === "internal" ||
+    host.endsWith(".internal") || // reserved for private-use applications
+    host === "home.arpa" ||
+    host.endsWith(".home.arpa") // RFC 8375, home networks
   );
 }
 

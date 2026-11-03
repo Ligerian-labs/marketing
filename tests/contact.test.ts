@@ -302,6 +302,7 @@ describe("contact_form_submitted decision", () => {
       "localhost", "app.localhost", "mac.local", "site.test", "x.invalid", "",
       "127.0.0.1", "10.0.0.5", "192.168.1.20", "172.16.4.1", "172.31.255.1", "172.32.0.1", "8.8.8.8", "0.0.0.0",
       "localhost.", "app.localhost.", "mac.local.", "lab.test.", "127.0.0.1.", "[::1].",
+      "lab.internal", "lab.internal.", "internal", "home.arpa", "lab.home.arpa", "a.b.home.arpa.", "LAB.HOME.ARPA",
       "[::1]", "::1", "[::]", "[::ffff:7f00:1]", "[::ffff:c0a8:101]", "[::ffff:808:808]", "[fd00::1]", "[fc00::1234]", "[fe80::1]", "[2001:db8::1]",
     ];
     for (const hostname of internal) {
@@ -309,7 +310,7 @@ describe("contact_form_submitted decision", () => {
       assert.equal(submittedEvent(accepted, "other", { hostname }), null, hostname);
     }
     assert.equal(submittedEvent(accepted, "other", { ...prod, automated: true }), null);
-    for (const hostname of ["ligerianlabs.fr", "ligerianlabs.fr.", "www.ligerianlabs.fr", "preview-123.vercel.app", "localhost.example.com", "10.example.org"]) {
+    for (const hostname of ["ligerianlabs.fr", "ligerianlabs.fr.", "www.ligerianlabs.fr", "preview-123.vercel.app", "localhost.example.com", "10.example.org", "internal.example.com", "myhome.arpa.example.org", "xn--caf-dma.example"]) {
       assert.equal(isInternalVisit({ hostname }), false, hostname);
     }
   });
@@ -438,6 +439,28 @@ describe("index append", () => {
       syncBuiltinESMExports();
     }
     assert.deepEqual(await parse(), ["lead_1", "lead_2", "lead_3"]);
+  });
+
+  test("a tail read that ends early refuses the append and keeps every prior row", async () => {
+    await appendIndexLine(index, row(1));
+    await appendIndexLine(index, row(2));
+    const before = await readFile(index);
+    const realOpen = fsp.open;
+    fsp.open = (async (...args: Parameters<typeof realOpen>) => {
+      const handle = await realOpen(...args);
+      (handle as any).read = async (buf: Buffer) => ({ bytesRead: 0, buffer: buf }); // EOF before the expected tail
+      return handle;
+    }) as typeof fsp.open;
+    syncBuiltinESMExports();
+    try {
+      await assert.rejects(appendIndexLine(index, row(3)), /ended before its tail could be read/);
+    } finally {
+      fsp.open = realOpen;
+      syncBuiltinESMExports();
+    }
+    assert.deepEqual(await readFile(index), before);
+    await appendIndexLine(index, row(4));
+    assert.deepEqual(await parse(), ["lead_1", "lead_2", "lead_4"]);
   });
 
   test("a failed length look-up refuses the append and leaves every row in place", async () => {

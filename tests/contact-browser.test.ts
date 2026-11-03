@@ -160,6 +160,8 @@ describe("contact page in a browser", { skip: playwright ? false : "Playwright n
       ["root-dotted .localhost", { origin: "app.localhost." }],
       ["root-dotted .local", { origin: "mac.local." }],
       ["root-dotted .test", { origin: "lab.test." }],
+      ["private .internal name", { origin: "lab.internal" }],
+      ["home network home.arpa name", { origin: "lab.home.arpa" }],
       ["automated browser", { human: false }],
     ];
     for (const [label, options] of visits) {
