@@ -139,6 +139,19 @@ l'hôte. Aucun lint/typecheck n'est configuré dans le dépôt ; ne pas les anno
 comme exécutés. Les tests analytics vérifient le bootstrap et son filtre avec un
 SDK simulé, sans envoyer de données à PostHog.
 
+Contrôle réseau statique facultatif, avec `npm start` déjà lancé :
+
+```bash
+curl --head http://127.0.0.1:4327/ingest/static/array.js
+curl --fail --silent --show-error --output /dev/null http://127.0.0.1:4327/ingest/static/array.js
+```
+
+Ces deux lectures GET/HEAD passent par l'entrée de production vers le fichier
+JavaScript public. Elles n'exécutent pas le SDK et n'envoient ni capture, ni
+soumission, ni donnée personnelle. Les chemins `/static/` et `/array/` vont vers
+`eu-assets.i.posthog.com`, les événements vers `eu.i.posthog.com`, conformément à
+la [documentation du proxy PostHog](https://posthog.com/docs/advanced/proxy/nextjs-middleware).
+
 Le [dossier marketing](docs/marketing/README.md) conserve le point de départ
 daté, les faits à confirmer, les permissions externes et le plan des 90 jours.
 

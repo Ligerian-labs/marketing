@@ -19,11 +19,39 @@ test("proxy forwards event bytes and protocol headers without credentials or ide
     assert.equal(init.redirect, "manual");
     assert.ok(!JSON.stringify([...init.headers]).includes("synthetic"));
     for (const name of ["cookie", "authorization", "x-forwarded-for", "x-internal-token", "referer", "user-agent", "origin"]) assert.equal(init.headers.get(name), null, name);
-    return new Response("accepted", { status: 202, headers: { "Content-Type": "text/plain", "Set-Cookie": "unwanted=1", "Content-Encoding": "gzip", "Content-Length": "999", "X-Upstream-Secret": "synthetic-secret" } });
+    return new Response("accepted", { status: 202, headers: { "Content-Type": "text/plain", "Set-Cookie": "unwanted=1", "Content-Encoding": "gzip", "Content-Length": "999", "X-Upstream-Secret": "synthetic-secret", "Access-Control-Allow-Origin": "https://untrusted.invalid", "Access-Control-Allow-Credentials": "true" } });
   });
   assert.equal(response.status, 202);
   assert.equal(await response.text(), "accepted");
   for (const name of ["set-cookie", "content-encoding", "content-length", "x-upstream-secret"]) assert.equal(response.headers.get(name), null, name);
+  assert.equal(response.headers.get("access-control-allow-origin"), "*");
+  assert.equal(response.headers.get("access-control-allow-credentials"), null);
+});
+
+test("SDK assets and remote configuration use the documented asset origin", async () => {
+  for (const path of ["static/array.js", "static/1.2.3/array.js", "array/public-project/config.js", "e/", "flags/"]) {
+    for (const method of ["GET", "HEAD"]) {
+      let observed;
+      await proxyAnalytics(new Request(`http://localhost/ingest/${path}?v=2`, { method }), path, async (url) => {
+        observed = String(url);
+        return new Response(null);
+      });
+      const host = /^(?:static|array)\//.test(path) ? "eu-assets.i.posthog.com" : "eu.i.posthog.com";
+      assert.equal(observed, `https://${host}/${path}?v=2`, `${method} ${path}`);
+    }
+  }
+});
+
+test("client cancellation reaches the injected upstream without waiting for timeout", async () => {
+  const controller = new AbortController();
+  controller.abort();
+  let propagated = false;
+  const response = await proxyAnalytics(new Request("http://localhost/ingest/static/array.js", { signal: controller.signal }), "static/array.js", async (url, init) => {
+    propagated = init.signal.aborted;
+    throw new Error("synthetic cancellation");
+  });
+  assert.equal(propagated, true);
+  assert.equal(response.status, 502);
 });
 
 test("SDK assets, HEAD, conditional status and caching survive proxying", async () => {
@@ -56,6 +84,9 @@ test("proxy handles preflight/failure and keeps redirects on the analytics host"
   const safe = await proxyAnalytics(new Request("http://localhost/ingest/static/array.js"), "static/array.js", async () => new Response(null, { status: 307, headers: { Location: "/static/versioned.js?v=1" } }));
   assert.equal(safe.status, 307);
   assert.equal(safe.headers.get("location"), "/ingest/static/versioned.js?v=1");
+  const regional = await proxyAnalytics(new Request("http://localhost/ingest/e/"), "e/", async () => new Response(null, { status: 301, headers: { Location: "https://eu-assets.i.posthog.com/static/array.js" } }));
+  assert.equal(regional.status, 301);
+  assert.equal(regional.headers.get("location"), "/ingest/static/array.js");
   const unsafe = await proxyAnalytics(new Request("http://localhost/ingest/e/"), "e/", async () => new Response(null, { status: 307, headers: { Location: "https://other.example.invalid/" } }));
   assert.equal(unsafe.status, 502);
 });

@@ -180,6 +180,8 @@ test("analytics never initializes on local/internal hosts or opted-out browsers"
   }
   assert.equal(analyticsHarness(html, { optOut: true }).window.posthog, undefined);
   assert.equal(analyticsHarness(html, { pathname: "/uncategorised/" }).window.posthog, undefined);
+  assert.equal(analyticsHarness(html, { pathname: "/realisations/unknown/" }).window.posthog, undefined);
+  assert.equal(analyticsHarness(html, { pathname: "/blog/unpublished-private/" }).window.posthog, undefined);
   const privateHtml = await (await request("/auth/connexion?token=private")).text();
   assert.ok(!privateHtml.includes("posthog.init"), "no analytics on private/noindex pages");
 });
@@ -210,6 +212,10 @@ test("analytics configuration and click properties cannot transmit personal cont
     assert.ok(!JSON.stringify(event).includes("private"));
   }
   assert.equal(config.before_send({ event: "contact_form_submitted", properties: { project_type: "private contents" } }).properties.project_type, undefined);
+  const forgedProperties = config.before_send({ event: "$pageview", properties: { page_id: "/private/alice/", landing_page_id: "/private/alice/", channel: "private" } }).properties;
+  assert.equal(forgedProperties.page_id, "/offres/");
+  assert.equal(forgedProperties.landing_page_id, "/offres/");
+  assert.equal(forgedProperties.channel, "direct");
   const captured = [];
   window.posthog.capture = (...args) => captured.push(args);
   const click = (href) => listeners.click({ target: { closest: () => ({ getAttribute: () => href }) } });
@@ -261,6 +267,18 @@ test("public page IDs and first-touch channels survive navigation without storin
   const forged = new Map([["ll_analytics_context", JSON.stringify({ landing_page_id: "/private/alice/", channel: "private" })]]);
   const cleaned = analyticsHarness(html, { storage: forged });
   assert.ok(!JSON.stringify([...cleaned.storage]).includes("private"));
+  // Forge one field at a time, so either missing validator causes failure.
+  for (const stored of [
+    { landing_page_id: "/private/alice/", channel: "organic" },
+    { landing_page_id: "/offres/", channel: "private" },
+  ]) {
+    const storage = new Map([["ll_analytics_context", JSON.stringify(stored)]]);
+    const h = analyticsHarness(html, { storage });
+    const event = h.window.posthog._i[0][1].before_send({ event: "$pageview", properties: {} });
+    assert.equal(event.properties.landing_page_id, "/offres/");
+    assert.equal(event.properties.channel, "direct");
+    assert.ok(!JSON.stringify([...storage]).includes("private"));
+  }
   const extra = new Map([["ll_analytics_context", JSON.stringify({ landing_page_id: "/offres/", channel: "organic", visitor_id: "private" })]]);
   assert.ok(!JSON.stringify([...analyticsHarness(html, { storage: extra }).storage]).includes("private"));
 });
