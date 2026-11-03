@@ -103,6 +103,14 @@ test("sitemap lists existing canonical indexable HTML with truthful dates", asyn
     assert.match(html, new RegExp(`<link rel="canonical" href="${loc}"`), loc);
     assert.ok(!/<meta name="robots" content="[^"]*noindex/.test(html), loc);
     if (entry.includes("<lastmod>")) assert.match(entry, /<lastmod>\d{4}-\d{2}-\d{2}<\/lastmod>/);
+    let articleDate, articlePublished;
+    if (url.pathname.startsWith("/blog/") && url.pathname !== "/blog/") {
+      const source = await readFile(`src/content/blog/${decodeURIComponent(url.pathname.slice(6, -1))}.md`, "utf8");
+      const frontmatter = source.match(/^---\r?\n([\s\S]*?)\r?\n---/)[1];
+      articlePublished = frontmatter.match(/^date:\s*["']?(\d{4}-\d{2}-\d{2})/m)[1];
+      articleDate = frontmatter.match(/^updated:\s*["']?(\d{4}-\d{2}-\d{2})/m)?.[1] ?? articlePublished;
+      assert.ok(entry.includes(`<lastmod>${articleDate}</lastmod>`), "article date must be authored, unaffected by mechanical Git edits");
+    }
     if (!url.pathname.startsWith("/blog/")) {
       const basename = url.pathname === "/" ? "index" : url.pathname.slice(1, -1);
       const source = [`src/pages/${basename}.astro`, `src/pages/${basename}/index.astro`].find(existsSync);
@@ -112,6 +120,11 @@ test("sitemap lists existing canonical indexable HTML with truthful dates", asyn
       }
     }
     const schemas = [...html.matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/g)].map((m) => JSON.parse(m[1]));
+    if (articleDate) {
+      const article = schemas.flatMap((schema) => schema["@graph"] || [schema]).find((item) => item["@type"] === "BlogPosting");
+      assert.ok(article.dateModified.startsWith(articleDate));
+      assert.ok(article.datePublished.startsWith(articlePublished));
+    }
     const checkSchema = (value) => {
       if (Array.isArray(value)) return value.forEach(checkSchema);
       if (value && typeof value === "object") {

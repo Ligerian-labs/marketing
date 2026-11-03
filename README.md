@@ -95,6 +95,10 @@ tags: ["ia", "outils"]
 ---
 ```
 
+Le champ facultatif `updated` indique la date d'une modification significative du contenu.
+Sans ce champ, le sitemap et le schéma conservent la date publiée ; une
+normalisation de liens ne doit pas modifier ces dates.
+
 Les tags pilotent la catégorie affichée sur les cartes et l'offre mise en avant
 dans la colonne de l'article — voir `src/lib/blog.ts`.
 
@@ -122,6 +126,12 @@ avec `dist/`. L'ancien démarrage direct `node dist/server/entry.mjs` et le prev
 natif contournent les redirections des pages prérendues ; ne pas les utiliser pour
 valider une release. `RESEND_API_KEY` et les clés Stripe doivent être retirées de
 l'environnement des tests locaux.
+
+Limite de développement vérifiée : `astro dev` retire les paramètres des
+redirections de pages prérendues, même via `context.request.url`. Par exemple
+`/ia-angers?x=1` devient `/ia-angers/`. L'entrée `npm start` conserve ces paramètres
+et doit servir aux contrôles de release. Aucun correctif interne à Astro n'est
+appliqué pour masquer cette différence.
 
 ```bash
 npm run test:seo

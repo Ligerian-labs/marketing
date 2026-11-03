@@ -15,6 +15,7 @@ interface Props {
   frontmatter: {
     title: string;
     date: string;
+    updated?: string;
     excerpt: string;
     author?: string;
     tags?: string[];
@@ -35,7 +36,7 @@ const articleSchema = {
   headline: frontmatter.title,
   description: frontmatter.excerpt,
   datePublished: isoDate(frontmatter.date),
-  dateModified: isoDate(frontmatter.date),
+  dateModified: isoDate(frontmatter.updated ?? frontmatter.date),
   inLanguage: "fr-FR",
   articleSection: category,
   keywords: frontmatter.tags?.join(", "),
