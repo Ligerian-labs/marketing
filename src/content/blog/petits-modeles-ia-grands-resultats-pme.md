@@ -45,4 +45,4 @@ On est à un point de bascule. Les modèles compacts performants, open source, e
 
 Si vous dirigez une entreprise à Angers ou en Pays de la Loire et que vous vous demandez par où commencer, on peut en discuter. Chez Ligerian Labs, on aide les PME à identifier les bons cas d'usage et à déployer des outils IA qui tiennent la route — sans exploser le budget.
 
-[Prenez contact →](/contact)
+[Prenez contact →](/contact/)

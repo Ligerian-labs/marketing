@@ -109,4 +109,4 @@ La confiance ne vient pas d'un modèle plus gros ou d'une interface plus brillan
 
 Chez Ligerian Labs, c'est exactement notre approche du conseil IA entreprise à Angers : partir d'un irritant réel, construire un outil utile, mesurer, ajuster. Pas de grand soir technologique. Juste de l'automatisation IA qui tient debout.
 
-Si vous avez une tâche répétitive qui consomme trop de temps dans votre PME, [on peut regarder ça ensemble](/contact).
+Si vous avez une tâche répétitive qui consomme trop de temps dans votre PME, [on peut regarder ça ensemble](/contact/).

@@ -71,4 +71,4 @@ Faites l'inventaire. Listez tous vos abonnements logiciels, leur coût mensuel, 
 
 Ensuite, commencez petit. Un seul outil, le moins critique. Testez l'approche, mesurez les économies, ajustez.
 
-C'est exactement le type d'accompagnement qu'on propose chez Ligerian Labs : identifier les postes de dépense logicielle inutiles, construire des alternatives sur mesure avec l'IA, et s'assurer que ça tient dans le temps. Si vous êtes curieux, [on en discute volontiers](/contact).
+C'est exactement le type d'accompagnement qu'on propose chez Ligerian Labs : identifier les postes de dépense logicielle inutiles, construire des alternatives sur mesure avec l'IA, et s'assurer que ça tient dans le temps. Si vous êtes curieux, [on en discute volontiers](/contact/).

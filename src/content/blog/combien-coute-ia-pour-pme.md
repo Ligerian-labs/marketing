@@ -91,4 +91,4 @@ Pour une PME de 10 personnes à Angers, si l'IA fait gagner 3 heures par semaine
 3. **Identifiez un quick win** — une tâche précise à automatiser. Mesurez le avant/après.
 4. **Faites-vous accompagner** — pour les projets plus structurés, un regard extérieur évite les erreurs coûteuses.
 
-Chez Ligerian Labs, on aide les entreprises des Pays de la Loire à trouver le bon niveau d'investissement IA — ni trop, ni trop peu. [Parlons-en](/contact).
+Chez Ligerian Labs, on aide les entreprises des Pays de la Loire à trouver le bon niveau d'investissement IA — ni trop, ni trop peu. [Parlons-en](/contact/).

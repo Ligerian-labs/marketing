@@ -60,4 +60,4 @@ Le fond du sujet, ce n'est pas que l'IA sait coder. C'est que la barrière techn
 
 Aujourd'hui, une PME à Angers a accès aux mêmes technologies que Spotify. Pas à la même échelle, évidemment — mais pour automatiser vos processus internes, c'est largement suffisant.
 
-Chez Ligerian Labs, on accompagne les entreprises du Pays de la Loire dans cette transition. Pas avec des slides PowerPoint sur "la transformation digitale" — avec des outils concrets, adaptés à votre métier, déployés en quelques jours. [Parlons-en →](/contact)
+Chez Ligerian Labs, on accompagne les entreprises du Pays de la Loire dans cette transition. Pas avec des slides PowerPoint sur "la transformation digitale" — avec des outils concrets, adaptés à votre métier, déployés en quelques jours. [Parlons-en →](/contact/)

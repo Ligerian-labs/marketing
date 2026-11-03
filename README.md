@@ -142,5 +142,20 @@ SDK simulé, sans envoyer de données à PostHog.
 Le [dossier marketing](docs/marketing/README.md) conserve le point de départ
 daté, les faits à confirmer, les permissions externes et le plan des 90 jours.
 
+Après intégration de la branche contact B, ses tests se lancent après le build :
+
+```bash
+node --test tests/contact.test.ts tests/contact-client.test.ts tests/contact-http.test.ts
+CONTACT_PLAYWRIGHT=/absolute/path/to/node_modules/@playwright/test node --test tests/contact-browser.test.ts
+```
+
+Ils demandent Node 24 ou 22.18+. Le test HTTP utilise un port éphémère, un dossier
+temporaire sans clé Resend et nettoie ses leads. Le test navigateur est **ignoré**
+si Playwright n'est pas disponible ; un test ignoré n'est pas un succès. Il bloque
+les requêtes hors du serveur local, y compris `/ingest` et les polices.
+`CONTACT_LEADS_DIR` choisit le dossier des leads, `./leads` par défaut. La
+notification email n'est envoyée que si `RESEND_API_KEY` est définie. Ces fichiers
+contact appartiennent à B et ne sont pas présents dans le candidat C seul.
+
 Le dossier `public/brand/` doit être déployé à la racine du site : les balises
 `og:image` et les téléchargements du kit presse pointent vers `/brand/…`.

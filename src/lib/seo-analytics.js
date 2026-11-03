@@ -5,6 +5,7 @@
   try {
     if (window.localStorage.getItem("ll_analytics_disabled") === "1") return;
   } catch { return; }
+  const publicPaths = new Set(LL_PUBLIC_PAGE_PATHS);
   const paths = {
     "/": "home", "/offres/": "offres", "/contact/": "contact", "/approche/": "approche",
     "/ia-angers/": "angers", "/ia-angers-pme/": "angers_pme", "/a-propos/": "about",
@@ -12,15 +13,43 @@
     "/developpement-logiciel-sur-mesure/": "software", "/integration-ia/": "ai", "/realisations/": "projects",
   };
   const path = window.location.pathname.replace(/\/*$/, "/");
+  if (!publicPaths.has(path)) return;
   const page = paths[path] || (path.startsWith("/blog/") ? "blog_article" : path.startsWith("/realisations/") ? "project" : "other");
   if (page === "other") return;
+  const channels = new Set(["direct", "organic", "maps", "social", "referral", "campaign"]);
+  const incomingChannel = () => {
+    const query = new URLSearchParams(window.location.search);
+    const source = (query.get("utm_source") || "").toLowerCase();
+    const medium = (query.get("utm_medium") || "").toLowerCase();
+    if (["google_maps", "google-business-profile", "gbp", "gmb"].includes(source)) return "maps";
+    if (["google", "bing", "duckduckgo"].includes(source) && medium === "organic") return "organic";
+    if (query.has("utm_source") || query.has("utm_medium") || query.has("utm_campaign")) return "campaign";
+    let referrer;
+    try { referrer = new URL(document.referrer); } catch { return null; }
+    if (referrer.origin === window.location.origin) return null;
+    const host = referrer.hostname.replace(/^www\./, "");
+    if (["maps.google.com", "maps.google.fr"].includes(host)) return "maps";
+    if (["google.com", "google.fr", "bing.com", "duckduckgo.com", "search.yahoo.com", "search.brave.com"].includes(host)) return "organic";
+    if (["linkedin.com", "l.linkedin.com", "facebook.com", "l.facebook.com", "instagram.com", "x.com", "t.co"].includes(host)) return "social";
+    return "referral";
+  };
+  // Keep only public path IDs and a channel enum for this browser tab. This
+  // is first-touch context, not a visitor ID or cross-visit identity store.
+  let context;
+  try { context = JSON.parse(window.sessionStorage.getItem("ll_analytics_context") || "null"); } catch {}
+  const incoming = incomingChannel();
+  if (incoming || !context || !publicPaths.has(context.landing_page_id) || !channels.has(context.channel)) {
+    context = { landing_page_id: path, channel: incoming || "direct" };
+  }
+  context = { landing_page_id: context.landing_page_id, channel: context.channel };
+  try { window.sessionStorage.setItem("ll_analytics_context", JSON.stringify(context)); } catch {}
   const projectTypes = new Set(["new-application", "existing-software", "ai-integration", "other"]);
   const events = new Set(["$pageview", "blog_post_viewed", "email_contact_click", "service_enquiry_click", "contact_form_submitted"]);
   const token = "phc_RWvhEosblAK0FyygISQWlIb0ljI7EoYwQLQYlMh6wK4";
   const beforeSend = (event) => {
     if (!event || !events.has(event.event)) return null;
     const input = event.properties || {};
-    const properties = { page, token };
+    const properties = { page, page_id: path, landing_page_id: context.landing_page_id, channel: context.channel, token };
     // Fresh memory-only anonymous SDK identifiers, never an identified profile.
     for (const key of ["distinct_id", "$device_id", "$session_id", "$window_id"]) {
       if (typeof input[key] === "string" && /^[0-9a-f-]{36}$/i.test(input[key])) properties[key] = input[key];

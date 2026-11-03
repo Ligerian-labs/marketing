@@ -67,4 +67,4 @@ Pas besoin de refaire toute votre stack technique. Commencez petit :
 
 Si le résultat est là, c'est le moment de passer à une solution plus robuste, taillée pour votre activité.
 
-Chez Ligerian Labs, on accompagne les PME en Pays de la Loire dans ce type de mise en place — de l'audit initial au déploiement d'un assistant IA qui connaît vraiment votre métier. [Parlons-en](https://ligerianlabs.fr/contact).
+Chez Ligerian Labs, on accompagne les PME en Pays de la Loire dans ce type de mise en place — de l'audit initial au déploiement d'un assistant IA qui connaît vraiment votre métier. [Parlons-en](https://ligerianlabs.fr/contact/).

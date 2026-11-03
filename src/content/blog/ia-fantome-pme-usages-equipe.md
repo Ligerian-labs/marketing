@@ -89,4 +89,4 @@ Si un assistant fait gagner 20 minutes par devis et que la qualité reste stable
 
 Une transformation digitale PME solide, ce n'est pas empiler des abonnements. C'est garder les usages qui tiennent dans la vraie vie.
 
-L'IA est probablement déjà entrée dans votre entreprise. La question n'est plus "faut-il commencer ?", mais "comment reprendre la main sans freiner les bonnes initiatives ?". Chez Ligerian Labs, on aide les PME d'Angers et du Pays de la Loire à faire cet audit, poser des règles simples et transformer les usages cachés en outils IA entreprise vraiment utiles. [Parlons-en](/contact).
+L'IA est probablement déjà entrée dans votre entreprise. La question n'est plus "faut-il commencer ?", mais "comment reprendre la main sans freiner les bonnes initiatives ?". Chez Ligerian Labs, on aide les PME d'Angers et du Pays de la Loire à faire cet audit, poser des règles simples et transformer les usages cachés en outils IA entreprise vraiment utiles. [Parlons-en](/contact/).

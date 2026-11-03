@@ -104,4 +104,4 @@ Le MCP est à la mode parce que les agents IA ont besoin d'un moyen propre pour 
 
 C'est exactement le genre de sujet où un conseil IA entreprise peut éviter de perdre trois mois. On choisit un cas d'usage, on garde les pieds sur terre, et on construit un outil IA entreprise qui rend service dès la première semaine.
 
-Chez Ligerian Labs, à Angers, on aide les PME des Pays de la Loire à connecter l'IA à leurs vrais processus sans transformer leur système d'information en chantier permanent. Si vous voulez identifier le premier flux à automatiser proprement, on peut en parler sur [/contact](/contact).
+Chez Ligerian Labs, à Angers, on aide les PME des Pays de la Loire à connecter l'IA à leurs vrais processus sans transformer leur système d'information en chantier permanent. Si vous voulez identifier le premier flux à automatiser proprement, on peut en parler sur [/contact](/contact/).

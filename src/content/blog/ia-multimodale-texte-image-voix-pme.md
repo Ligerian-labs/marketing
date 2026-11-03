@@ -66,4 +66,4 @@ L'objectif, c'est pas de remplacer des gens. C'est de libérer du temps sur les 
 
 Le tissu économique local — artisans, commerces, PME industrielles — est exactement le type d'entreprise qui peut bénéficier de ces outils sans investissement lourd. Pas besoin d'un département IT. Pas besoin d'un budget R&D. Juste une curiosité et 30 minutes pour tester.
 
-Chez Ligerian Labs, on accompagne les entreprises d'Angers et du Pays de la Loire dans l'adoption de ces outils. Pas de la théorie : du concret, adapté à votre métier. [Parlons-en](https://ligerianlabs.fr/contact).
+Chez Ligerian Labs, on accompagne les entreprises d'Angers et du Pays de la Loire dans l'adoption de ces outils. Pas de la théorie : du concret, adapté à votre métier. [Parlons-en](https://ligerianlabs.fr/contact/).

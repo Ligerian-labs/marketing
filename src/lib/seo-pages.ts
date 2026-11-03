@@ -5,7 +5,7 @@ const sources = import.meta.glob("../pages/**/*.astro", { eager: true, query: "?
 export const publicPages = Object.entries(sources).flatMap(([source, contents]) => {
   const name = source.replace("../pages/", "").replace(/\.astro$/, "");
   if (/[\[\]]/.test(name) || /^(?:auth|dashboard)(?:\/|$)/.test(name) || ["404", "500", "services"].includes(name)) return [];
-  if (/robots\s*=\s*["'][^"']*noindex/.test(String(contents))) return [];
+  if (/robots\s*=\s*(?:\{\s*)?["'][^"']*noindex/.test(String(contents))) return [];
   const path = "/" + name.replace(/(?:^|\/)index$/, "");
   return [{ path: path.endsWith("/") ? path : `${path}/`, source: `src/pages/${name}.astro` }];
 });
