@@ -110,4 +110,4 @@ Le registre IA n'est pas le sujet le plus sexy. Il ne fera pas une belle démo e
 
 Pour les PME en Pays de la Loire, le bon mouvement est simple : lister les usages, couper les risques évidents, garder les humains aux endroits critiques, puis automatiser progressivement.
 
-Ligerian Labs peut vous aider à faire cet inventaire, cadrer vos automatisations IA et construire des outils utiles sans perdre le contrôle. Si vous voulez poser les bases proprement, le plus simple est de nous écrire via [/contact](/contact).
+Ligerian Labs peut vous aider à faire cet inventaire, cadrer vos automatisations IA et construire des outils utiles sans perdre le contrôle. Si vous voulez poser les bases proprement, le plus simple est de nous écrire via [/contact](/contact/).

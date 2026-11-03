@@ -80,4 +80,4 @@ C'est justement là qu'il y a du levier. Une PME qui structure ses règles comme
 
 À Angers et dans le Pays de la Loire, beaucoup d'entreprises n'ont pas besoin d'une “transformation digitale PME” version grand cabinet. Elles ont besoin d'un premier système fiable qui enlève 5, 10 ou 20 heures de friction par mois.
 
-Chez Ligerian Labs, on préfère cette approche : partir du terrain, structurer le contexte, puis construire l'outil IA qui tient la route. Si vous voulez identifier le premier processus rentable dans votre boîte, [on peut en parler](/contact).
+Chez Ligerian Labs, on préfère cette approche : partir du terrain, structurer le contexte, puis construire l'outil IA qui tient la route. Si vous voulez identifier le premier processus rentable dans votre boîte, [on peut en parler](/contact/).

@@ -108,4 +108,4 @@ Les agents IA vont devenir un vrai levier pour les PME. Pas parce qu'ils remplac
 
 La différence entre un gadget et un outil solide se joue dans les permissions. Ce que l'agent peut lire. Ce qu'il peut proposer. Ce qu'il peut faire seul. Ce qui demande un accord.
 
-Chez Ligerian Labs, on aide les entreprises d'Angers et du Pays de la Loire à poser ce cadre avant de déployer des outils IA entreprise. Un agent utile, ce n'est pas celui qui fait tout. C'est celui qui fait les bonnes choses, au bon niveau d'autonomie. Pour cadrer un premier cas d'usage, [on peut en parler](/contact).
+Chez Ligerian Labs, on aide les entreprises d'Angers et du Pays de la Loire à poser ce cadre avant de déployer des outils IA entreprise. Un agent utile, ce n'est pas celui qui fait tout. C'est celui qui fait les bonnes choses, au bon niveau d'autonomie. Pour cadrer un premier cas d'usage, [on peut en parler](/contact/).

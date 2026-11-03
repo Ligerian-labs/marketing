@@ -82,7 +82,7 @@ if (chapters.length === 0) {
       {chapters.length > 0 ? (
         <div class="ll-box" style="padding:0">
           {chapters.map((chapter, index) => (
-            <a href={`/formations/${tier}/${chapter.slug}`} class="ll-listrow">
+            <a href={`/formations/${tier}/${chapter.slug}/`} class="ll-listrow">
               <div style="display:grid;grid-template-columns:34px 1fr;gap:14px;align-items:baseline">
                 <span style="font-family:var(--font-mono);font-size:12px;color:var(--cobalt)">
                   {String(index + 1).padStart(2, "0")}
@@ -108,7 +108,7 @@ if (chapters.length === 0) {
       >
         <a href="/formations/" class="ll-mono ll-mono--plain">← Toutes les formations</a>
         {chapters.length > 0 && (
-          <a href={`/formations/${tier}/${chapters[0].slug}`} class="ll-btn">
+          <a href={`/formations/${tier}/${chapters[0].slug}/`} class="ll-btn">
             Commencer la formation →
           </a>
         )}

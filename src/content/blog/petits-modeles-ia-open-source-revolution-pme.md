@@ -82,4 +82,4 @@ Le marché de l'IA bouge à une vitesse folle — OpenAI vient de lever 110 mill
 
 Les PME qui prennent le train maintenant auront un avantage concret : elles sauront quels outils marchent pour leur métier, auront formé leurs équipes, et ne seront pas prises de court quand leurs concurrents s'y mettront.
 
-Chez Ligerian Labs, on accompagne les entreprises du Pays de la Loire dans cette transition — de l'audit initial au déploiement d'outils IA adaptés à votre réalité. [Parlons-en](https://ligerianlabs.fr/contact).
+Chez Ligerian Labs, on accompagne les entreprises du Pays de la Loire dans cette transition — de l'audit initial au déploiement d'outils IA adaptés à votre réalité. [Parlons-en](https://ligerianlabs.fr/contact/).

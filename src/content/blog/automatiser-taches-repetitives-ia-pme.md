@@ -56,4 +56,4 @@ Ce qui a changé en 2025-2026, c'est que ces outils sont devenus abordables et s
 
 Une TPE avec un bon accompagnement peut déployer son premier outil IA en quelques jours, pas en quelques mois.
 
-C'est exactement ce qu'on fait chez Ligerian Labs. On accompagne les entreprises d'Angers et des Pays de la Loire pour identifier les bons leviers IA et les mettre en place — concrètement, sans jargon, avec des résultats mesurables. Si le sujet vous intéresse, [parlons-en](/contact).
+C'est exactement ce qu'on fait chez Ligerian Labs. On accompagne les entreprises d'Angers et des Pays de la Loire pour identifier les bons leviers IA et les mettre en place — concrètement, sans jargon, avec des résultats mesurables. Si le sujet vous intéresse, [parlons-en](/contact/).

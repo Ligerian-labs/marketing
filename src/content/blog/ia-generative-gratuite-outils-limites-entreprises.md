@@ -70,4 +70,4 @@ On ne va pas vous dire de ne jamais utiliser les outils d'IA gratuits — ce ser
 
 Et quand vous sentirez les limites — quand vous voudrez automatiser pour de vrai, connecter l'IA à vos données métier, garantir la confidentialité — c'est là qu'on intervient. Chez Ligerian Labs, on accompagne les entreprises d'Angers et du Pays de la Loire pour passer du stade "je teste" au stade "ça tourne en production".
 
-Un audit rapide de vos besoins, un outil sur mesure, une formation pour vos équipes : [on en discute quand vous voulez](/contact).
+Un audit rapide de vos besoins, un outil sur mesure, une formation pour vos équipes : [on en discute quand vous voulez](/contact/).

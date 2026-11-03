@@ -5,6 +5,8 @@ import Footer from "../components/Footer.astro";
 import { getAuthenticatedUser } from "../lib/auth";
 import { canonicalUrl as pageCanonical, canonicalSchema } from "../../scripts/server/urls.mjs";
 import analytics from "../lib/seo-analytics.js?raw";
+import { getCollection } from "astro:content";
+import { publicPages } from "../lib/seo-pages";
 
 interface Props {
   title: string;
@@ -53,6 +55,11 @@ const {
 const site = Astro.site ?? new URL("https://ligerianlabs.fr");
 const canonicalUrl = pageCanonical(Astro.url.pathname);
 const ogImageUrl = new URL(`/brand/og/${ogImage}.png`, site).href;
+const analyticsPagePaths = [
+  ...publicPages.map((page) => page.path),
+  ...(await getCollection("blog")).map((post) => `/blog/${post.slug}/`),
+];
+const analyticsSource = `const LL_PUBLIC_PAGE_PATHS = ${JSON.stringify(analyticsPagePaths).replace(/</g, "\\u003c")};\n${analytics}`;
 
 // Strip the site-name suffix when a page hasn't supplied its own social title.
 const socialTitle = ogTitle ?? title.replace(/\s*[|—]\s*Ligerian Labs\s*$/, "");
@@ -191,7 +198,7 @@ if (!Astro.isPrerendered) {
     />
 
     {!robots.includes("noindex") && !user && (
-      <script is:inline set:html={analytics} />
+      <script is:inline set:html={analyticsSource} />
     )}
 
     <script

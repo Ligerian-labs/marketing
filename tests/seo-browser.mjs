@@ -68,7 +68,7 @@ try {
     return route.fulfill({ status: response.status, headers: Object.fromEntries(response.headers), body: Buffer.from(await response.arrayBuffer()) });
   });
   const page = await context.newPage();
-  await page.goto("https://ligerianlabs.fr/offres/?email=private%40example.invalid");
+  await page.goto("https://ligerianlabs.fr/offres/?utm_source=google_maps&email=private%40example.invalid");
   const result = await page.evaluate(() => {
     const sdk = window.posthog;
     const config = sdk._i[0][1];
@@ -89,9 +89,20 @@ try {
   assert.equal(result.submitted.properties.project_type, "ai-integration"); assertions++;
   assert.equal(result.autocapture, false); assertions++;
   assert.equal(result.replay, true); assertions++;
+  assert.equal(result.submitted.properties.page_id, "/offres/"); assertions++;
+  assert.equal(result.submitted.properties.landing_page_id, "/offres/"); assertions++;
+  assert.equal(result.submitted.properties.channel, "maps"); assertions++;
   await page.evaluate(() => fetch("/ingest/privacy-probe", { method: "POST", body: "test" }).catch(() => {}));
   assert.ok(analyticsReferrers.length > 0); assertions++;
   assert.ok(analyticsReferrers.every((value) => value === undefined)); assertions++;
+  await page.goto("https://ligerianlabs.fr/contact/");
+  const contact = await page.evaluate(() => window.posthog._i[0][1].before_send({ event: "contact_form_submitted", properties: { project_type: "other", message: "private" } }));
+  assert.equal(contact.properties.page_id, "/contact/"); assertions++;
+  assert.equal(contact.properties.landing_page_id, "/offres/"); assertions++;
+  assert.equal(contact.properties.channel, "maps"); assertions++;
+  assert.ok(!JSON.stringify(contact).includes("private")); assertions++;
+  assert.equal((await context.cookies()).length, 0); assertions++;
+  assert.equal(await page.evaluate(() => localStorage.length), 0); assertions++;
   await page.evaluate(() => localStorage.setItem("ll_analytics_disabled", "1"));
   await page.reload();
   assert.equal(await page.evaluate(() => typeof window.posthog), "undefined"); assertions++;
