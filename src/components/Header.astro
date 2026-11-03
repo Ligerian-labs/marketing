@@ -1,90 +1,80 @@
 ---
 import Logo from "./Logo.astro";
-
 interface Props {
-  /** Underlines the matching tab in cobalt. */
-  active?: "offres" | "approche" | "apropos" | "blog" | "";
+  active?: "offres" | "approche" | "apropos" | "blog" | "services" | "realisations" | "developpement" | "integration" | "";
   user?: { name: string; email: string } | null;
 }
-
 const { active = "", user = null } = Astro.props;
-
+const path = Astro.url.pathname;
+const servicePage = ["/offres", "/developpement-logiciel-sur-mesure", "/integration-ia"].some((prefix) => path === prefix || path.startsWith(prefix + "/"));
 const tabs = [
-  { key: "offres", href: "/offres", label: "Offres" },
-  { key: "approche", href: "/approche", label: "Approche" },
-  { key: "apropos", href: "/a-propos", label: "À propos" },
-  { key: "blog", href: "/blog", label: "Blog" },
-] as const;
+  { href: "/offres/", label: "Services", current: servicePage || ["offres", "services", "developpement", "integration"].includes(active) },
+  { href: "/realisations/", label: "Réalisations", current: path.startsWith("/realisations/") || active === "realisations" },
+  { href: "/a-propos/", label: "À propos", current: active === "apropos" },
+  { href: "/blog/", label: "Ressources", current: active === "blog" },
+  { href: "/contact/", label: "Contact", current: path === "/contact/" || path === "/contact" },
+];
 ---
-
 <div class="ll-nav">
-  <div class="ll-wrap">
-    <div class="ll-nav__bar">
-      <Logo />
-
-      <nav class="ll-nav__links" aria-label="Navigation principale">
-        {tabs.map((tab) => (
-          <a
-            href={tab.href}
-            class="ll-nav__link"
-            aria-current={active === tab.key ? "page" : undefined}
-          >
-            {tab.label}
-          </a>
-        ))}
-      </nav>
-
-      <div class="ll-nav__end">
-        {user ? (
-          <a href="/dashboard" class="ll-nav__minor">{user.name.split(" ")[0]}</a>
-        ) : (
-          <a href="/auth/connexion" class="ll-nav__minor">Connexion</a>
-        )}
-        <a href="/contact" class="ll-nav__cta">Parlons de votre projet</a>
-        <button
-          type="button"
-          class="ll-nav__burger"
-          id="ll-burger"
-          aria-label="Ouvrir le menu"
-          aria-expanded="false"
-          aria-controls="ll-nav-panel"
-        >
-          <svg width="22" height="16" viewBox="0 0 22 16" aria-hidden="true">
-            <rect width="22" height="2" y="0" fill="currentColor"></rect>
-            <rect width="22" height="2" y="7" fill="currentColor"></rect>
-            <rect width="22" height="2" y="14" fill="currentColor"></rect>
-          </svg>
-        </button>
-      </div>
+  <div class="ll-wrap"><div class="ll-nav__bar">
+    <Logo />
+    <nav class="ll-nav__links" aria-label="Navigation principale">
+      {tabs.map((tab) => <a href={tab.href} class="ll-nav__link" aria-current={tab.current ? "page" : undefined}>{tab.label}</a>)}
+      <a href={user ? "/dashboard/" : "/auth/connexion/"} class="ll-nav__minor">{user ? "Espace client" : "Connexion"}</a>
+    </nav>
+    <div class="ll-nav__end">
+      <a href="/contact/" class="mobile-contact">Contact</a>
+      <button type="button" class="ll-nav__burger" id="ll-burger" aria-label="Ouvrir le menu" aria-expanded="false" aria-controls="ll-nav-panel">
+        <svg width="22" height="16" viewBox="0 0 22 16" aria-hidden="true"><path d="M0 1h22M0 8h22M0 15h22" stroke="currentColor" stroke-width="2" /></svg>
+      </button>
     </div>
-  </div>
-
-  <div class="ll-nav__panel" id="ll-nav-panel">
+  </div></div>
+  <nav class="ll-nav__panel" id="ll-nav-panel" aria-label="Navigation mobile" inert>
     <div class="ll-wrap">
-      {tabs.map((tab) => <a href={tab.href}>{tab.label}</a>)}
-      <a href="/ia-angers">Agence IA à Angers</a>
-      <a href="/ia-angers-pme">IA pour PME</a>
-      {user ? (
-        <>
-          <a href="/dashboard">Espace client</a>
-          <a href="/api/auth/logout">Déconnexion</a>
-        </>
-      ) : (
-        <a href="/auth/connexion">Connexion</a>
-      )}
+      {tabs.map((tab) => <a href={tab.href} aria-current={tab.current ? "page" : undefined}>{tab.label}</a>)}
+      <a href="/developpement-logiciel-sur-mesure/">Logiciels sur mesure</a>
+      <a href="/integration-ia/">Intégration IA</a>
+      <a href="/approche/">Notre approche</a>
+      <a href="/ia-angers/">IA à Angers</a>
+      <a href="/ia-angers-pme/">IA pour PME</a>
+      {user ? <><a href="/dashboard/">Espace client</a><a href="/api/auth/logout">Déconnexion</a></> : <a href="/auth/connexion/">Connexion</a>}
     </div>
-  </div>
+  </nav>
 </div>
-
 <script is:inline>
   (function () {
     var btn = document.getElementById("ll-burger");
     var panel = document.getElementById("ll-nav-panel");
     if (!btn || !panel) return;
-    btn.addEventListener("click", function () {
-      var open = panel.classList.toggle("open");
-      btn.setAttribute("aria-expanded", open ? "true" : "false");
+    function setOpen(open) {
+      panel.classList.toggle("open", open);
+      panel.inert = !open;
+      btn.setAttribute("aria-expanded", String(open));
       btn.setAttribute("aria-label", open ? "Fermer le menu" : "Ouvrir le menu");
+    }
+    btn.addEventListener("click", function () { setOpen(btn.getAttribute("aria-expanded") !== "true"); });
+    document.addEventListener("keydown", function (event) {
+      if (event.key === "Escape" && btn.getAttribute("aria-expanded") === "true") { setOpen(false); btn.focus(); }
     });
+    panel.addEventListener("click", function (event) { if (event.target.closest("a")) setOpen(false); });
+    matchMedia("(min-width: 1101px)").addEventListener("change", function (event) { if (event.matches) setOpen(false); });
   })();
 </script>
+<style>
+  .ll-nav__bar { min-width: 0; gap: 12px; }
+  .ll-nav__end { flex-shrink: 0; }
+  .mobile-contact { display: none; }
+  .ll-nav__panel { max-height: calc(100dvh - var(--nav-h)); overflow-y: auto; }
+  .ll-nav__panel a[aria-current="page"] { color: var(--cobalt); font-weight: 700; }
+  @media (min-width: 1101px) { .ll-nav__end { display: none; } }
+  @media (max-width: 1100px) {
+    .ll-nav__links { display: none; }
+    .ll-nav__burger { display: flex; width: 48px; min-width: 48px; }
+    .mobile-contact { display: flex; align-items: center; justify-content: center; align-self: stretch; min-height: 44px; padding: 0 14px; font-size: 14px; font-weight: 700; background: var(--cobalt); color: var(--cream); }
+  }
+  @media (max-width: 360px) {
+    .ll-nav__bar :global(.ll-logo) { font-size: 13px; gap: 6px; }
+    .mobile-contact { padding-inline: 10px; }
+    .ll-nav__burger { width: 44px; min-width: 44px; }
+  }
+</style>

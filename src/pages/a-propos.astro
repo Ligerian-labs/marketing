@@ -1,212 +1,36 @@
 ---
 export const prerender = true;
 import Base from "../layouts/Base.astro";
+import MarketingFrame from "../components/MarketingFrame.astro";
+import PageHero from "../components/PageHero.astro";
+import ProjectCards from "../components/ProjectCards.astro";
 import SectionBar from "../components/SectionBar.astro";
-import ProofSection from "../components/ProofSection.astro";
 import CtaBand from "../components/CtaBand.astro";
-
-const career = [
-  {
-    org: "Ligerian Labs",
-    role: "fondateur, ingénierie IA",
-    highlight: true,
-    what: "Token ops, mise en production, architecture IA, agents. Cadrage et livraison de bout en bout.",
-    when: "2021 → Auj.",
-    where: "Angers · Télétravail",
-  },
-  {
-    org: "Cartridge.gg",
-    role: "Ingénieur logiciel",
-    highlight: false,
-    what: "Infrastructure gaming et onchain en Rust et TypeScript ; mainteneur de dojo.js, torii-core et arcade en open source.",
-    when: "2024 → 2026",
-    where: "NYC · Télétravail",
-  },
-  {
-    org: "Pasquinade.fr",
-    role: "Lead développeur / CTO",
-    highlight: false,
-    what: "Migration d'AWS ECS vers Kubernetes ; mise en place de la CI/CD et de l'outillage avec Ansible et Terraform.",
-    when: "2020 → 2021",
-    where: "Paris · Télétravail",
-  },
-  {
-    org: "FioulMarket / Total Proxi Énergies",
-    role: "Responsable technique",
-    highlight: false,
-    what: "Décisions techniques et mises en production hebdomadaires sur une plateforme Symfony + React.",
-    when: "2017 → 2020",
-    where: "Rueil · Télétravail",
-  },
-];
-
-const stack = [
-  { label: "Systèmes", items: ["Rust", "Zig", "Go", "TypeScript", "Node.js", "Python", "Cairo"] },
-  {
-    label: "IA",
-    items: [
-      "Orchestration d'agents",
-      "Évaluations",
-      "Recherche (RAG)",
-      "OpenTelemetry",
-      "Exécution en sandbox",
-      "Modélisation des coûts",
-    ],
-  },
-  {
-    label: "Infra",
-    items: ["Kubernetes", "AWS", "Terraform", "Ansible", "Docker", "Firecracker", "CI/CD"],
-  },
-  {
-    label: "Livraison",
-    items: ["Cadrage", "Traduction des enjeux", "Revue de code", "Pairing", "Maintenance open source"],
-  },
-];
-
 const personSchema = {
-  "@type": "Person",
-  "@id": "https://ligerianlabs.fr/a-propos#valentin-dosimont",
-  name: "Valentin Dosimont",
-  jobTitle: "Fondateur, ingénieur logiciel",
+  "@type": "Person", "@id": "https://ligerianlabs.fr/a-propos/#valentin-dosimont",
+  name: "Valentin Dosimont", jobTitle: "Fondateur, ingénieur logiciel",
   image: "https://ligerianlabs.fr/brand/valentin-dosimont.jpg",
   worksFor: { "@id": "https://ligerianlabs.fr/#organization" },
-  knowsLanguage: ["fr", "en"],
-  sameAs: ["https://github.com/Ligerian-labs"],
 };
 ---
-
-<Base
-  title="À propos — Ligerian Labs, laboratoire IA à Angers"
-  description="Ligerian Labs est un laboratoire d'ingénierie IA fondé par Valentin Dosimont à Angers. Douze ans de production, du gaming à l'onchain, aujourd'hui l'IA en production."
-  ogTitle="À propos — un labo d'ingénierie, pas une agence"
-  ogDescription="Ligerian Labs est un atelier d'ingénierie IA basé à Angers. Douze ans de production."
-  ogImage="og-a-propos"
-  active="apropos"
-  structuredData={personSchema}
->
-  <header class="ll-sec">
-    <div class="ll-wrap ll-hero">
-      <div class="ll-hero__main">
-        <div class="ll-mono" style="font-size:12px;letter-spacing:.16em">À propos</div>
-        <h1 class="ll-h1">Un labo<br />d'ingénierie,<br />pas une agence</h1>
-        <p class="ll-lede">
-          Ligerian Labs est un atelier d'ingénierie IA basé à Angers. Petite structure, missions
-          sérieuses : nous prenons peu de clients et nous répondons de ce qui tourne en production.
-        </p>
-      </div>
-      <div class="ll-hero__aside ll-hero__aside--cobalt" style="gap:24px">
-        <div class="ll-mono" style="color:inherit">Le nom</div>
-        <p style="margin:0;font-size:16px;line-height:1.55">
-          «&nbsp;Ligerian&nbsp;» vient de <em>Liger</em>, le nom latin de la Loire. Le fleuve
-          traverse Angers, il n'est pas canalisé, et il impose son rythme aux ouvrages qui le
-          bordent. Cela nous paraissait un bon modèle pour l'ingénierie.
-        </p>
-        <div style="font-family:var(--font-mono);font-size:11px;line-height:1.7;opacity:.85">
-          ANGERS · PAYS DE LA LOIRE<br />47.4784 N · −0.5632 E
-        </div>
-      </div>
-    </div>
-  </header>
-
-  <SectionBar label="01 — Qui est derrière" note="Douze ans en production" />
-
-  <section class="ll-sec">
-    <div class="ll-wrap">
-      <div class="ll-portrait">
-        <div class="ll-portrait__img">
-          <img
-            src="/brand/valentin-dosimont.jpg"
-            alt="Valentin Dosimont, fondateur de Ligerian Labs"
-            loading="lazy"
-            decoding="async"
-          />
-        </div>
-        <div class="ll-portrait__text">
-          <div class="ll-mono" style="letter-spacing:.16em">Valentin Dosimont · fondateur</div>
-          <h2 class="ll-h2 ll-h2--tight">
-            Douze ans<br />en production.<br />Aujourd'hui<br />avec l'IA au cœur.
-          </h2>
-          <p class="ll-body ll-body--lg" style="max-width:54ch">
-            J'ai été celui qui porte le chantier ambigu et critique dont personne ne veut — dans le
-            gaming, l'IA et la blockchain, en français comme en anglais. Domain-driven,
-            event-driven, d'une fiabilité ennuyeuse.
-          </p>
-          <p class="ll-body ll-body--lg" style="max-width:54ch">
-            Je prends le cadrage, l'architecture et la livraison de bout en bout, puis je rends un
-            système que votre équipe sait faire tourner sans moi.
-          </p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <section class="ll-sec">
-    <div class="ll-wrap">
-      <div class="ll-stats">
-        <div class="ll-stat">
-          <div class="ll-stat__n">12+</div>
-          <div class="ll-stat__k">Ans en production</div>
-        </div>
-        <div class="ll-stat ll-stat--on">
-          <div class="ll-stat__n">60+</div>
-          <div class="ll-stat__k">Dépôts publics</div>
-        </div>
-        <div class="ll-stat">
-          <div class="ll-stat__n">03</div>
-          <div class="ll-stat__k">Gaming · IA · chain</div>
-        </div>
-        <div class="ll-stat">
-          <div class="ll-stat__n">E2E</div>
-          <div class="ll-stat__k">Cadrage → déploiement</div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <SectionBar label="02 — Parcours" note="De la production, pas des pilotes" />
-
-  <section class="ll-sec">
-    <div class="ll-wrap ll-pad">
-      <div class="ll-rows">
-        {career.map((job) => (
-          <div class="ll-row ll-row--cv">
-            <div>
-              <div style="font-weight:700;font-size:17px">
-                {job.org}
-                <span style={`font-weight:500;color:${job.highlight ? "var(--cobalt)" : "#555"}`}>
-                  {" "}— {job.role}
-                </span>
-              </div>
-              <div style="font-size:15px;color:#444;margin-top:5px;line-height:1.5">{job.what}</div>
-            </div>
-            <div class="ll-row__dates">{job.when}<br />{job.where}</div>
-          </div>
-        ))}
-      </div>
-    </div>
-  </section>
-
-  <ProofSection label="03 — La preuve" />
-
-  <section class="ll-sec">
-    <div class="ll-wrap ll-pad" style="display:flex;flex-direction:column;gap:16px">
-      <div class="ll-bar__label" style="margin-bottom:6px">04 — Stack</div>
-      {stack.map((group) => (
-        <div class="ll-stackrow">
-          <div class="ll-stackrow__label">{group.label}</div>
-          <div class="ll-chips">
-            {group.items.map((item) => <span class="ll-chip">{item}</span>)}
-          </div>
-        </div>
-      ))}
-      <div class="ll-mono ll-mono--plain" style="margin-top:10px">
-        Architecture on AWS · Cloud University 2020 — FR natif · EN professionnel courant
-      </div>
-    </div>
-  </section>
-
-  <CtaBand
-    title="Confiez-nous<br />le chantier ambigu"
-    body="Celui qui est critique pour l'activité et dont personne ne veut. C'est là que nous sommes utiles."
-  />
+<Base title="À propos · Logiciels et IA à Angers | Ligerian Labs"
+  description="Valentin Dosimont, fondateur de Ligerian Labs à Angers. Développement logiciel, intégration IA et travaux indépendants consultables en public."
+  active="apropos" ogImage="og-a-propos" structuredData={personSchema}>
+  <MarketingFrame>
+    <PageHero heading="Le besoin métier, puis les choix techniques" label="À propos · Ligerian Labs"
+      intro="Ligerian Labs est un atelier de développement logiciel et d'ingénierie IA basé à Angers. Notre travail relie le cadrage, la construction et l'exploitation de vos outils.">
+      <div class="ll-mono" style="color:inherit">Votre interlocuteur</div>
+      <img src="/brand/valentin-dosimont.jpg" alt="Valentin Dosimont, fondateur de Ligerian Labs" width="320" height="320" class="portrait" />
+      <p>Valentin Dosimont · fondateur</p>
+    </PageHero>
+    <SectionBar label="01 · Une méthode de travail" />
+    <section class="ll-sec"><div class="ll-wrap marketing-section marketing-columns">
+      <div><h2 class="ll-h2">Clarifier avant de construire</h2><p class="marketing-intro">Une proposition commence par vos utilisateurs, leurs tâches et les contraintes de votre organisation. Le périmètre, les critères de réception et les décisions techniques doivent être compréhensibles par l'équipe qui utilisera le logiciel.</p></div>
+      <div><h2 class="ll-h2">Préparer la suite</h2><p class="marketing-intro">Tests, documentation et passation font partie du travail convenu. L'hébergement, les droits sur les livrables et la maintenance se définissent explicitement, avec les responsabilités de chacun.</p><a href="/developpement-logiciel-sur-mesure/">Le développement sur mesure →</a><br /><a href="/integration-ia/">L'intégration IA →</a></div>
+    </div></section>
+    <SectionBar label="02 · Des travaux consultables" />
+    <section class="ll-sec"><div class="ll-wrap marketing-section"><h2 class="ll-h2">Examiner le travail</h2><p class="marketing-intro">Les projets indépendants ci-dessous donnent accès au code et à ses limites. Ils permettent d'examiner des choix concrets, sans déduire une expérience client ou un résultat qui ne sont pas documentés.</p><ProjectCards /></div></section>
+    <CtaBand title="Présentez votre situation" body="Depuis Angers, commençons par un échange sur les utilisateurs, le logiciel existant et les difficultés à résoudre." />
+  </MarketingFrame>
 </Base>
+<style>.portrait { max-width: 100%; height: auto; width: 220px; aspect-ratio: 1; object-fit: cover; border: 2px solid var(--cream); }</style>
