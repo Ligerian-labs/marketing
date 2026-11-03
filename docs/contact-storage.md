@@ -37,30 +37,46 @@ Les demandes antérieures à ce changement ont un autre format (`message`, `stad
 Les fichiers font foi, pas l'index. Depuis le dossier qui contient `leads/` :
 
 ```sh
-ls leads/lead_*.json | wc -l      # demandes enregistrées
+ls leads/lead_*.json | wc -l      # fichiers lead_*.json présents, valides ou non
 wc -l < leads/leads.jsonl         # lignes de l'index (peut être plus bas)
 ```
 
-Un écart vers le bas de l'index est normal après une erreur d'écriture. Un index plus
-long que le nombre de fichiers ne doit pas arriver : conservez le dossier tel quel et
+Ces deux nombres sont bruts. Le premier compte aussi les fichiers mal formés ; il ne donne
+donc pas le nombre de demandes valides. Pour ce nombre, lancez le contrôle sans écriture
+de la section suivante (`node rebuild-leads-index.mjs leads`) : il lit chaque fichier et
+sépare les valides des invalides.
+
+Un index plus court que le nombre de fichiers valides est normal après une erreur
+d'écriture. Un index plus long ne doit pas arriver : conservez le dossier tel quel et
 regardez les logs avant de toucher à quoi que ce soit.
 
-## Fichiers mal formés ou non acceptés
+## Fichiers mal formés
 
-Une demande est acceptée seulement si le serveur a répondu 200. Un fichier tronqué
-(arrêt brutal pendant l'écriture) n'a donc jamais été confirmé au visiteur. Un fichier
-est considéré valide s'il se lit comme du JSON, si son `id` correspond à son nom de
-fichier, et s'il contient `timestamp`, `name` et `email` sous forme de textes.
+Un fichier est considéré valide s'il se lit comme du JSON, si son `id` correspond à son nom
+de fichier, et s'il contient `timestamp`, `name` et `email` sous forme de textes. Un fichier
+qui ne remplit pas ces conditions est invalide, sans qu'on sache pourquoi : arrêt brutal
+pendant l'écriture, édition manuelle, copie incomplète. Les octets actuels ne disent pas
+si le serveur a répondu 200 au visiteur. Les logs et le journal d'accès du serveur, s'ils
+existent, permettent de le savoir.
 
 Ne supprimez pas un fichier invalide : déplacez-le dans `leads/quarantine/` pour qu'une
-personne l'examine. Il peut contenir le texte d'un visiteur dont l'envoi a échoué.
+personne l'examine. Il peut contenir le texte d'un visiteur.
+
+## Données personnelles et Git
+
+Tout ce qui se trouve sous `leads/` contient des données de visiteurs : fichiers de demande,
+index, copies `leads.jsonl.old` et `.new`, dossier `quarantine/`. Le `.gitignore` du dépôt
+ignore tout `leads/` sauf `.gitkeep`, ainsi que les dossiers `leads-backup-*` et
+`leads.backup-*` à la racine. Gardez de préférence les sauvegardes hors du dépôt, comme
+dans la procédure ci-dessous, avec des droits restreints.
 
 ## Reconstruire l'index (service arrêté)
 
 À faire sur une copie, ou en production seulement après accord du responsable du site.
 
 1. Arrêter le service, pour qu'aucun processus n'écrive dans le dossier.
-2. Sauvegarder : `cp -a leads leads.backup-$(date -u +%Y%m%dT%H%M%SZ)`
+2. Sauvegarder hors du dépôt, avec des droits restreints :
+   `(umask 077; cp -a leads "$HOME/leads-backup-$(date -u +%Y%m%dT%H%M%SZ)")`
 3. Enregistrer le script ci-dessous sous `rebuild-leads-index.mjs`, hors du dossier `leads/`.
 4. Contrôler sans rien écrire : `node rebuild-leads-index.mjs leads`
 5. Appliquer : `node rebuild-leads-index.mjs leads --write`

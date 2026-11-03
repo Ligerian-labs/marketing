@@ -7,6 +7,11 @@ dist/
 
 # Anchored to the repo root: an unanchored `data/` also matched `src/data/`,
 # which silently kept source files out of the repo.
-/leads/*.json
-/leads/*.jsonl
+# Enquiry data (personal information). Nothing under leads/ is committed except the
+# placeholder: per-lead files, the index and its .old/.new copies, quarantine/.
+/leads/*
+!/leads/.gitkeep
+# Backups taken inside the checkout by docs/contact-storage.md.
+/leads-backup-*/
+/leads.backup-*/
 /data/
