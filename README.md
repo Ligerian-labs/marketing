@@ -109,9 +109,10 @@ Le fichier individuel `leads/lead_<id>.json` est la source canonique : son
 dérivé, alimenté au mieux ; un échec d'index est signalé sans rejeter la demande
 déjà enregistrée.
 
-Le [guide de stockage du contact](https://github.com/Ligerian-labs/marketing/blob/5a839306b315e19378b18ff83343528780a894e0/docs/contact-storage.md),
-livré par la branche contact B, précise l'inspection, le comptage des fichiers
-valides, la reconstruction à service arrêté et la limite à un processus serveur.
+Ces garanties s'appliquent après intégration de la branche contact B, qui doit
+précéder cette branche C. Le [guide de stockage du contact](docs/contact-storage.md)
+est maintenu avec le code de stockage ; il précise l'inspection, le comptage des
+fichiers valides, la reconstruction à service arrêté et la limite à un processus serveur.
 
 Les leads sont gitignorés. La notification email part via Resend ; sans
 `RESEND_API_KEY`, le lead est quand même enregistré et un avertissement est logué.
