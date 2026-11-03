@@ -60,4 +60,4 @@ Trois conseils concrets pour une PME qui veut éviter le piège du paradoxe :
 
 L'IA ne va pas transformer votre entreprise du jour au lendemain. Mais les PME qui commencent maintenant à comprendre comment elle fonctionne seront celles qui en profiteront vraiment quand les outils seront au point.
 
-Besoin d'un coup de main pour identifier où l'IA peut vraiment vous faire gagner du temps ? [Parlons-en](https://ligerianlabs.fr/contact).
+Besoin d'un coup de main pour identifier où l'IA peut vraiment vous faire gagner du temps ? [Parlons-en](https://ligerianlabs.fr/contact/).

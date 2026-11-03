@@ -72,4 +72,4 @@ Les déclarations chocs sur l'IA qui "remplace tout" reviennent tous les 6 mois.
 
 Mais ignorer la tendance serait une erreur. Les PME qui intègrent l'IA maintenant — même à petite échelle — construisent un avantage concurrentiel durable. Celles qui attendent risquent de se retrouver à rattraper un retard coûteux.
 
-Chez Ligerian Labs, on accompagne les entreprises d'Angers et du Pays de la Loire dans cette transition. Pas avec des slides PowerPoint, mais avec des outils concrets, adaptés à votre métier. [Parlons-en →](/contact)
+Chez Ligerian Labs, on accompagne les entreprises d'Angers et du Pays de la Loire dans cette transition. Pas avec des slides PowerPoint, mais avec des outils concrets, adaptés à votre métier. [Parlons-en →](/contact/)

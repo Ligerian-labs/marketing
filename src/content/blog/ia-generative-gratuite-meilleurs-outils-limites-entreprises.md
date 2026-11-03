@@ -85,4 +85,4 @@ Mais quand l'objectif devient concret — automatiser un processus, connecter l'
 
 Chez Ligerian Labs, à Angers, c'est exactement ce qu'on fait : on aide les entreprises du Pays de la Loire à dépasser le stade de l'expérimentation. Audit de vos besoins, choix des bons modèles, développement d'outils IA sur mesure, formation de vos équipes. Du concret, adapté à votre réalité.
 
-Vous avez testé les outils gratuits et vous voulez aller plus loin ? [Parlons-en](https://ligerianlabs.fr/contact).
+Vous avez testé les outils gratuits et vous voulez aller plus loin ? [Parlons-en](https://ligerianlabs.fr/contact/).

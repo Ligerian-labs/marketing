@@ -87,4 +87,4 @@ Les vrais leviers :
 - **L'intégration** — connecter l'IA à vos outils existants
 - **La formation** — que vos équipes sachent s'en servir au quotidien
 
-C'est exactement là qu'on intervient chez Ligerian Labs. On accompagne les entreprises en Pays de la Loire pour choisir les bons outils et surtout les utiliser efficacement. [On en discute ?](/contact)
+C'est exactement là qu'on intervient chez Ligerian Labs. On accompagne les entreprises en Pays de la Loire pour choisir les bons outils et surtout les utiliser efficacement. [On en discute ?](/contact/)

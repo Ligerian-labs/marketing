@@ -93,4 +93,4 @@ Les agents IA vont continuer à progresser. Ils vont manipuler plus d'outils, li
 
 Un journal d'audit IA donne une réponse pragmatique. Il ne bloque pas l'innovation. Il rend les actions compréhensibles, vérifiables, améliorables.
 
-Si vous êtes une PME en Pays de la Loire et que vos équipes commencent déjà à utiliser plusieurs outils IA sans cadre commun, c'est le bon moment pour remettre un peu d'ordre. Ligerian Labs peut vous aider à poser ce socle : conseil IA entreprise, automatisation IA utile, et garde-fous assez simples pour être vraiment utilisés. On en parle sur [/contact](/contact).
+Si vous êtes une PME en Pays de la Loire et que vos équipes commencent déjà à utiliser plusieurs outils IA sans cadre commun, c'est le bon moment pour remettre un peu d'ordre. Ligerian Labs peut vous aider à poser ce socle : conseil IA entreprise, automatisation IA utile, et garde-fous assez simples pour être vraiment utilisés. On en parle sur [/contact](/contact/).

@@ -126,7 +126,7 @@ const readingTime = Math.max(1, Math.ceil(wordCount / 200));
 
           <nav class="ll-chapnav">
             {prevChapter ? (
-              <a href={`/formations/${tier}/${prevChapter.slug}`} class="ll-chapnav__link">
+              <a href={`/formations/${tier}/${prevChapter.slug}/`} class="ll-chapnav__link">
                 <span class="ll-label">← Précédent</span>
                 <b>{prevChapter.title}</b>
               </a>
@@ -138,7 +138,7 @@ const readingTime = Math.max(1, Math.ceil(wordCount / 200));
             )}
             {nextChapter ? (
               <a
-                href={`/formations/${tier}/${nextChapter.slug}`}
+                href={`/formations/${tier}/${nextChapter.slug}/`}
                 class="ll-chapnav__link ll-chapnav__link--end"
               >
                 <span class="ll-label">Suivant →</span>

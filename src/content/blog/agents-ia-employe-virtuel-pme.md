@@ -70,4 +70,4 @@ Les PME de la région ont un avantage : elles sont souvent plus agiles que les g
 
 Chez Ligerian Labs, on accompagne les entreprises d'Angers et du Pays de la Loire dans cette transition. On identifie les processus à fort potentiel, on configure l'agent, on forme l'équipe, et on s'assure que ça tourne.
 
-Envie de voir ce qu'un agent IA pourrait faire pour votre entreprise ? [Parlons-en](/contact).
+Envie de voir ce qu'un agent IA pourrait faire pour votre entreprise ? [Parlons-en](/contact/).

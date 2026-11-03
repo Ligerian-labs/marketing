@@ -65,4 +65,4 @@ Le fait qu'une IA française de ce niveau propose nativement l'intégration avec
 
 Avec Le Chat Work Mode, Mistral démocratise l'accès à un assistant IA contextuel — sans sacrifier la souveraineté des données. Pour les entreprises en Pays de la Loire qui hésitaient encore à franchir le pas, c'est probablement le meilleur point d'entrée en 2026.
 
-Besoin d'un coup de main pour intégrer l'IA dans vos process ? [On en discute](https://ligerianlabs.fr/contact).
+Besoin d'un coup de main pour intégrer l'IA dans vos process ? [On en discute](https://ligerianlabs.fr/contact/).
