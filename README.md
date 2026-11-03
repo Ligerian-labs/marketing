@@ -104,10 +104,14 @@ dans la colonne de l'article — voir `src/lib/blog.ts`.
 
 ## Leads
 
-Les soumissions du formulaire de contact sont stockées dans :
+Le fichier individuel `leads/lead_<id>.json` est la source canonique : son
+écriture complète précède la réponse HTTP 200. `leads/leads.jsonl` est un index
+dérivé, alimenté au mieux ; un échec d'index est signalé sans rejeter la demande
+déjà enregistrée.
 
-- `leads/leads.jsonl` — un JSON par ligne (append-only)
-- `leads/lead_<id>.json` — fichiers individuels
+Le [guide de stockage du contact](https://github.com/Ligerian-labs/marketing/blob/5a839306b315e19378b18ff83343528780a894e0/docs/contact-storage.md),
+livré par la branche contact B, précise l'inspection, le comptage des fichiers
+valides, la reconstruction à service arrêté et la limite à un processus serveur.
 
 Les leads sont gitignorés. La notification email part via Resend ; sans
 `RESEND_API_KEY`, le lead est quand même enregistré et un avertissement est logué.
