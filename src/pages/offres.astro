@@ -467,7 +467,7 @@ const serviceSchema = offers.map((offer) => ({
             <div class="ll-mono" style="margin-bottom:14px">Travaux indépendants à examiner</div>
             <div class="ll-stack" style="gap:10px">
               {projects.map((project) => (
-                <a href={`/realisations/${project.slug}/`} class="ll-ossline">
+                <a href={`/realisations/${project.slug}/`} class="offer-project">
                   <span>{project.name}</span>
                   <span>{project.status}. {project.summary}</span>
                 </a>
@@ -561,3 +561,10 @@ const serviceSchema = offers.map((offer) => ({
   />
   </MarketingFrame>
 </Base>
+
+<style>
+  .offer-project { display: flex; flex-direction: column; gap: 6px; padding-bottom: 12px; border-bottom: 1px solid var(--rule-hair); }
+  .offer-project:last-child { border-bottom: 0; padding-bottom: 0; }
+  .offer-project > span:first-child { font-weight: 700; font-size: 15px; overflow-wrap: normal; }
+  .offer-project > span:last-child { font-size: 13.5px; line-height: 1.55; color: var(--ink-soft); }
+</style>
