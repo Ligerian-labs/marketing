@@ -1,35 +1,40 @@
 ---
 export const prerender = true;
 import Base from "../layouts/Base.astro";
+import { LIMITS, PROJECT_TYPES, PROJECT_TYPE_LABELS } from "../lib/contact.ts";
 
-const stages = [
-  { value: "00", strong: "Expérimentation", rest: " — des démos, pas encore de production" },
-  { value: "01", strong: "En prod, à l'aveugle", rest: " — ça tourne, mais on ne mesure rien" },
-  { value: "02", strong: "Mesurée, mais greffée", rest: " — l'IA est à côté du produit" },
-  { value: "03", strong: "Nativement IA", rest: " — on veut déléguer du travail à des agents" },
-  { value: "ns", strong: "", rest: "Je ne sais pas — c'est justement la question" },
-];
+// Existing site claim, carried over unchanged. Pending founder confirmation:
+// do not harden it into a guarantee or repeat it in new places.
+const RESPONSE_DELAY = "48 h ouvrées";
+const CONTACT_EMAIL = "bonjour@ligerianlabs.fr";
+
+const projectHints: Record<(typeof PROJECT_TYPES)[number], string> = {
+  "new-application": "à concevoir et à construire",
+  "existing-software": "le faire évoluer, le reprendre ou le fiabiliser",
+  "ai-integration": "ajouter de l'IA à un outil, ou la mettre en production",
+  other: "ça ne rentre pas dans ces cases, ou je ne sais pas encore",
+};
 
 const next = [
-  "Nous lisons votre message et répondons sous 48 h ouvrées.",
+  `Nous lisons votre message et répondons sous ${RESPONSE_DELAY}.`,
   "Un appel de 30 minutes, sans support de présentation.",
-  "Si c'est pertinent : une proposition de sprint de cadrage, périmètre écrit.",
+  "Si c'est pertinent : une proposition de cadrage, périmètre écrit.",
   "Si ça ne l'est pas, nous vous le disons — et nous disons qui appeler.",
 ];
 
 const contactSchema = {
   "@type": "ContactPage",
-  "@id": "https://ligerianlabs.fr/contact#page",
+  "@id": "https://ligerianlabs.fr/contact/#page",
   name: "Contact — Ligerian Labs",
   about: { "@id": "https://ligerianlabs.fr/#organization" },
 };
 ---
 
 <Base
-  title="Contact — parlons de votre projet IA | Ligerian Labs"
-  description="Décrivez votre situation en quelques lignes. Réponse sous 48 h ouvrées, par un ingénieur, pas par un commercial. Angers, Pays de la Loire."
-  ogTitle="Contact — parlons de votre projet IA"
-  ogDescription="Une réponse d'ingénieur sous 48 h ouvrées. Y compris si ce n'est pas pour nous."
+  title="Contact — parlons de votre projet logiciel ou IA | Ligerian Labs"
+  description={`Décrivez votre projet : nouvelle application, logiciel existant ou intégration d'IA. Réponse sous ${RESPONSE_DELAY}, par un ingénieur, pas par un commercial. Angers, Pays de la Loire.`}
+  ogTitle="Contact — parlons de votre projet logiciel ou IA"
+  ogDescription={`Une réponse d'ingénieur sous ${RESPONSE_DELAY}. Y compris si ce n'est pas pour nous.`}
   ogImage="og-contact"
   structuredData={contactSchema}
 >
@@ -39,19 +44,20 @@ const contactSchema = {
         <div class="ll-mono" style="font-size:12px;letter-spacing:.16em">Contact</div>
         <h1 class="ll-h1">Parlons de<br />votre projet</h1>
         <p class="ll-lede" style="max-width:50ch">
-          Décrivez votre situation en quelques lignes. Vous aurez une réponse d'un ingénieur, pas
-          d'un commercial — et une réponse honnête si ce n'est pas pour nous.
+          Décrivez votre projet en quelques lignes : une application à construire, un logiciel à
+          faire évoluer ou de l'IA à intégrer. Vous aurez une réponse d'un ingénieur, pas d'un
+          commercial — et une réponse honnête si ce n'est pas pour nous.
         </p>
       </div>
       <div class="ll-hero__aside ll-hero__aside--panel" style="justify-content:center;gap:18px">
         <div style="display:flex;flex-direction:column;gap:5px">
           <span class="ll-label">Délai de réponse</span>
-          <span style="font-weight:700;font-size:17px">48 h ouvrées</span>
+          <span style="font-weight:700;font-size:17px">{RESPONSE_DELAY}</span>
         </div>
         <div style="display:flex;flex-direction:column;gap:5px">
           <span class="ll-label">Par mail</span>
-          <a href="mailto:bonjour@ligerianlabs.fr" style="font-weight:700;font-size:17px">
-            bonjour@ligerianlabs.fr
+          <a href={`mailto:${CONTACT_EMAIL}`} style="font-weight:700;font-size:17px">
+            {CONTACT_EMAIL}
           </a>
         </div>
         <div style="display:flex;flex-direction:column;gap:5px">
@@ -66,100 +72,123 @@ const contactSchema = {
     <div class="ll-wrap">
       <div class="ll-contact">
         <div class="ll-contact__form">
-          <div id="form-status" role="status" aria-live="polite"></div>
+          <div id="form-success" class="ll-alert ll-alert--ok" tabindex="-1" hidden>
+            <div class="ll-mono" style="color:inherit">Message envoyé</div>
+            <p>Merci, votre demande est bien enregistrée. Nous revenons vers vous sous {RESPONSE_DELAY}, depuis {CONTACT_EMAIL}.</p>
+            <p>Un détail à ajouter&nbsp;? Écrivez-nous à <a href={`mailto:${CONTACT_EMAIL}`} style="color:inherit;text-decoration:underline">{CONTACT_EMAIL}</a>.</p>
+          </div>
+
+          <div id="form-alert" class="ll-alert ll-alert--err" role="alert" tabindex="-1" hidden>
+            <div class="ll-mono" style="color:inherit" id="form-alert-title"></div>
+            <p id="form-alert-body"></p>
+            <p>
+              Vous pouvez aussi nous écrire directement à
+              <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>.
+            </p>
+          </div>
 
           <form id="contact-form" class="ll-contact__fields" novalidate>
-          <div class="ll-pair">
-            <label class="ll-field">
-              <span class="ll-label">Nom *</span>
-              <input class="ll-input" type="text" name="name" required placeholder="Prénom et nom" autocomplete="name" />
-            </label>
-            <label class="ll-field">
-              <span class="ll-label">Email *</span>
-              <input class="ll-input" type="email" name="email" required placeholder="vous@entreprise.fr" autocomplete="email" />
-            </label>
-          </div>
+            <p class="contact-note">Les champs marqués d'un astérisque (*) sont obligatoires.</p>
 
-          <div class="ll-pair">
-            <label class="ll-field">
-              <span class="ll-label">Entreprise</span>
-              <input class="ll-input" type="text" name="company" placeholder="Nom de la structure" autocomplete="organization" />
-            </label>
-            <label class="ll-field">
-              <span class="ll-label">Rôle</span>
-              <input class="ll-input" type="text" name="role" placeholder="CTO, dirigeant, produit…" autocomplete="organization-title" />
-            </label>
-          </div>
+            <div class="ll-pair">
+              <div class="ll-field">
+                <label class="ll-label" for="contact-name">Nom <span aria-hidden="true">*</span></label>
+                <input class="ll-input" id="contact-name" type="text" name="name" required maxlength={LIMITS.name} autocomplete="name" aria-describedby="error-name" />
+                <p class="contact-error" id="error-name" hidden></p>
+              </div>
+              <div class="ll-field">
+                <label class="ll-label" for="contact-email">Email professionnel <span aria-hidden="true">*</span></label>
+                <input class="ll-input" id="contact-email" type="email" name="email" required maxlength={LIMITS.email} autocomplete="email" inputmode="email" autocapitalize="off" spellcheck="false" aria-describedby="error-email" />
+                <p class="contact-error" id="error-email" hidden></p>
+              </div>
+            </div>
 
-          <fieldset class="ll-fieldset">
-            <legend>Où en êtes-vous&nbsp;?</legend>
-            {stages.map((stage) => (
-              <label class="ll-check">
-                <input type="radio" name="stade" value={stage.value} />
-                <span>
-                  {stage.strong && <strong>{stage.strong}</strong>}{stage.rest}
+            <div class="ll-field">
+              <label class="ll-label" for="contact-company">Entreprise <span class="contact-opt">(facultatif)</span></label>
+              <input class="ll-input" id="contact-company" type="text" name="company" maxlength={LIMITS.company} autocomplete="organization" aria-describedby="error-company" />
+              <p class="contact-error" id="error-company" hidden></p>
+            </div>
+
+            <fieldset class="ll-fieldset" aria-describedby="error-projectType">
+              <legend>Type de projet <span aria-hidden="true">*</span><span class="contact-sr"> (obligatoire)</span></legend>
+              {PROJECT_TYPES.map((value) => (
+                <label class="ll-check contact-option">
+                  <input type="radio" name="projectType" value={value} required />
+                  <span><strong>{PROJECT_TYPE_LABELS[value]}</strong> — {projectHints[value]}</span>
+                </label>
+              ))}
+              <p class="contact-error" id="error-projectType" hidden></p>
+            </fieldset>
+
+            <div class="ll-field">
+              <label class="ll-label" for="contact-description">Votre projet <span aria-hidden="true">*</span></label>
+              <textarea class="ll-input" id="contact-description" name="description" required rows="6" maxlength={LIMITS.description} aria-describedby="hint-description error-description"></textarea>
+              <p class="contact-hint" id="hint-description">Le contexte, ce qui existe déjà, et le résultat que vous attendez.</p>
+              <p class="contact-error" id="error-description" hidden></p>
+            </div>
+
+            <div class="ll-pair">
+              <div class="ll-field">
+                <label class="ll-label" for="contact-timing">Calendrier <span class="contact-opt">(facultatif)</span></label>
+                <input class="ll-input" id="contact-timing" type="text" name="timing" maxlength={LIMITS.timing} aria-describedby="error-timing" placeholder="Ex. : démarrer au printemps" />
+                <p class="contact-error" id="error-timing" hidden></p>
+              </div>
+              <div class="ll-field">
+                <label class="ll-label" for="contact-budget">Budget <span class="contact-opt">(facultatif)</span></label>
+                <input class="ll-input" id="contact-budget" type="text" name="budget" maxlength={LIMITS.budget} aria-describedby="error-budget" placeholder="Ordre de grandeur" />
+                <p class="contact-error" id="error-budget" hidden></p>
+              </div>
+            </div>
+
+            <div class="ll-field">
+              <label class="ll-check contact-option">
+                <input type="checkbox" name="consent" required aria-describedby="error-consent" />
+                <span style="font-size:14px;color:var(--ink-soft)">
+                  J'accepte que ces informations soient utilisées pour répondre à ma demande. Elles
+                  ne sont ni revendues ni utilisées à d'autres fins.
+                  <a href="/mentions-legales/">Mentions légales</a>. <span aria-hidden="true">*</span><span class="contact-sr"> (obligatoire)</span>
                 </span>
               </label>
-            ))}
-          </fieldset>
+              <p class="contact-error" id="error-consent" hidden></p>
+            </div>
 
-          <label class="ll-field">
-            <span class="ll-label">Votre situation *</span>
-            <textarea
-              class="ll-input"
-              name="message"
-              required
-              rows="6"
-              placeholder="Ce qui tourne aujourd'hui, ce qui vous inquiète, et ce que vous aimeriez pouvoir dire dans six mois."
-            ></textarea>
-          </label>
+            <div class="ll-hp" aria-hidden="true">
+              <label>
+                Ne remplissez pas ce champ
+                <input type="text" name="website" tabindex="-1" autocomplete="off" />
+              </label>
+            </div>
 
-          <label class="ll-check">
-            <input type="checkbox" name="rgpd" required />
-            <span style="font-size:14px;color:var(--ink-soft)">
-              J'accepte que ces informations soient utilisées pour répondre à ma demande. Elles ne
-              sont ni revendues ni utilisées à d'autres fins.
-              <a href="/mentions-legales">Mentions légales</a>.
-            </span>
-          </label>
-
-          <div class="ll-hp" aria-hidden="true">
-            <label>
-              Ne remplissez pas ce champ
-              <input type="text" name="website" tabindex="-1" autocomplete="off" />
-            </label>
-          </div>
-
-          <div style="display:flex;align-items:center;gap:20px;flex-wrap:wrap;margin-top:2px">
-            <button type="submit" class="ll-btn ll-btn--lg" id="contact-submit">Envoyer →</button>
-            <span class="ll-mono ll-mono--plain">Réponse sous 48 h ouvrées</span>
-          </div>
+            <div style="display:flex;align-items:center;gap:20px;flex-wrap:wrap;margin-top:2px">
+              <button type="submit" class="ll-btn ll-btn--lg" id="contact-submit">Envoyer →</button>
+              <span class="ll-mono ll-mono--plain">Réponse sous {RESPONSE_DELAY}</span>
+            </div>
           </form>
         </div>
 
         <div class="ll-stack">
           <div class="ll-contact__next">
             <div class="ll-mono" style="margin-bottom:14px">Ce qui se passe ensuite</div>
-            <div class="ll-stack" style="gap:12px">
+            <ol class="ll-stack contact-steps" style="gap:12px">
               {next.map((step, i) => (
-                <div style="display:grid;grid-template-columns:26px 1fr;gap:12px">
+                <li style="display:grid;grid-template-columns:26px 1fr;gap:12px">
                   <span
                     style="font-family:var(--font-mono);font-size:11px;color:var(--cobalt);padding-top:3px"
-                  >{String(i + 1).padStart(2, "0")}</span>
+                    aria-hidden="true">{String(i + 1).padStart(2, "0")}</span>
                   <span style="font-size:15px;line-height:1.5">{step}</span>
-                </div>
+                </li>
               ))}
-            </div>
+            </ol>
           </div>
           <div class="ll-contact__aside">
             <div class="ll-mono ll-mono--invert">Pas encore prêt&nbsp;?</div>
             <p style="margin:0;font-size:15.5px;line-height:1.55;color:var(--ink-invert)">
-              Regardez d'abord les quatre offres et le diagnostic en quatre stades. Vous saurez plus
-              vite ce dont vous avez besoin — et le message sera meilleur.
+              Regardez d'abord les quatre offres et notre approche. Vous saurez plus vite ce dont
+              vous avez besoin — et votre message sera meilleur.
             </p>
             <div class="ll-stack" style="gap:9px;margin-top:4px">
-              <a href="/offres" style="font-size:15px;font-weight:700;color:var(--cream)">Les quatre offres →</a>
-              <a href="/approche" style="font-size:15px;font-weight:700;color:var(--cream)">Notre approche →</a>
+              <a href="/offres/" style="font-size:15px;font-weight:700;color:var(--cream)">Les quatre offres →</a>
+              <a href="/approche/" style="font-size:15px;font-weight:700;color:var(--cream)">Notre approche →</a>
               <a
                 href="https://github.com/Ligerian-labs"
                 rel="noopener"
@@ -174,81 +203,170 @@ const contactSchema = {
   </section>
 </Base>
 
-<script>
-  const form = document.getElementById("contact-form") as HTMLFormElement | null;
-  const status = document.getElementById("form-status");
-  const submit = document.getElementById("contact-submit") as HTMLButtonElement | null;
-
-  const STAGE_LABELS: Record<string, string> = {
-    "00": "Stade 00 — Expérimentation",
-    "01": "Stade 01 — En prod, à l'aveugle",
-    "02": "Stade 02 — Mesurée, mais greffée",
-    "03": "Stade 03 — Nativement IA",
-    ns: "Ne sait pas",
-  };
-
-  function render(kind: "ok" | "err", title: string, body: string) {
-    if (!status) return;
-    status.innerHTML = `<div class="ll-alert ll-alert--${kind}">
-      <div class="ll-mono" style="color:inherit">${title}</div>
-      <p>${body}</p>
-    </div>`;
+<style>
+  /* Author `display` rules on these classes would otherwise beat the hidden attribute. */
+  .ll-alert[hidden],
+  .ll-contact__fields[hidden] {
+    display: none;
   }
+  .contact-note,
+  .contact-hint {
+    margin: 0;
+    font-size: 14px;
+    color: var(--ink-soft);
+  }
+  .contact-opt {
+    text-transform: none;
+    letter-spacing: 0;
+  }
+  .contact-error {
+    margin: 0;
+    font-size: 14px;
+    font-weight: 700;
+  }
+  .contact-error::before {
+    content: "Erreur — ";
+  }
+  /* Not colour alone: a heavy left edge marks the invalid field. */
+  .ll-input[aria-invalid="true"] {
+    border-left-width: 8px;
+  }
+  .contact-option {
+    min-height: 44px;
+    align-items: center;
+  }
+  .contact-steps {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .contact-sr {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+</style>
+
+<script>
+  import type { ContactErrors, ContactField } from "../lib/contact.ts";
+  import { submitEnquiry } from "../lib/contact-client.ts";
+
+  const FIELDS: ContactField[] = ["name", "email", "company", "projectType", "description", "timing", "budget", "consent"];
+
+  const form = document.getElementById("contact-form") as HTMLFormElement | null;
+  const success = document.getElementById("form-success");
+  const alertBox = document.getElementById("form-alert");
+  const alertTitle = document.getElementById("form-alert-title");
+  const alertBody = document.getElementById("form-alert-body");
+  const submit = document.getElementById("contact-submit") as HTMLButtonElement | null;
+  let sending = false;
+
+  function controls(field: ContactField): HTMLElement[] {
+    return Array.from(form?.querySelectorAll<HTMLElement>(`[name="${field}"]`) ?? []);
+  }
+
+  function clearError(field: ContactField) {
+    const slot = document.getElementById(`error-${field}`);
+    if (slot) {
+      slot.hidden = true;
+      slot.textContent = "";
+    }
+    controls(field).forEach((el) => el.removeAttribute("aria-invalid"));
+  }
+
+  function showErrors(errors: ContactErrors) {
+    let first: HTMLElement | undefined;
+    for (const field of FIELDS) {
+      clearError(field);
+      const message = errors[field];
+      if (typeof message !== "string") continue;
+      const slot = document.getElementById(`error-${field}`);
+      if (slot) {
+        slot.textContent = message;
+        slot.hidden = false;
+      }
+      controls(field).forEach((el) => el.setAttribute("aria-invalid", "true"));
+      first ??= controls(field)[0];
+    }
+    first?.focus();
+  }
+
+  function showFailure(title: string, body: string) {
+    if (!alertBox || !alertTitle || !alertBody) return;
+    alertTitle.textContent = title;
+    alertBody.textContent = body;
+    alertBox.hidden = false;
+    alertBox.focus();
+  }
+
+  function finish() {
+    sending = false;
+    if (submit) {
+      submit.disabled = false;
+      submit.textContent = "Envoyer →";
+    }
+    form?.removeAttribute("aria-busy");
+  }
+
+  FIELDS.forEach((field) => {
+    controls(field).forEach((el) => {
+      el.addEventListener("input", () => clearError(field));
+      el.addEventListener("change", () => clearError(field));
+    });
+  });
 
   form?.addEventListener("submit", async (event) => {
     event.preventDefault();
-    if (!form.reportValidity()) return;
+    if (sending) return;
+    if (alertBox) alertBox.hidden = true;
 
-    const formData = new FormData(form);
-    if (formData.get("website")) return; // honeypot
-
-    const stade = String(formData.get("stade") ?? "");
+    const data = new FormData(form);
+    const text = (key: string) => String(data.get(key) ?? "");
     const payload = {
-      name: formData.get("name"),
-      email: formData.get("email"),
-      company: formData.get("company") || null,
-      role: formData.get("role") || null,
-      stade,
-      message: formData.get("message"),
+      name: text("name"),
+      email: text("email"),
+      company: text("company"),
+      projectType: text("projectType"),
+      description: text("description"),
+      timing: text("timing"),
+      budget: text("budget"),
+      consent: data.get("consent") === "on",
+      website: text("website"),
     };
 
-    if ((window as any).posthog) {
-      (window as any).posthog.capture("contact_form_submitted", {
-        stade: payload.stade,
-        has_company: !!payload.company,
-        has_role: !!payload.role,
-      });
-    }
-
+    sending = true;
+    form.setAttribute("aria-busy", "true");
     if (submit) {
       submit.disabled = true;
       submit.textContent = "Envoi…";
     }
 
-    try {
-      const res = await fetch("/api/contact", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
-      if (!res.ok) throw new Error(String(res.status));
+    const outcome = await submitEnquiry(payload, {
+      fetch: window.fetch.bind(window),
+      visit: { hostname: location.hostname, automated: navigator.webdriver },
+      capture: (name, properties) => (window as any).posthog?.capture?.(name, properties),
+    });
 
-      form.hidden = true;
-      render(
-        "ok",
-        "Message envoyé",
-        "Merci. Nous revenons vers vous sous 48 h ouvrées, depuis bonjour@ligerianlabs.fr.",
-      );
-      status?.scrollIntoView({ behavior: "smooth", block: "center" });
-    } catch {
-      render(
-        "err",
+    if (outcome.status === "invalid" || outcome.status === "fields") {
+      finish();
+      showErrors(outcome.errors);
+    } else if (outcome.status === "failed") {
+      finish();
+      showFailure(
         "L'envoi a échoué",
-        'Écrivez-nous directement à <a href="mailto:bonjour@ligerianlabs.fr">bonjour@ligerianlabs.fr</a>.',
+        outcome.reason === "network"
+          ? "Le serveur ne répond pas. Vérifiez votre connexion et réessayez."
+          : "Votre message n'a pas été enregistré. Réessayez dans un instant.",
       );
-      if (submit) {
-        submit.disabled = false;
-        submit.textContent = "Envoyer →";
+    } else {
+      form.hidden = true;
+      sending = false;
+      if (success) {
+        success.hidden = false;
+        success.focus();
       }
     }
   });

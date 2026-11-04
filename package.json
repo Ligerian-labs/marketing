@@ -6,7 +6,9 @@
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",
-    "preview": "astro preview"
+    "preview": "astro preview",
+    "start": "node scripts/server/entry.mjs",
+    "test:seo": "node --test tests/seo*.test.mjs"
   },
   "keywords": [],
   "author": "",

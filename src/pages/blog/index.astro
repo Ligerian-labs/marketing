@@ -26,7 +26,7 @@ const featuredCategory = featured ? category(featured.data.tags) : "";
 
 const blogSchema = {
   "@type": "Blog",
-  "@id": "https://ligerianlabs.fr/blog#blog",
+  "@id": "https://ligerianlabs.fr/blog/#blog",
   name: "Notes d'ingénierie — Ligerian Labs",
   description: "Notes d'ingénierie sur l'IA en production : coûts, évaluations, architecture, agents.",
   inLanguage: "fr-FR",
@@ -71,7 +71,7 @@ const blogSchema = {
   {featured && (
     <section class="ll-sec">
       <div class="ll-wrap">
-        <a href={`/blog/${featured.slug}`} class="ll-feature">
+        <a href={`/blog/${featured.slug}/`} class="ll-feature">
           <div class="ll-feature__text">
             <div style="display:flex;gap:14px;align-items:baseline;flex-wrap:wrap">
               <span
@@ -118,7 +118,7 @@ const blogSchema = {
       <div class="ll-grid ll-grid--3 ll-grid--fill" id="ll-posts">
         {posts.map((post) => (
           <a
-            href={`/blog/${post.slug}`}
+            href={`/blog/${post.slug}/`}
             class="ll-cell"
             style="min-height:270px;gap:13px"
             data-category={post.categoryKey}

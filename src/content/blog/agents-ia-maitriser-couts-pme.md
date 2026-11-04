@@ -108,4 +108,4 @@ L'automatisation IA n'a pas besoin d'être spectaculaire pour être rentable. El
 
 Les agents IA vont devenir courants dans les PME. Le mouvement est lancé. Mais les entreprises qui gagneront du temps ne seront pas celles qui branchent tout partout. Ce seront celles qui choisissent un workflow précis, posent des limites, mesurent les coûts, et améliorent semaine après semaine.
 
-Chez Ligerian Labs, on aide les entreprises locales à faire ce tri : identifier le bon cas d'usage, choisir entre cloud et IA locale, installer les garde-fous, former les équipes, puis mesurer le ROI. Si vous voulez tester un agent IA dans votre PME sans transformer votre budget en terrain vague, [parlons-en](/contact).
+Chez Ligerian Labs, on aide les entreprises locales à faire ce tri : identifier le bon cas d'usage, choisir entre cloud et IA locale, installer les garde-fous, former les équipes, puis mesurer le ROI. Si vous voulez tester un agent IA dans votre PME sans transformer votre budget en terrain vague, [parlons-en](/contact/).

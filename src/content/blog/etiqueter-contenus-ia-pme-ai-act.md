@@ -119,4 +119,4 @@ L'étiquetage des contenus IA est une hygiène de communication, comme vérifier
 
 Les entreprises qui prennent ce réflexe maintenant pourront continuer à utiliser l'automatisation IA, les visuels générés, les assistants rédactionnels et les agents métier, mais avec un cadre compréhensible par toute l'équipe.
 
-Si vous voulez mettre ça au propre sans transformer votre PME en service conformité, Ligerian Labs peut vous aider à cadrer vos usages IA, vos contenus publics et vos automatisations. Le plus simple : passer par [/contact](/contact) et on regarde ce qui mérite vraiment une règle.
+Si vous voulez mettre ça au propre sans transformer votre PME en service conformité, Ligerian Labs peut vous aider à cadrer vos usages IA, vos contenus publics et vos automatisations. Le plus simple : passer par [/contact](/contact/) et on regarde ce qui mérite vraiment une règle.

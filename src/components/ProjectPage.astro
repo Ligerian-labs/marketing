@@ -1,0 +1,65 @@
+---
+import Base from "../layouts/Base.astro";
+import MarketingFrame from "./MarketingFrame.astro";
+import PageHero from "./PageHero.astro";
+import SectionBar from "./SectionBar.astro";
+import CtaBand from "./CtaBand.astro";
+import { projects } from "../data/projects";
+interface Props { slug: string; }
+const project = projects.find((item) => item.slug === Astro.props.slug);
+if (!project) throw new Error(`Unknown project: ${Astro.props.slug}`);
+const schema = {
+  "@type": "CreativeWork", "@id": `https://ligerianlabs.fr/realisations/${project.slug}/#project`,
+  name: project.name, description: project.summary,
+  url: `https://ligerianlabs.fr/realisations/${project.slug}/`,
+  creator: { "@id": "https://ligerianlabs.fr/#organization" },
+  isBasedOn: project.sources.map((source) => source.href),
+};
+---
+<Base title={`${project.name} · Projet indépendant | Ligerian Labs`} description={project.summary} structuredData={schema}>
+  <MarketingFrame>
+    <div class="ll-wrap"><nav class="ll-crumbs" aria-label="Fil d'Ariane"><a href="/">Accueil</a><span>/</span><a href="/realisations/">Réalisations</a><span>/</span><span aria-current="page">{project.name}</span></nav></div>
+    <PageHero heading={project.name} intro={project.summary} label="Projet indépendant · Code public">
+      <div class="ll-mono" style="color:inherit">État du projet</div>
+      <p>{project.status}</p>
+      <p>Travail indépendant sous Ligerian Labs, sans référence client ni résultat commercial revendiqué.</p>
+      <a href={project.sources[0].href}>Examiner le dépôt public →</a>
+    </PageHero>
+    <SectionBar label="01 · Le problème et le public" />
+    <section class="ll-sec"><div class="ll-wrap marketing-section marketing-columns">
+      <div><h2 class="ll-h2">Le besoin exploré</h2><p class="marketing-intro">{project.need}</p></div>
+      <div><h2 class="ll-h2">Pour qui ?</h2><p class="marketing-intro">{project.users}</p></div>
+    </div></section>
+    <SectionBar label="02 · Contribution et périmètre" />
+    <section class="ll-sec"><div class="ll-wrap marketing-section">
+      <h2 class="ll-h2">Ce qui est publié</h2><p class="marketing-intro">{project.contribution}</p>
+      <ul class="marketing-list">{project.built.map((item) => <li>{item}</li>)}</ul>
+      <figure>
+        <div class="project-diagram">{project.diagram.map((step, index) => <div><span class="ll-mono">0{index + 1}</span><h3>{step.title}</h3><p>{step.detail}</p></div>)}</div>
+        <figcaption>Schéma explicatif du périmètre documenté, pas une capture du produit. Sources et version examinée ci-dessous.</figcaption>
+      </figure>
+    </div></section>
+    <SectionBar label="03 · Choix et limites" />
+    <section class="ll-sec"><div class="ll-wrap marketing-section marketing-columns">
+      <div><h2 class="ll-h2">Les choix à examiner</h2><ul class="marketing-list">{project.decisions.map((item) => <li>{item}</li>)}</ul></div>
+      <div><h2 class="ll-h2">Ce que cela ne prouve pas</h2><p class="marketing-intro">{project.limits}</p></div>
+    </div></section>
+    <SectionBar label="04 · Sources consultables" />
+    <section class="ll-sec"><div class="ll-wrap marketing-section">
+      <h2 class="ll-h2">Vérifier par vous-même</h2>
+      <p class="marketing-intro">Présentation fondée sur les fichiers publics examinés le 3 novembre 2026. Les liens vers les fichiers désignent cette version précise ; le dépôt peut avoir évolué depuis.</p>
+      <ul class="marketing-list">{project.sources.map((source) => <li><a href={source.href}>{source.label} →</a></li>)}</ul>
+      <a class="ll-btn ll-btn--ghost" href={project.service.href}>{project.service.label} →</a>
+    </div></section>
+    <CtaBand title="Un besoin proche dans votre entreprise ?" body="Parlons de votre contexte, des contraintes et de ce qu'il faudrait vérifier avant de construire." />
+  </MarketingFrame>
+</Base>
+<style>
+  figure { margin: 32px 0 0; }
+  .project-diagram { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 2px; background: var(--ink); border: 2px solid var(--ink); }
+  .project-diagram > div { padding: 24px; background: var(--panel); }
+  .project-diagram h3 { font-size: 21px; line-height: 1.2; }
+  .project-diagram p, figcaption { line-height: 1.6; }
+  figcaption { margin-top: 12px; font-size: 14px; color: var(--meta); }
+  @media (max-width: 620px) { .project-diagram { grid-template-columns: minmax(0, 1fr); } }
+</style>

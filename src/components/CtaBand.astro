@@ -12,7 +12,7 @@ const {
   body,
   label = "Prochaine étape",
   cta = "Parlons de votre projet →",
-  href = "/contact",
+  href = "/contact/",
 } = Astro.props;
 ---
 
@@ -26,3 +26,10 @@ const {
     <a href={href} class="ll-btn ll-btn--cream">{cta}</a>
   </div>
 </section>
+
+<style>
+  .ll-cta__inner > div { min-width: 0; max-width: 100%; }
+  h2, p { overflow-wrap: anywhere; }
+  .ll-btn { max-width: 100%; white-space: normal; text-align: center; }
+  @media (max-width: 620px) { h2 { font-size: clamp(24px, 7vw, 34px); line-height: 1.1; } }
+</style>

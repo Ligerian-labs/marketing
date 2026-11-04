@@ -104,4 +104,4 @@ La prompt injection ne veut pas dire qu'il faut arrêter les agents IA. Ce serai
 
 La bonne approche est plus simple : cartographier les contenus lus par l'agent, limiter ses droits, garder l'humain sur les décisions sensibles, et tester les scénarios tordus avant qu'un client ou un fournisseur ne le fasse sans prévenir.
 
-Pour les entreprises d'Angers et du Pays de la Loire, c'est exactement le rôle d'un conseil IA entreprise sérieux : transformer l'enthousiasme en outil fiable. Chez Ligerian Labs, on aide les PME à auditer leurs usages, cadrer les permissions, former les équipes, et construire des automatisations IA qui travaillent sans mettre les données en roue libre. [On peut en parler ici](/contact).
+Pour les entreprises d'Angers et du Pays de la Loire, c'est exactement le rôle d'un conseil IA entreprise sérieux : transformer l'enthousiasme en outil fiable. Chez Ligerian Labs, on aide les PME à auditer leurs usages, cadrer les permissions, former les équipes, et construire des automatisations IA qui travaillent sans mettre les données en roue libre. [On peut en parler ici](/contact/).

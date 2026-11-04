@@ -45,4 +45,4 @@ L'erreur serait d'attendre que tout soit parfait. Les entreprises qui bougent ma
 
 Chez Ligerian Labs, on accompagne les PME d'Angers et des Pays de la Loire dans cette transition. Pas avec des slides PowerPoint sur "la transformation digitale", mais avec des audits concrets, des outils sur mesure et des formations adaptées à votre métier.
 
-Si vous vous demandez par où commencer, [on en parle autour d'un café](https://ligerianlabs.fr/contact).
+Si vous vous demandez par où commencer, [on en parle autour d'un café](https://ligerianlabs.fr/contact/).

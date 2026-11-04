@@ -103,4 +103,4 @@ L'IA Angers et l'IA Pays de la Loire ne doivent pas rester des mots de salon. Po
 
 La vision IA locale permet de démarrer petit, sur une tâche visible, mesurable, et proche du métier. Pas besoin d'un laboratoire innovation IA hors sol. Il faut un irritant clair, quelques dizaines d'exemples, une boucle de validation, puis un test de 30 jours.
 
-Chez Ligerian Labs, on aide les PME à transformer ce genre de friction en automatisation IA utile : cadrage du cas d'usage, choix local/cloud, prototype, mesure, formation de l'équipe. Si vos photos, plans ou contrôles qualité prennent trop de temps, [on peut regarder ça ensemble](/contact).
+Chez Ligerian Labs, on aide les PME à transformer ce genre de friction en automatisation IA utile : cadrage du cas d'usage, choix local/cloud, prototype, mesure, formation de l'équipe. Si vos photos, plans ou contrôles qualité prennent trop de temps, [on peut regarder ça ensemble](/contact/).

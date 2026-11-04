@@ -78,4 +78,4 @@ La transformation digitale d'une PME ne devrait pas créer une nouvelle dépenda
 
 Le bon système est simple à expliquer, testable, et réversible. Si demain un modèle devient trop cher ou moins fiable, vous devez pouvoir en brancher un autre sans casser toute l'organisation.
 
-C'est exactement le type de travail où un accompagnement en conseil IA entreprise fait gagner du temps : partir des vrais processus, choisir les bons outils IA entreprise, poser les garde-fous, puis automatiser progressivement. Ligerian Labs aide les entreprises locales en Pays de la Loire à construire cette base proprement, sans folklore technique. Pour en parler simplement, le plus court chemin reste la page [/contact](/contact).
+C'est exactement le type de travail où un accompagnement en conseil IA entreprise fait gagner du temps : partir des vrais processus, choisir les bons outils IA entreprise, poser les garde-fous, puis automatiser progressivement. Ligerian Labs aide les entreprises locales en Pays de la Loire à construire cette base proprement, sans folklore technique. Pour en parler simplement, le plus court chemin reste la page [/contact](/contact/).

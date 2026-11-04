@@ -66,4 +66,4 @@ Si le sujet vous intrigue, voici un plan simple :
 2. **Testez un outil gratuit** : ElevenLabs propose un tier gratuit pour la synthèse vocale. Essayez avec un script de 30 secondes.
 3. **Mesurez l'impact** : temps gagné, appels traités, satisfaction client.
 
-Chez Ligerian Labs, on accompagne les entreprises du Pays de la Loire dans l'intégration de ces outils — du choix de la solution au déploiement. Si vous voulez explorer ce que l'IA vocale peut faire pour votre activité, [parlons-en](https://ligerianlabs.fr/contact).
+Chez Ligerian Labs, on accompagne les entreprises du Pays de la Loire dans l'intégration de ces outils — du choix de la solution au déploiement. Si vous voulez explorer ce que l'IA vocale peut faire pour votre activité, [parlons-en](https://ligerianlabs.fr/contact/).

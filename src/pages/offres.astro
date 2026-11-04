@@ -1,9 +1,11 @@
 ---
 export const prerender = true;
 import Base from "../layouts/Base.astro";
+import MarketingFrame from "../components/MarketingFrame.astro";
 import SectionBar from "../components/SectionBar.astro";
 import CtaBand from "../components/CtaBand.astro";
 import { offers } from "../data/offers";
+import { projects } from "../data/projects";
 
 const toc = offers.map((offer, i) => ({
   slug: offer.slug,
@@ -15,7 +17,7 @@ const toc = offers.map((offer, i) => ({
 
 const serviceSchema = offers.map((offer) => ({
   "@type": "Service",
-  "@id": `https://ligerianlabs.fr/offres#${offer.slug}`,
+  "@id": `https://ligerianlabs.fr/offres/#${offer.slug}`,
   name: `${offer.name} — ${offer.promise}`,
   serviceType: offer.promise,
   description: offer.teaser,
@@ -25,22 +27,22 @@ const serviceSchema = offers.map((offer) => ({
 ---
 
 <Base
-  title="Offres — token ops, mise en production, architecture IA, agents | Ligerian Labs"
-  description="Quatre offres d'ingénierie IA : supervision et token ops, déploiement en production, architecture IA au cœur du produit, développement d'agents. Périmètre écrit, livrables nommés."
-  ogTitle="Offres — token ops, mise en production, architecture IA, agents"
-  ogDescription="Quatre offres. Périmètre écrit, livrables nommés, documentation de passation incluse."
+  title="Services · Logiciels sur mesure et IA | Ligerian Labs"
+  description="Applications métier, évolution de logiciels et intégration IA à Angers. Découvrez les services sur mesure et les offres pour fiabiliser votre IA en production."
+  ogTitle="Services · Logiciels sur mesure et intégration IA à Angers"
+  ogDescription="Applications métier, évolution de logiciels, intégration IA et fiabilité en production. Un périmètre défini avec vous, du cadrage à l'exploitation."
   ogImage="og-offres"
   active="offres"
   structuredData={serviceSchema}
 >
+  <MarketingFrame>
   <header class="ll-sec">
     <div class="ll-wrap ll-hero">
       <div class="ll-hero__main">
-        <div class="ll-mono" style="font-size:12px;letter-spacing:.16em">Offres</div>
-        <h1 class="ll-h1">Quatre offres.<br />Vous en<br />achetez une.</h1>
+        <div class="ll-mono" style="font-size:12px;letter-spacing:.16em">Services</div>
+        <h1 class="ll-h1">Des logiciels métier.<br />De l’IA utile.</h1>
         <p class="ll-lede">
-          Chacune répond à un stade précis. Périmètre écrit avant de démarrer, livrables nommés,
-          documentation de passation incluse — pas en option.
+          Une application à construire, un logiciel à faire évoluer ou de l'IA à intégrer : choisissez le besoin de départ. Les quatre offres détaillées ci-dessous restent dédiées aux équipes qui construisent ou exploitent déjà un service IA.
         </p>
       </div>
       <div class="ll-hero__aside ll-hero__aside--panel">
@@ -62,6 +64,15 @@ const serviceSchema = offers.map((offer) => ({
       </div>
     </div>
   </header>
+
+  <section class="ll-sec"><div class="ll-wrap marketing-section">
+    <h2 class="ll-h2">Quel projet voulez-vous engager ?</h2>
+    <div class="ll-grid ll-grid--2" style="margin-top:28px">
+      <a class="ll-cell" href="/developpement-logiciel-sur-mesure/"><h3 class="ll-h3">Développement logiciel sur mesure</h3><p>Applications métier, portails et évolution de vos outils. Livrables, estimation, hébergement et maintenance.</p><span class="ll-cell__foot">Voir le service →</span></a>
+      <a class="ll-cell" href="/integration-ia/"><h3 class="ll-h3">Intégration IA</h3><p>Recherche documentaire et tâches assistées dans vos logiciels, avec évaluations, maîtrise des coûts et validation humaine.</p><span class="ll-cell__foot">Voir le service →</span></a>
+    </div>
+    <p class="marketing-note">Les durées des offres IA ci-dessous sont des formats indicatifs, à confirmer selon le périmètre, les accès et les validations. Les droits sur le code, les licences, l'hébergement et la maintenance sont précisés dans la proposition. <a href="/realisations/">Examiner les travaux indépendants →</a></p>
+  </div></section>
 
   <!-- 01 · Voir ---------------------------------------------------------- -->
   <section id="voir" class="ll-sec ll-anchor">
@@ -453,20 +464,14 @@ const serviceSchema = offers.map((offer) => ({
           </div>
 
           <div class="ll-offerbody__extra" style="border-top:2px solid var(--ink)">
-            <div class="ll-mono" style="margin-bottom:14px">Nous construisons ça en public</div>
+            <div class="ll-mono" style="margin-bottom:14px">Travaux indépendants à examiner</div>
             <div class="ll-stack" style="gap:10px">
-              <div class="ll-ossline">
-                <span>marathon</span>
-                <span>Runner Zig, tâches d'agent en VM Firecracker isolées</span>
-              </div>
-              <div class="ll-ossline">
-                <span>claudeswarm</span>
-                <span>Du ticket à la PR, avec points de contrôle humains</span>
-              </div>
-              <div class="ll-ossline ll-ossline--last">
-                <span>atelier</span>
-                <span>Studio Rust pilotant quatre agents de code</span>
-              </div>
+              {projects.map((project) => (
+                <a href={`/realisations/${project.slug}/`} class="offer-project">
+                  <span>{project.name}</span>
+                  <span>{project.status}. {project.summary}</span>
+                </a>
+              ))}
             </div>
           </div>
         </div>
@@ -554,4 +559,12 @@ const serviceSchema = offers.map((offer) => ({
     title="Vous ne savez pas<br />laquelle vous concerne&nbsp;?"
     body="C'est précisément l'objet du sprint de cadrage. Deux semaines, un plan écrit, aucune obligation de continuer."
   />
+  </MarketingFrame>
 </Base>
+
+<style>
+  .offer-project { display: flex; flex-direction: column; gap: 6px; padding-bottom: 12px; border-bottom: 1px solid var(--rule-hair); }
+  .offer-project:last-child { border-bottom: 0; padding-bottom: 0; }
+  .offer-project > span:first-child { font-weight: 700; font-size: 15px; overflow-wrap: normal; }
+  .offer-project > span:last-child { font-size: 13.5px; line-height: 1.55; color: var(--ink-soft); }
+</style>

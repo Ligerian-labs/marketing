@@ -108,4 +108,4 @@ Ajoutez une validation humaine sur les actions visibles par un client, un fourni
 
 Enfin, mesurez le gain réel : temps économisé, erreurs évitées, délai de traitement, satisfaction de l'équipe. Une transformation digitale PME réussie ne se juge pas au nombre d'outils branchés, mais à la charge mentale retirée au quotidien.
 
-Les agents IA peuvent devenir un vrai levier pour les PME, à condition de ne pas confondre autonomie et abandon du contrôle. Chez Ligerian Labs, on aide les entreprises locales à cadrer ces usages, choisir les bons niveaux de validation et construire des automatisations qui tiennent dans la vraie vie. Pour en parler simplement, le plus direct reste de passer par [/contact](/contact).
+Les agents IA peuvent devenir un vrai levier pour les PME, à condition de ne pas confondre autonomie et abandon du contrôle. Chez Ligerian Labs, on aide les entreprises locales à cadrer ces usages, choisir les bons niveaux de validation et construire des automatisations qui tiennent dans la vraie vie. Pour en parler simplement, le plus direct reste de passer par [/contact](/contact/).

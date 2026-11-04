@@ -60,4 +60,4 @@ L'agent viendra ensuite, quand vous aurez identifié les processus répétitifs 
 
 L'IA générative n'est plus un sujet réservé aux grands groupes parisiens. Les PME d'Angers, de Nantes, du Mans ont tout à gagner à intégrer un copilote IA dans leur fonctionnement — et ça ne demande ni budget R&D ni équipe technique.
 
-Chez Ligerian Labs, on accompagne les entreprises locales dans ce premier pas : choix de l'outil, configuration, formation des équipes. Parce qu'un copilote IA, c'est comme un GPS — il faut quand même savoir où on veut aller. [Parlons-en](https://ligerianlabs.fr/contact).
+Chez Ligerian Labs, on accompagne les entreprises locales dans ce premier pas : choix de l'outil, configuration, formation des équipes. Parce qu'un copilote IA, c'est comme un GPS — il faut quand même savoir où on veut aller. [Parlons-en](https://ligerianlabs.fr/contact/).

@@ -111,4 +111,4 @@ Posez trois questions avant de généraliser :
 
 Si la réponse est oui trois fois, l'abonnement peut devenir un vrai levier. Sinon, il reste une expérimentation.
 
-L'IA en PME ne se joue pas à celui qui empile le plus d'outils. Elle se joue à celui qui transforme deux ou trois usages bien choisis en habitudes solides. Chez Ligerian Labs, on aide les entreprises d'Angers et du Pays de la Loire à faire ce tri : garder ce qui rapporte, couper ce qui distrait, construire ce qui manque. [Parlons-en](/contact).
+L'IA en PME ne se joue pas à celui qui empile le plus d'outils. Elle se joue à celui qui transforme deux ou trois usages bien choisis en habitudes solides. Chez Ligerian Labs, on aide les entreprises d'Angers et du Pays de la Loire à faire ce tri : garder ce qui rapporte, couper ce qui distrait, construire ce qui manque. [Parlons-en](/contact/).

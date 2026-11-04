@@ -58,4 +58,4 @@ Des outils existent pour auditer l'empreinte numérique de votre entreprise. Pas
 
 L'IA avance vite. Ce qui était un papier de recherche il y a six mois devient un outil accessible aujourd'hui. Les PME qui prennent ces sujets au sérieux maintenant — avant l'incident — seront celles qui garderont la confiance de leurs clients et de leurs équipes.
 
-Chez Ligerian Labs, on accompagne les entreprises du Pays de la Loire dans leur compréhension de l'IA — les opportunités comme les risques. Si vous vous demandez où vous en êtes sur ces questions, [on peut en discuter](/contact).
+Chez Ligerian Labs, on accompagne les entreprises du Pays de la Loire dans leur compréhension de l'IA — les opportunités comme les risques. Si vous vous demandez où vous en êtes sur ces questions, [on peut en discuter](/contact/).

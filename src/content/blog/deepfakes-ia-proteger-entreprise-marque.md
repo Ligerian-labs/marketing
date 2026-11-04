@@ -65,4 +65,4 @@ C'est le paradoxe : les meilleurs outils de détection de deepfakes sont eux-mê
 
 Le sujet des deepfakes illustre bien la dualité de l'IA : elle crée de nouveaux risques, mais elle fournit aussi les outils pour s'en protéger. L'important, c'est de ne pas rester passif.
 
-Chez Ligerian Labs, on accompagne les entreprises d'Angers et du Pays de la Loire pour intégrer l'IA de manière responsable — y compris sur les questions de sécurité et de confiance numérique. Si vous voulez faire le point sur votre exposition aux risques liés à l'IA générative, [parlons-en](https://ligerianlabs.fr/contact).
+Chez Ligerian Labs, on accompagne les entreprises d'Angers et du Pays de la Loire pour intégrer l'IA de manière responsable — y compris sur les questions de sécurité et de confiance numérique. Si vous voulez faire le point sur votre exposition aux risques liés à l'IA générative, [parlons-en](https://ligerianlabs.fr/contact/).
