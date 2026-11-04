@@ -1,0 +1,511 @@
+{
+  "analysed_at": "2026-11-04T09:41:22.255322+00:00",
+  "source_export": "ligerianlabs.fr-Performance-on-Search-2026-11-04",
+  "source_files": [
+    {
+      "file": "Appareils.csv",
+      "sha256": "a322a1417573fda99883700824e78a3222338f7ee22ec5f5927549975f7dd296",
+      "rows": 3
+    },
+    {
+      "file": "Apparence dans les résultats de recherche.csv",
+      "sha256": "b7b42562762fb4040f715c2a5833a27615a55cfaa667c49f18b82b4371eb23a0",
+      "rows": 0
+    },
+    {
+      "file": "Filtres.csv",
+      "sha256": "8aa5c1d0000a21c60e94ad731196ec45a86f48982e7e625c3fc40afbef409c0b",
+      "rows": 2
+    },
+    {
+      "file": "Graphique.csv",
+      "sha256": "b8986f8df10dc9e558d34c467295889fef8b596dc739eb06b2ce529e66475562",
+      "rows": 92
+    },
+    {
+      "file": "Pages.csv",
+      "sha256": "282f83b03856df6d9870471323d207b4a3d75c7f81675bd8c6813deef1a7e76a",
+      "rows": 33
+    },
+    {
+      "file": "Pays.csv",
+      "sha256": "7215342ef16db2181b2df99c0ed91a2ea87bf37661bf97438f97d4dde2383610",
+      "rows": 30
+    },
+    {
+      "file": "Requêtes.csv",
+      "sha256": "cfa7f3686aca1221095974493f8b0f9ebd7bd9ff76b0a090761609340f520476",
+      "rows": 57
+    }
+  ],
+  "search_type": "Web (textuel)",
+  "export_date_filter": "Les 3 derniers mois",
+  "scope": {
+    "hosts_observed": [
+      "ligerianlabs.fr",
+      "valentin.ligerianlabs.fr"
+    ],
+    "property_type_verified": false,
+    "note": "The unfiltered export includes the personal valentin subdomain. Do not present property totals as company-host-only traffic."
+  },
+  "property_daily_totals": {
+    "start": "2026-08-03",
+    "end": "2026-11-02",
+    "days": 92,
+    "clicks": 17,
+    "impressions": 1493,
+    "ctr_percent": 1.1386,
+    "position_weighted_from_rounded_rows": 36.9292
+  },
+  "monthly": [
+    {
+      "month": "2026-08",
+      "start": "2026-08-03",
+      "end": "2026-08-31",
+      "days": 29,
+      "clicks": 5,
+      "impressions": 659,
+      "ctr_percent": 0.7587,
+      "position_weighted_from_rounded_rows": 39.7341
+    },
+    {
+      "month": "2026-09",
+      "start": "2026-09-01",
+      "end": "2026-09-30",
+      "days": 30,
+      "clicks": 8,
+      "impressions": 434,
+      "ctr_percent": 1.8433,
+      "position_weighted_from_rounded_rows": 33.8445
+    },
+    {
+      "month": "2026-10",
+      "start": "2026-10-01",
+      "end": "2026-10-31",
+      "days": 31,
+      "clicks": 3,
+      "impressions": 369,
+      "ctr_percent": 0.813,
+      "position_weighted_from_rounded_rows": 36.0192
+    },
+    {
+      "month": "2026-11",
+      "start": "2026-11-01",
+      "end": "2026-11-02",
+      "days": 2,
+      "clicks": 1,
+      "impressions": 31,
+      "ctr_percent": 3.2258,
+      "position_weighted_from_rounded_rows": 31.3194
+    }
+  ],
+  "rolling_28_days": {
+    "current": {
+      "start": "2026-10-06",
+      "end": "2026-11-02",
+      "days": 28,
+      "clicks": 2,
+      "impressions": 344,
+      "ctr_percent": 0.5814,
+      "position_weighted_from_rounded_rows": 35.1788
+    },
+    "previous": {
+      "start": "2026-09-08",
+      "end": "2026-10-05",
+      "days": 28,
+      "clicks": 9,
+      "impressions": 348,
+      "ctr_percent": 2.5862,
+      "position_weighted_from_rounded_rows": 33.2753
+    }
+  },
+  "dimension_totals": {
+    "Pages": {
+      "rows": 33,
+      "clicks": 17,
+      "impressions": 1625,
+      "ctr_percent": 1.0462,
+      "position_weighted_from_rounded_rows": 34.8347
+    },
+    "Requêtes": {
+      "rows": 57,
+      "clicks": 1,
+      "impressions": 1115,
+      "ctr_percent": 0.0897,
+      "position_weighted_from_rounded_rows": 45.3476
+    },
+    "Pays": {
+      "rows": 30,
+      "clicks": 17,
+      "impressions": 1493,
+      "ctr_percent": 1.1386,
+      "position_weighted_from_rounded_rows": 36.9332
+    },
+    "Appareils": {
+      "rows": 3,
+      "clicks": 17,
+      "impressions": 1493,
+      "ctr_percent": 1.1386,
+      "position_weighted_from_rounded_rows": 36.9324
+    }
+  },
+  "page_aggregation_by_host": {
+    "ligerianlabs.fr": {
+      "clicks": 15,
+      "impressions": 1552,
+      "ctr_percent": 0.9665,
+      "position_weighted_from_rounded_rows": 36.0923
+    },
+    "valentin.ligerianlabs.fr": {
+      "clicks": 2,
+      "impressions": 73,
+      "ctr_percent": 2.7397,
+      "position_weighted_from_rounded_rows": 8.0971
+    }
+  },
+  "page_rows": [
+    {
+      "url": "https://ligerianlabs.fr/",
+      "clicks": 9,
+      "impressions": 54,
+      "ctr_percent": 16.67,
+      "position": 16.11
+    },
+    {
+      "url": "https://valentin.ligerianlabs.fr/fr/",
+      "clicks": 2,
+      "impressions": 29,
+      "ctr_percent": 6.9,
+      "position": 12.69
+    },
+    {
+      "url": "https://ligerianlabs.fr/a-propos/",
+      "clicks": 2,
+      "impressions": 25,
+      "ctr_percent": 8.0,
+      "position": 7.68
+    },
+    {
+      "url": "https://ligerianlabs.fr/ia-angers/",
+      "clicks": 1,
+      "impressions": 292,
+      "ctr_percent": 0.34,
+      "position": 35.76
+    },
+    {
+      "url": "https://ligerianlabs.fr/blog/rationaliser-abonnements-ia-pme/",
+      "clicks": 1,
+      "impressions": 108,
+      "ctr_percent": 0.93,
+      "position": 31.25
+    },
+    {
+      "url": "https://ligerianlabs.fr/blog/ia-contexte-long-analyser-documents-pme/",
+      "clicks": 1,
+      "impressions": 51,
+      "ctr_percent": 1.96,
+      "position": 23.59
+    },
+    {
+      "url": "https://ligerianlabs.fr/blog/agents-ia-communication-interne-pme/",
+      "clicks": 1,
+      "impressions": 4,
+      "ctr_percent": 25.0,
+      "position": 19.75
+    },
+    {
+      "url": "https://ligerianlabs.fr/blog/memoire-ia-pourquoi-votre-assistant-oublie-tout/",
+      "clicks": 0,
+      "impressions": 704,
+      "ctr_percent": 0.0,
+      "position": 46.37
+    },
+    {
+      "url": "https://ligerianlabs.fr/blog/gouvernance-agents-ia-pme/",
+      "clicks": 0,
+      "impressions": 75,
+      "ctr_percent": 0.0,
+      "position": 44.01
+    },
+    {
+      "url": "https://ligerianlabs.fr/blog/",
+      "clicks": 0,
+      "impressions": 45,
+      "ctr_percent": 0.0,
+      "position": 32.51
+    },
+    {
+      "url": "https://valentin.ligerianlabs.fr/",
+      "clicks": 0,
+      "impressions": 44,
+      "ctr_percent": 0.0,
+      "position": 5.07
+    },
+    {
+      "url": "https://ligerianlabs.fr/blog/registre-ia-pme-ai-act/",
+      "clicks": 0,
+      "impressions": 44,
+      "ctr_percent": 0.0,
+      "position": 10.16
+    },
+    {
+      "url": "https://ligerianlabs.fr/offres/",
+      "clicks": 0,
+      "impressions": 43,
+      "ctr_percent": 0.0,
+      "position": 5.91
+    },
+    {
+      "url": "https://ligerianlabs.fr/kit-presse/",
+      "clicks": 0,
+      "impressions": 24,
+      "ctr_percent": 0.0,
+      "position": 4.58
+    },
+    {
+      "url": "https://ligerianlabs.fr/blog/ia-fantome-pme-usages-equipe/",
+      "clicks": 0,
+      "impressions": 17,
+      "ctr_percent": 0.0,
+      "position": 36.12
+    },
+    {
+      "url": "https://ligerianlabs.fr/approche",
+      "clicks": 0,
+      "impressions": 15,
+      "ctr_percent": 0.0,
+      "position": 22.73
+    },
+    {
+      "url": "https://ligerianlabs.fr/contact/",
+      "clicks": 0,
+      "impressions": 14,
+      "ctr_percent": 0.0,
+      "position": 3.43
+    },
+    {
+      "url": "https://ligerianlabs.fr/blog/journal-audit-ia-pme/",
+      "clicks": 0,
+      "impressions": 9,
+      "ctr_percent": 0.0,
+      "position": 18.11
+    },
+    {
+      "url": "https://ligerianlabs.fr/blog/etiqueter-contenus-ia-pme-ai-act/",
+      "clicks": 0,
+      "impressions": 9,
+      "ctr_percent": 0.0,
+      "position": 31.67
+    },
+    {
+      "url": "https://ligerianlabs.fr/blog/agents-ia-permissions-pme/",
+      "clicks": 0,
+      "impressions": 3,
+      "ctr_percent": 0.0,
+      "position": 19.67
+    },
+    {
+      "url": "https://ligerianlabs.fr/blog/dependance-fournisseurs-ia-pme/",
+      "clicks": 0,
+      "impressions": 2,
+      "ctr_percent": 0.0,
+      "position": 9.0
+    },
+    {
+      "url": "https://ligerianlabs.fr/blog/ia-generative-gratuite-outils-limites-entreprises",
+      "clicks": 0,
+      "impressions": 2,
+      "ctr_percent": 0.0,
+      "position": 9.0
+    },
+    {
+      "url": "https://ligerianlabs.fr/blog/prompt-injection-agents-ia-pme/",
+      "clicks": 0,
+      "impressions": 2,
+      "ctr_percent": 0.0,
+      "position": 14.5
+    },
+    {
+      "url": "https://ligerianlabs.fr/formations",
+      "clicks": 0,
+      "impressions": 1,
+      "ctr_percent": 0.0,
+      "position": 1.0
+    },
+    {
+      "url": "https://ligerianlabs.fr/blog/context-engineering-ia-pme/",
+      "clicks": 0,
+      "impressions": 1,
+      "ctr_percent": 0.0,
+      "position": 3.0
+    },
+    {
+      "url": "https://ligerianlabs.fr/blog/agents-ia-permissions-pme",
+      "clicks": 0,
+      "impressions": 1,
+      "ctr_percent": 0.0,
+      "position": 5.0
+    },
+    {
+      "url": "https://ligerianlabs.fr/blog/ia-audit-cybersecurite-pme/",
+      "clicks": 0,
+      "impressions": 1,
+      "ctr_percent": 0.0,
+      "position": 5.0
+    },
+    {
+      "url": "https://ligerianlabs.fr/blog/ia-multimodale-texte-image-voix-pme/",
+      "clicks": 0,
+      "impressions": 1,
+      "ctr_percent": 0.0,
+      "position": 6.0
+    },
+    {
+      "url": "https://ligerianlabs.fr/blog/petits-modeles-ia-grands-resultats-pme/",
+      "clicks": 0,
+      "impressions": 1,
+      "ctr_percent": 0.0,
+      "position": 6.0
+    },
+    {
+      "url": "https://ligerianlabs.fr/blog/ia-visuelle-locale-controle-qualite-pme/",
+      "clicks": 0,
+      "impressions": 1,
+      "ctr_percent": 0.0,
+      "position": 8.0
+    },
+    {
+      "url": "https://ligerianlabs.fr/blog/remplacer-logiciels-couteux-ia-sur-mesure-pme/",
+      "clicks": 0,
+      "impressions": 1,
+      "ctr_percent": 0.0,
+      "position": 8.0
+    },
+    {
+      "url": "https://ligerianlabs.fr/blog/agents-ia-supervises-pme",
+      "clicks": 0,
+      "impressions": 1,
+      "ctr_percent": 0.0,
+      "position": 9.0
+    },
+    {
+      "url": "https://ligerianlabs.fr/blog/etiqueter-contenus-ia-pme-ai-act",
+      "clicks": 0,
+      "impressions": 1,
+      "ctr_percent": 0.0,
+      "position": 9.0
+    }
+  ],
+  "visible_local_queries": [
+    {
+      "query": "agence ia angers",
+      "clicks": 1,
+      "impressions": 90,
+      "position": 28.81
+    },
+    {
+      "query": "agence ia cholet",
+      "clicks": 0,
+      "impressions": 140,
+      "position": 47.12
+    },
+    {
+      "query": "meilleure agence ia angers",
+      "clicks": 0,
+      "impressions": 11,
+      "position": 22.73
+    },
+    {
+      "query": "ia cholet",
+      "clicks": 0,
+      "impressions": 7,
+      "position": 55.29
+    },
+    {
+      "query": "expert ia angers",
+      "clicks": 0,
+      "impressions": 6,
+      "position": 45.83
+    },
+    {
+      "query": "agence intelligence artificielle cholet",
+      "clicks": 0,
+      "impressions": 2,
+      "position": 44.0
+    },
+    {
+      "query": "agence conseils ia angers",
+      "clicks": 0,
+      "impressions": 1,
+      "position": 31.0
+    },
+    {
+      "query": "ia angers",
+      "clicks": 0,
+      "impressions": 1,
+      "position": 32.0
+    }
+  ],
+  "country_rows": [
+    {
+      "Pays": "France",
+      "Clics": "15",
+      "Impressions": "1390",
+      "CTR": "1.08%",
+      "Position": "38.96"
+    },
+    {
+      "Pays": "Belgique",
+      "Clics": "1",
+      "Impressions": "13",
+      "CTR": "7.69%",
+      "Position": "4.62"
+    },
+    {
+      "Pays": "Portugal",
+      "Clics": "1",
+      "Impressions": "1",
+      "CTR": "100%",
+      "Position": "1"
+    }
+  ],
+  "device_rows": [
+    {
+      "Appareil": "Ordinateur",
+      "Clics": "14",
+      "Impressions": "1262",
+      "CTR": "1.11%",
+      "Position": "38.5"
+    },
+    {
+      "Appareil": "Mobile",
+      "Clics": "3",
+      "Impressions": "228",
+      "CTR": "1.32%",
+      "Position": "28.68"
+    },
+    {
+      "Appareil": "Tablette",
+      "Clics": "0",
+      "Impressions": "3",
+      "CTR": "0%",
+      "Position": "4.67"
+    }
+  ],
+  "interpretation_limits": [
+    "CTR is clicks divided by impressions, not visitors or conversions.",
+    "Position reconstructed from rounded daily rows is approximate. It is not an exact exported report total or a fixed ranking.",
+    "Page impressions total 1625; property impressions total 1493. Aggregation differs. Do not sum or substitute these totals.",
+    "The visible query rows contain 1 click and 1115 impressions. They do not account for all 17 clicks or 1493 impressions. Google omits anonymized queries; no brand/nonbrand click split is established.",
+    "The export has no query-by-page breakdown. A query and a page cannot be joined as a measured relationship.",
+    "33 reported URLs do not establish the current count of indexed pages or Google-selected canonicals.",
+    "No contact conversions, qualified leads, revenue, Maps metrics or owner account permissions are supplied.",
+    "All dates precede the unmerged website changes. This is a pre-release baseline, not a before/after result.",
+    "The 28-day click comparison has only 2 versus 9 clicks. It does not establish a sustained decline or its cause."
+  ],
+  "references": [
+    "https://support.google.com/webmasters/answer/7576553?hl=en",
+    "https://support.google.com/webmasters/answer/17011364?hl=en",
+    "https://support.google.com/webmasters/answer/17010575?hl=en"
+  ]
+}
