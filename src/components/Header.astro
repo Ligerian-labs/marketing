@@ -6,7 +6,7 @@ interface Props {
 }
 const { active = "", user = null } = Astro.props;
 const path = Astro.url.pathname;
-const servicePage = ["/offres", "/developpement-logiciel-sur-mesure", "/integration-ia"].some((prefix) => path === prefix || path.startsWith(prefix + "/"));
+const servicePage = ["/offres", "/developpement-logiciel-sur-mesure", "/integration-ia", "/expertise"].some((prefix) => path === prefix || path.startsWith(prefix + "/"));
 const tabs = [
   { href: "/offres/", label: "Services", current: servicePage || ["offres", "services", "developpement", "integration"].includes(active) },
   { href: "/realisations/", label: "Réalisations", current: path.startsWith("/realisations/") || active === "realisations" },
@@ -34,6 +34,7 @@ const tabs = [
       {tabs.map((tab) => <a href={tab.href} aria-current={tab.current ? "page" : undefined}>{tab.label}</a>)}
       <a href="/developpement-logiciel-sur-mesure/">Logiciels sur mesure</a>
       <a href="/integration-ia/">Intégration IA</a>
+      <a href="/expertise/">Expertise IA</a>
       <a href="/approche/">Notre approche</a>
       <a href="/ia-angers/">IA à Angers</a>
       <a href="/ia-angers-pme/">IA pour PME</a>

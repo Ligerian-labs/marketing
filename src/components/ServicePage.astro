@@ -21,7 +21,7 @@ const schema = {
     <PageHero heading={service.heading} intro={service.intro} label={service.label}>
       <div class="ll-mono" style="color:inherit">Votre besoin d'abord</div>
       <p>{service.need}</p>
-      <a href="/offres/">Voir aussi les offres IA en production →</a>
+      <a href={Astro.props.kind === "logiciel" ? "/offres/#creation" : "/expertise/"}>{Astro.props.kind === "logiciel" ? "Construction à 2 000 € par mois : voir l'offre →" : "Voir aussi l'expertise IA en production →"}</a>
     </PageHero>
     <SectionBar label="01 · Le besoin et la livraison" />
     <section class="ll-sec"><div class="ll-wrap marketing-section marketing-columns">
@@ -45,6 +45,6 @@ const schema = {
       <div><h2 class="ll-h2">Propriété, hébergement, maintenance</h2><p class="marketing-intro">Le contrat précise les droits sur le code et les livrables, les licences tierces et les accès remis. L'hébergement est choisi avec vous selon les données et les contraintes. Le périmètre de maintenance, son coût, les délais d'intervention et les responsabilités sont convenus séparément.</p></div>
       <div><h2 class="ll-h2">Une exploitation préparée</h2><p class="marketing-intro">{service.production}</p><a href={service.article.href}>{service.article.label} →</a></div>
     </div></section>
-    <CtaBand title="Décrivons le premier périmètre" body="Présentez votre activité, les utilisateurs et le problème à résoudre. Nous pourrons préciser les informations nécessaires à une proposition." />
+    <CtaBand title="Décrivons le premier périmètre" body="Présentez votre activité, les utilisateurs et le problème à résoudre. Nous pourrons préciser les informations nécessaires à une proposition." href={Astro.props.kind === "logiciel" ? "/contact/?projet=creation" : "/contact/?projet=expertise"} />
   </MarketingFrame>
 </Base>

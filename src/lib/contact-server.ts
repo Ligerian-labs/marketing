@@ -103,6 +103,7 @@ export function buildNotification(lead: Lead): Notification {
         ${row("Email", `<a href="mailto:${e(lead.email)}">${e(lead.email)}</a>`)}
         ${lead.company ? row("Entreprise", e(lead.company)) : ""}
         ${row("Type de projet", e(lead.projectTypeLabel))}
+        ${lead.currentTool ? row("Outil actuel", e(lead.currentTool)) : ""}
         ${lead.timing ? row("Calendrier", e(lead.timing)) : ""}
         ${lead.budget ? row("Budget", e(lead.budget)) : ""}
       </table>

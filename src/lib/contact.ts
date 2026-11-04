@@ -3,12 +3,13 @@
  * both enforce the same fields and limits. No Node or Astro imports here.
  */
 
-export const PROJECT_TYPES = ["new-application", "existing-software", "ai-integration", "other"] as const;
+export const PROJECT_TYPES = ["new-application", "existing-software", "maintenance", "ai-integration", "other"] as const;
 export type ProjectType = (typeof PROJECT_TYPES)[number];
 
 export const PROJECT_TYPE_LABELS: Record<ProjectType, string> = {
   "new-application": "Nouvelle application",
-  "existing-software": "Logiciel existant",
+  "existing-software": "Reprise d'un logiciel existant",
+  maintenance: "Hébergement et maintenance",
   "ai-integration": "Intégration d'IA",
   other: "Autre",
 };
@@ -17,6 +18,7 @@ export const LIMITS = {
   name: 100,
   email: 254,
   company: 120,
+  currentTool: 500,
   descriptionMin: 10,
   description: 4000,
   timing: 120,
@@ -29,6 +31,7 @@ export type ContactField =
   | "name"
   | "email"
   | "company"
+  | "currentTool"
   | "projectType"
   | "description"
   | "timing"
@@ -39,6 +42,7 @@ export interface ContactEnquiry {
   name: string;
   email: string;
   company: string | null;
+  currentTool: string | null;
   projectType: ProjectType;
   description: string;
   timing: string | null;
@@ -109,6 +113,9 @@ export function validateContact(input: unknown): ContactValidation {
   const company = text("company");
   if (company !== undefined && company.length > LIMITS.company) errors.company = tooLong(LIMITS.company);
 
+  const currentTool = text("currentTool");
+  if (currentTool !== undefined && currentTool.length > LIMITS.currentTool) errors.currentTool = tooLong(LIMITS.currentTool);
+
   let projectType: ProjectType | undefined;
   if (typeof raw.projectType === "string" && (PROJECT_TYPES as readonly string[]).includes(raw.projectType)) {
     projectType = raw.projectType as ProjectType;
@@ -137,6 +144,7 @@ export function validateContact(input: unknown): ContactValidation {
       name: name as string,
       email: email as string,
       company: company || null,
+      currentTool: currentTool || null,
       projectType,
       description: description as string,
       timing: timing || null,

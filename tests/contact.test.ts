@@ -24,7 +24,7 @@ describe("validateContact", () => {
     const v = validateContact(valid);
     assert.ok(v.ok);
     const { consent, ...fields } = valid;
-    assert.deepEqual(v.value, { ...fields, company: null, timing: null, budget: null });
+    assert.deepEqual(v.value, { ...fields, company: null, currentTool: null, timing: null, budget: null });
   });
 
   test("accepts every project type and nothing else", () => {
@@ -38,6 +38,7 @@ describe("validateContact", () => {
     const edges: [string, number][] = [
       ["name", LIMITS.name],
       ["company", LIMITS.company],
+      ["currentTool", LIMITS.currentTool],
       ["description", LIMITS.description],
       ["timing", LIMITS.timing],
       ["budget", LIMITS.budget],
@@ -65,7 +66,7 @@ describe("validateContact", () => {
   });
 
   test("rejects wrong types instead of coercing them", () => {
-    for (const field of ["name", "email", "description", "company", "timing", "budget"]) {
+    for (const field of ["name", "email", "description", "company", "currentTool", "timing", "budget"]) {
       for (const bad of [5, true, ["x"], { a: 1 }]) {
         assert.equal(validateContact({ ...valid, [field]: bad }).ok, false, `${field}=${JSON.stringify(bad)}`);
       }
@@ -79,7 +80,7 @@ describe("validateContact", () => {
     for (const input of [null, undefined, 1, "x", [], () => {}]) assert.equal(validateContact(input).ok, false);
     const v = validateContact({ ...valid, status: "won", __proto__: { x: 1 }, isAdmin: true });
     assert.ok(v.ok);
-    assert.deepEqual(Object.keys(v.value).sort(), ["budget", "company", "description", "email", "name", "projectType", "timing"]);
+    assert.deepEqual(Object.keys(v.value).sort(), ["budget", "company", "currentTool", "description", "email", "name", "projectType", "timing"]);
   });
 
   test("strips control characters; the description keeps its line breaks", () => {

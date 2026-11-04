@@ -1,7 +1,27 @@
 # Ligerian Labs — site marketing
 
-Laboratoire d'ingénierie IA basé à Angers, Pays de la Loire.
+Développement logiciel et ingénierie IA à Angers, Pays de la Loire.
 Le site tourne sur le système visuel **Cobalt Bold Blocks**.
+
+## Offre confirmée le 4 novembre 2026
+
+La création est proposée à **2 000 € par mois de construction**. Le périmètre initial,
+la durée estimée et le budget cible sont précisés avant le démarrage. La reprise
+d'un logiciel est chiffrée après diagnostic. L'hébergement et la maintenance
+font l'objet d'un abonnement de suivi distinct sur devis. Aucun prix fixe de
+maintenance ni traitement fiscal du montant n'est ajouté.
+
+`src/data/project-offers.ts` porte les offres commerciales et la correspondance
+entre les liens `?projet=creation|reprise|suivi|expertise` et les catégories du
+contact. Le contrat partagé de `src/lib/contact.ts` conserve les catégories
+existantes et ajoute `maintenance`. Le champ facultatif `currentTool` est limité
+à 500 caractères, enregistré dans la demande et inclus dans la notification.
+L'outil, le budget et le calendrier restent exclus de l'analytics.
+
+Cette composition reprend les pages et projets de #97, le contact de #100 et
+les conventions URL/analytics de #99, puis rapproche l'offre de #98. Elle conserve
+le stockage canonique par demande et l'index dérivé de B plutôt que de remettre
+l'ancien handler contact de #98. Les projets restent des prototypes indépendants.
 
 ## Stack
 
@@ -48,16 +68,20 @@ Règles de composition :
 - Chaque page publique se termine par le bandeau CTA → `<CtaBand />`.
 
 Composants partagés : `Header`, `Footer`, `SectionBar`, `CtaBand`, `OfferGrid`,
-`DiagnosticTable`, `ProofSection`. Les quatre offres et le diagnostic en quatre
-stades vivent dans `src/data/offers.ts` — une seule source de vérité.
+`DiagnosticTable`, `ProofSection`, `ProjectOffers`. Les trois offres commerciales
+vivent dans `src/data/project-offers.ts`. Les quatre expertises IA et le diagnostic
+vivent dans `src/data/offers.ts`.
 
 ## Pages
 
 | Route | Contenu |
 | --- | --- |
-| `/` | Accueil : hero, quatre questions, offres, diagnostic, preuve, ancrage, blog |
-| `/offres` | Les quatre offres (Voir, Livrer, Reconstruire, Automatiser) + formats d'engagement |
-| `/approche` | Diagnostic, méthode en quatre temps, cinq principes |
+| `/` | Accueil : tarif de construction, création/reprise/suivi, services, prototypes et démarche |
+| `/offres/` | Création à 2 000 € par mois de construction, reprise et suivi sur devis, FAQ budget |
+| `/expertise/` | Les quatre expertises IA Voir, Livrer, Reconstruire et Automatiser |
+| `/approche/` | Cadrage, construction, mise en service et suivi |
+| `/developpement-logiciel-sur-mesure/`, `/integration-ia/` | Services, livrables, estimation et travaux indépendants |
+| `/realisations/`, `/realisations/<projet>/` | Deux prototypes indépendants avec sources et limites |
 | `/a-propos` | Le labo, le fondateur, le parcours, la stack |
 | `/contact` | Formulaire (lead capture) |
 | `/blog`, `/blog/<slug>` | Notes d'ingénierie |
@@ -68,6 +92,9 @@ stades vivent dans `src/data/offers.ts` — une seule source de vérité.
 
 Les pages publiques canoniques ont un slash final. `/services` et `/services/`
 redirigent en 301 vers `/offres/`, avec les paramètres conservés.
+Les anciens liens `/offres/#voir`, `#livrer`, `#reconstruire`, `#automatiser`
+et `#cadrage` conservent leur destination ; les quatre premières ancres renvoient
+vers le détail correspondant sur `/expertise/`.
 
 ## Marque
 

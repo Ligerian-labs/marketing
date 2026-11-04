@@ -19,7 +19,7 @@ export type SubmitOutcome =
   | { status: "sent" }
   | { status: "failed"; reason: "network" | "server" };
 
-const FIELDS: ContactField[] = ["name", "email", "company", "projectType", "description", "timing", "budget", "consent"];
+const FIELDS: ContactField[] = ["name", "email", "company", "currentTool", "projectType", "description", "timing", "budget", "consent"];
 
 /** Keep only known field keys with string messages from a server reply. */
 function serverFieldErrors(fields: unknown): ContactErrors {

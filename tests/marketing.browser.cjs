@@ -4,7 +4,7 @@ const assert = require("node:assert/strict");
 const { chromium } = require(process.env.PLAYWRIGHT_MODULE || "@playwright/test");
 
 const origin = process.env.MARKETING_ORIGIN || "http://127.0.0.1:4323";
-const routes = ["/", "/offres/", "/a-propos/", "/ia-angers/", "/developpement-logiciel-sur-mesure/", "/integration-ia/", "/realisations/", "/realisations/contremaitre/", "/realisations/assistant-export/"];
+const routes = ["/", "/offres/", "/expertise/", "/approche/", "/a-propos/", "/ia-angers/", "/developpement-logiciel-sur-mesure/", "/integration-ia/", "/realisations/", "/realisations/contremaitre/", "/realisations/assistant-export/"];
 
 (async () => {
   const browser = await chromium.launch({ headless: true });
@@ -31,7 +31,7 @@ const routes = ["/", "/offres/", "/a-propos/", "/ia-angers/", "/developpement-lo
           return !pathname.startsWith("/api/") && !pathname.split("/").pop().includes(".") && !pathname.endsWith("/");
         }));
         assert.deepEqual(badLinks, [], `page links normalized: ${path}`);
-        if (path === "/offres/") {
+        if (path === "/expertise/") {
           const projectNames = await page.locator('.ll-offerbody__extra a[href^="/realisations/"] > span:first-child').evaluateAll((names) => names.map((name) => {
             const range = document.createRange();
             range.selectNodeContents(name);

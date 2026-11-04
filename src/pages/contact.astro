@@ -3,23 +3,23 @@ export const prerender = true;
 import Base from "../layouts/Base.astro";
 import { LIMITS, PROJECT_TYPES, PROJECT_TYPE_LABELS } from "../lib/contact.ts";
 
-// Existing site claim, carried over unchanged. Pending founder confirmation:
-// do not harden it into a guarantee or repeat it in new places.
+// Existing response commitment confirmed by the founder on 4 November 2026.
 const RESPONSE_DELAY = "48 h ouvrées";
 const CONTACT_EMAIL = "bonjour@ligerianlabs.fr";
 
 const projectHints: Record<(typeof PROJECT_TYPES)[number], string> = {
   "new-application": "à concevoir et à construire",
   "existing-software": "le faire évoluer, le reprendre ou le fiabiliser",
+  maintenance: "organiser son hébergement et son suivi après livraison",
   "ai-integration": "ajouter de l'IA à un outil, ou la mettre en production",
   other: "ça ne rentre pas dans ces cases, ou je ne sais pas encore",
 };
 
 const next = [
   `Nous lisons votre message et répondons sous ${RESPONSE_DELAY}.`,
-  "Un appel de 30 minutes, sans support de présentation.",
-  "Si c'est pertinent : une proposition de cadrage, périmètre écrit.",
-  "Si ça ne l'est pas, nous vous le disons — et nous disons qui appeler.",
+  "Un premier échange précise votre besoin, les priorités et l'existant.",
+  "Une proposition précise le périmètre, la durée estimée et le budget. Tout diagnostic distinct est chiffré avant de commencer.",
+  "Pour une construction, le tarif du suivi après livraison est également précisé avant le démarrage.",
 ];
 
 const contactSchema = {
@@ -32,7 +32,7 @@ const contactSchema = {
 
 <Base
   title="Contact — parlons de votre projet logiciel ou IA | Ligerian Labs"
-  description={`Décrivez votre projet : nouvelle application, logiciel existant ou intégration d'IA. Réponse sous ${RESPONSE_DELAY}, par un ingénieur, pas par un commercial. Angers, Pays de la Loire.`}
+  description={`Création à 2 000 € par mois de construction, reprise, maintenance ou intégration IA : décrivez votre projet. Réponse sous ${RESPONSE_DELAY}. Angers et à distance.`}
   ogTitle="Contact — parlons de votre projet logiciel ou IA"
   ogDescription={`Une réponse d'ingénieur sous ${RESPONSE_DELAY}. Y compris si ce n'est pas pour nous.`}
   ogImage="og-contact"
@@ -44,9 +44,9 @@ const contactSchema = {
         <div class="ll-mono" style="font-size:12px;letter-spacing:.16em">Contact</div>
         <h1 class="ll-h1">Parlons de<br />votre projet</h1>
         <p class="ll-lede" style="max-width:50ch">
-          Décrivez votre projet en quelques lignes : une application à construire, un logiciel à
-          faire évoluer ou de l'IA à intégrer. Vous aurez une réponse d'un ingénieur, pas d'un
-          commercial — et une réponse honnête si ce n'est pas pour nous.
+          Décrivez votre projet : un logiciel à construire ou à reprendre, un besoin de maintenance
+          ou de l'IA à intégrer. La construction est proposée à 2 000 € par mois, avec un périmètre
+          et une durée estimée. Le suivi après livraison est chiffré séparément.
         </p>
       </div>
       <div class="ll-hero__aside ll-hero__aside--panel" style="justify-content:center;gap:18px">
@@ -119,6 +119,12 @@ const contactSchema = {
               ))}
               <p class="contact-error" id="error-projectType" hidden></p>
             </fieldset>
+
+            <div class="ll-field">
+              <label class="ll-label" for="contact-currentTool">Outil ou logiciel actuel <span class="contact-opt">(facultatif)</span></label>
+              <input class="ll-input" id="contact-currentTool" type="text" name="currentTool" maxlength={LIMITS.currentTool} aria-describedby="error-currentTool" />
+              <p class="contact-error" id="error-currentTool" hidden></p>
+            </div>
 
             <div class="ll-field">
               <label class="ll-label" for="contact-description">Votre projet <span aria-hidden="true">*</span></label>
@@ -253,10 +259,16 @@ const contactSchema = {
 <script>
   import type { ContactErrors, ContactField } from "../lib/contact.ts";
   import { submitEnquiry } from "../lib/contact-client.ts";
+  import { projectTypeForOffer } from "../data/project-offers.ts";
 
-  const FIELDS: ContactField[] = ["name", "email", "company", "projectType", "description", "timing", "budget", "consent"];
+  const FIELDS: ContactField[] = ["name", "email", "company", "currentTool", "projectType", "description", "timing", "budget", "consent"];
 
   const form = document.getElementById("contact-form") as HTMLFormElement | null;
+  const selectedProject = projectTypeForOffer(new URLSearchParams(location.search).get("projet"));
+  if (selectedProject) {
+    const choice = form?.querySelector<HTMLInputElement>(`input[name="projectType"][value="${selectedProject}"]`);
+    if (choice) choice.checked = true;
+  }
   const success = document.getElementById("form-success");
   const alertBox = document.getElementById("form-alert");
   const alertTitle = document.getElementById("form-alert-title");
@@ -329,6 +341,7 @@ const contactSchema = {
       name: text("name"),
       email: text("email"),
       company: text("company"),
+      currentTool: text("currentTool"),
       projectType: text("projectType"),
       description: text("description"),
       timing: text("timing"),

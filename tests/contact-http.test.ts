@@ -41,12 +41,12 @@ beforeEach(() => srv.resetLeads());
 describe("contact page", () => {
   test("asks for a project type and no AI-maturity stage", async () => {
     const html = await (await fetch(`${base}/contact/`)).text();
-    for (const value of ["new-application", "existing-software", "ai-integration", "other"]) {
+    for (const value of ["new-application", "existing-software", "maintenance", "ai-integration", "other"]) {
       assert.match(html, new RegExp(`name="projectType"[^>]*value="${value}"`), `radio ${value}`);
     }
     assert.doesNotMatch(html, /name="stade"/);
     assert.doesNotMatch(html, /Où en êtes-vous/);
-    for (const field of ["name", "email", "company", "description", "timing", "budget"]) {
+    for (const field of ["name", "email", "company", "currentTool", "description", "timing", "budget"]) {
       assert.match(html, new RegExp(`name="${field}"`), `field ${field}`);
     }
   });

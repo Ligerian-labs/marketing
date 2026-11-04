@@ -6,11 +6,12 @@ import PageHero from "../components/PageHero.astro";
 import SectionBar from "../components/SectionBar.astro";
 import ProjectCards from "../components/ProjectCards.astro";
 import CtaBand from "../components/CtaBand.astro";
+import ProjectOffers from "../components/ProjectOffers.astro";
 const needs = [
   { title: "Créer une application métier", body: "Un outil interne ou un portail pour les tâches et les utilisateurs de votre entreprise.", href: "/developpement-logiciel-sur-mesure/" },
   { title: "Faire évoluer un logiciel", body: "Relier vos outils, adapter un parcours ou reprendre une application existante.", href: "/developpement-logiciel-sur-mesure/" },
   { title: "Intégrer l'IA à vos outils", body: "Rechercher dans vos documents ou assister une tâche, avec une validation humaine adaptée.", href: "/integration-ia/" },
-  { title: "Fiabiliser un service IA", body: "Suivre la qualité et les coûts, évaluer les réponses et préparer les pannes.", href: "/offres/#voir" },
+  { title: "Fiabiliser un service IA", body: "Suivre la qualité et les coûts, évaluer les réponses et préparer les pannes.", href: "/expertise/#voir" },
 ];
 const steps = [
   ["Cadrage", "Préciser le besoin, les utilisateurs, les contraintes et ce qui permettra de réceptionner le travail."],
@@ -20,31 +21,34 @@ const steps = [
 ];
 ---
 <Base title="Logiciels sur mesure et IA à Angers | Ligerian Labs"
-  description="Ligerian Labs conçoit vos applications métier et intègre l'intelligence artificielle à vos logiciels. À Angers, du cadrage à la mise en production."
-  ogTitle="Logiciels sur mesure et IA à Angers">
+  description="Création de logiciels à 2 000 € par mois de construction, reprise après diagnostic et maintenance sur devis distinct. À Angers et à distance."
+  ogTitle="Votre logiciel à 2 000 € par mois de construction"
+  ogDescription="Un périmètre, une durée estimée et un budget définis avant de démarrer. Hébergement et maintenance chiffrés séparément.">
   <MarketingFrame>
     <PageHero heading="Développement de logiciels sur mesure et de solutions IA à Angers" label="Pour les entreprises · Angers, Pays de la Loire"
       intro="Ligerian Labs conçoit vos applications métier et intègre l'intelligence artificielle à vos logiciels. Basé à Angers, nous accompagnons les entreprises du cadrage à la mise en production.">
-      <div class="ll-mono" style="color:inherit">Le point de départ</div>
-      <h2 class="ll-h2">Quel travail votre logiciel doit-il faciliter ?</h2>
-      <p>Décrivez la tâche, les personnes concernées et vos outils actuels. Nous pourrons définir un premier périmètre utile.</p>
-      <a href="/contact/">Parler de mon projet →</a>
+      <div class="ll-mono" style="color:inherit">Créer votre logiciel</div>
+      <h2 class="ll-h2">2 000 €<br />par mois de construction</h2>
+      <p>Un périmètre initial, une durée estimée et un budget cible définis avant de démarrer. Après livraison, l'hébergement et la maintenance font l'objet d'un abonnement distinct, sur devis.</p>
+      <a href="/offres/#creation">Voir l'offre et les tarifs →</a>
     </PageHero>
-    <SectionBar label="01 · Ce que vous pouvez faire construire" />
+    <SectionBar label="01 · Création, reprise et suivi" note="Le détail des offres →" noteHref="/offres/" />
+    <section class="ll-sec"><div class="ll-wrap marketing-section"><ProjectOffers /></div></section>
+    <SectionBar label="02 · Ce que vous pouvez faire construire" />
     <section class="ll-sec"><div class="ll-wrap"><div class="ll-grid ll-grid--2">
       {needs.map((need) => <a class="ll-cell" href={need.href}><h2 class="ll-h3">{need.title}</h2><p>{need.body}</p><span class="ll-cell__foot">Voir le service →</span></a>)}
     </div></div></section>
-    <SectionBar label="02 · Des projets à examiner" note="Toutes les réalisations →" noteHref="/realisations/" />
+    <SectionBar label="03 · Des projets à examiner" note="Toutes les réalisations →" noteHref="/realisations/" />
     <section class="ll-sec"><div class="ll-wrap marketing-section">
       <h2 class="ll-h2">Le travail et ses limites, en public</h2>
       <p class="marketing-intro">Deux projets indépendants pour examiner notre démarche et le code disponible. Leur état est précisé sur chaque page ; ils ne sont pas présentés comme des références clients.</p>
       <ProjectCards />
     </div></section>
-    <SectionBar label="03 · Du besoin au logiciel exploitable" />
+    <SectionBar label="04 · Du besoin au logiciel exploitable" />
     <section class="ll-sec"><div class="ll-wrap marketing-section"><div class="ll-grid ll-grid--2">
       {steps.map(([title, body], i) => <div class="ll-cell"><span class="ll-mono">Étape {i + 1}</span><h2 class="ll-h3">{title}</h2><p>{body}</p></div>)}
     </div><p class="marketing-note">Les droits sur le code, l'hébergement et le périmètre de maintenance sont précisés dans la proposition. Les délais et le budget dépendent du périmètre convenu.</p></div></section>
-    <SectionBar label="04 · Votre interlocuteur" />
+    <SectionBar label="05 · Votre interlocuteur" />
     <section class="ll-sec"><div class="ll-wrap marketing-section marketing-columns">
       <div><h2 class="ll-h2">Valentin Dosimont, fondateur</h2><p class="marketing-intro">Ligerian Labs réunit le développement logiciel et l'ingénierie IA. Le cadrage relie les besoins de votre équipe aux choix techniques et à la livraison.</p><a href="/a-propos/">Découvrir la démarche et les travaux publics →</a></div>
       <div><h2 class="ll-h2">Depuis Angers</h2><p class="marketing-intro">Vous êtes une entreprise du bassin angevin ou des Pays de la Loire ? Présentez votre projet. Les échanges à distance et les modalités d'une éventuelle rencontre se définissent ensemble.</p><a href="/ia-angers/">Logiciels et IA à Angers →</a></div>

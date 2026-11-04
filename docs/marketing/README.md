@@ -1,5 +1,28 @@
 # Suivi du plan marketing
 
+## Mise à jour du 4 novembre 2026
+
+Le dirigeant confirme la création à **2 000 € par mois de construction**, avec
+hébergement et maintenance sur devis distinct, ainsi que les textes commerciaux
+existants et l'engagement de réponse sous 48 h ouvrées. Sans preuve client, les
+deux réalisations restent présentées comme des prototypes indépendants.
+
+Le [point de départ Search Console](search-console-2026-11-04.md), fusionné dans
+la PR #101, couvre le 3 août au 2 novembre : 17 clics et 1 493 impressions pour
+la propriété exportée, qui comprend aussi le sous-domaine personnel. L'indexation
+actuelle, les URL canoniques choisies par Google, PostHog et Business Profile
+attendent leurs exports ou accès. Les observations datées du 3 novembre ci-dessous
+restent le constat d'avant modification.
+
+La nouvelle composition rapproche les PR #97 à #100 autour de cette offre.
+`/offres/` présente création, reprise et suivi ; `/expertise/` conserve les quatre
+interventions IA. Les anciennes ancres d'offres restent accessibles. Les liens
+de contact préselectionnent une catégorie autorisée ; le contrat B conserve ses
+identifiants et ajoute `maintenance` et le champ facultatif `currentTool`.
+L'analytics accepte la catégorie maintenance et la page expertise, sans le contenu
+du formulaire. Cette composition sera livrée en PR et en aperçu local avant
+toute nouvelle décision de fusion ou de publication.
+
 Le [plan de 90 jours](90-day-plan.md) conserve le brief fourni le 3 novembre 2026, ses neuf volets, les formulations proposées, l'ordre de l'accueil, les pages, les sujets d'articles, les estimations et les décisions J30/J60/J90. Il décrit un travail prévu, pas des faits commerciaux vérifiés. Le site reste destiné aux entreprises francophones autour d'Angers qui commandent un logiciel ou une intégration IA, tout en conservant les offres IA en production et l'identité visuelle.
 
 ## Point de départ avant modification
@@ -30,12 +53,12 @@ Les textes actuels du site sont des affirmations publiées, pas des preuves exte
 | Date de création distincte de l'expérience du fondateur | Non vérifiée ; ne pas déduire l'âge de l'entreprise de son parcours |
 | Offres réellement disponibles, propriété, hébergement, maintenance, capacité | Confirmer périmètres et disponibilité avant publication |
 | Visites clients, accueil physique, zone et horaires réels | Conditionnent l'éligibilité et la configuration Google Business Profile |
-| Engagement de réponse sous 48 h ouvrées | Présent sur le site, copié par B ; confirmation du dirigeant demandée, sans réponse à ce stade |
+| Engagement de réponse sous 48 h ouvrées | Présent sur le site, copié par B ; confirmé par le dirigeant le 4 novembre 2026 |
 | Base légale, responsable, sous-traitants, durées de conservation | Assertions légales existantes laissées inchangées ; confirmation du propriétaire requise, aucune validation juridique déduite des modifications techniques |
 | Noms clients, captures, témoignages, résultats | Autorisations et preuves non fournies ; aucun résultat client inventé |
 | Relation entre projets publics et prestations clients | Assistant Export et Contremaitre sont présentés par A comme projets indépendants en développement ; aucune preuve de déploiement client ou résultat mesuré |
 
-Trafic, conversions, demandes qualifiées, impressions/clics, requêtes locales, pages indexées et URL choisies par Google restent **inconnus**. Il faut vérifier l'accès Search Console et exporter les trois derniers mois. L'observation HTTP ne prouve ni l'indexation ni les performances commerciales. Google Business Profile, son contrôleur, son éligibilité, sa vérification et la visibilité Maps restent inconnus sans accès propriétaire. Les objectifs chiffrés attendent le point de départ et la capacité de livraison.
+Les impressions, clics, pages et requêtes visibles sont désormais documentés dans le [point de départ Search Console du 4 novembre](search-console-2026-11-04.md). Les conversions, demandes qualifiées, pages actuellement indexées et URL canoniques choisies par Google restent inconnues. L'observation HTTP ne prouve ni l'indexation ni les performances commerciales. Google Business Profile, son contrôleur, son éligibilité, sa vérification et la visibilité Maps restent inconnus sans accès propriétaire. Les objectifs chiffrés attendent les demandes qualifiées et la capacité de livraison.
 
 ## Mesure et contrat de contact
 
@@ -48,12 +71,12 @@ Autocapture, enregistrement de session, profils identifiés, pages automatiques 
 | `$pageview` | page publique autorisée | `page`, `page_id`, `landing_page_id`, `channel` bornés |
 | `email_contact_click` | clic mailto sur page autorisée | `page`, `page_id`, `landing_page_id`, `channel` ; aucune adresse ou corps du lien |
 | `service_enquiry_click` | lien interne vers contact depuis offres, logiciel, intégration IA ou Angers | `page`, `page_id`, `landing_page_id`, `channel` ; aucune query ou ancre |
-| `contact_form_submitted` | B uniquement, après réponse acceptée du serveur | `project_type` parmi `new-application`, `existing-software`, `ai-integration`, `other`, plus `page`, `page_id`, `landing_page_id`, `channel` ajoutés globalement |
+| `contact_form_submitted` | B uniquement, après réponse acceptée du serveur | `project_type` parmi `new-application`, `existing-software`, `maintenance`, `ai-integration`, `other`, plus `page`, `page_id`, `landing_page_id`, `channel` ajoutés globalement |
 | `blog_post_viewed` | événement historique conservé | `page`, `page_id`, `landing_page_id`, `channel`, sans titre ni tags libres |
 
 B n'utilise que `window.posthog` et gère son absence/échec. L'acceptation d'un formulaire dépend du serveur, jamais de l'analytics. Aucune mesure réelle de réception PostHog n'est revendiquée par les tests locaux. Le proxy `/ingest/` ne transmet que les en-têtes de protocole nécessaires : aucun cookie, Authorization, referrer, IP client ou en-tête interne. Les cookies de réponse et les anciens en-têtes encoding/length des corps décodés sont écartés. Les tests automatisés utilisent une fonction amont injectée et des valeurs synthétiques, sans requête externe. Le contrôle statique facultatif GET/HEAD du README ne lit que le JavaScript public sans l'exécuter ni envoyer de capture. Les chemins SDK `/static/` et `/array/` sont routés vers `eu-assets.i.posthog.com`, les autres vers `eu.i.posthog.com` ; seuls ces deux domaines HTTPS sont acceptés pour les redirections.
 
-Le contrat B final collecte nom, email, entreprise facultative, type de projet, description, délai/budget facultatifs et consentement vrai. Le stockage ajoute identifiant, horodatage, libellé du type de projet et statut `new`. Le honeypot `website` est jeté ; aucun IP/UA n'est stocké par ce code. La notification Resend facultative suit la persistance et sert à répondre à la demande. La liste factuelle des mentions légales est alignée sur ce contrat lors de la composition A/B/C ; les autres assertions légales attendent confirmation.
+Le contrat de contact collecte nom, email, entreprise et outil actuel facultatifs, type de projet, description, délai/budget facultatifs et consentement vrai. Le stockage ajoute identifiant, horodatage, libellé du type de projet et statut `new`. Le honeypot `website` est jeté ; aucun IP/UA n'est stocké par ce code. La notification Resend facultative suit la persistance et sert à répondre à la demande. La liste factuelle des mentions légales est alignée sur ce contrat ; la confirmation du texte existant par le dirigeant ne constitue pas une vérification juridique indépendante.
 
 ## Convention et vérification avant mise en ligne
 

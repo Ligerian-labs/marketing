@@ -7,7 +7,7 @@
   } catch { return; }
   const publicPaths = new Set(LL_PUBLIC_PAGE_PATHS);
   const paths = {
-    "/": "home", "/offres/": "offres", "/contact/": "contact", "/approche/": "approche",
+    "/": "home", "/offres/": "offres", "/expertise/": "expertise", "/contact/": "contact", "/approche/": "approche",
     "/ia-angers/": "angers", "/ia-angers-pme/": "angers_pme", "/a-propos/": "about",
     "/blog/": "blog", "/formations/": "formations", "/kit-presse/": "press", "/mentions-legales/": "legal",
     "/developpement-logiciel-sur-mesure/": "software", "/integration-ia/": "ai", "/realisations/": "projects",
@@ -43,7 +43,7 @@
   }
   context = { landing_page_id: context.landing_page_id, channel: context.channel };
   try { window.sessionStorage.setItem("ll_analytics_context", JSON.stringify(context)); } catch {}
-  const projectTypes = new Set(["new-application", "existing-software", "ai-integration", "other"]);
+  const projectTypes = new Set(["new-application", "existing-software", "maintenance", "ai-integration", "other"]);
   const events = new Set(["$pageview", "blog_post_viewed", "email_contact_click", "service_enquiry_click", "contact_form_submitted"]);
   const token = "phc_RWvhEosblAK0FyygISQWlIb0ljI7EoYwQLQYlMh6wK4";
   const beforeSend = (event) => {
@@ -84,6 +84,6 @@
     let target;
     try { target = new URL(href, window.location.origin); } catch { return; }
     if (target.origin !== window.location.origin || target.pathname.replace(/\/*$/, "/") !== "/contact/") return;
-    if (["offres", "software", "ai", "angers", "angers_pme"].includes(page)) capture("service_enquiry_click");
+    if (["offres", "expertise", "software", "ai", "angers", "angers_pme"].includes(page)) capture("service_enquiry_click");
   });
 })();

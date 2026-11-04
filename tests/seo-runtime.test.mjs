@@ -199,6 +199,20 @@ test("analytics never initializes on local/internal hosts or opted-out browsers"
   assert.ok(!privateHtml.includes("posthog.init"), "no analytics on private/noindex pages");
 });
 
+test("expertise uses bounded page and enquiry properties", async () => {
+  const html = await (await request("/expertise/")).text();
+  const { window, listeners } = analyticsHarness(html, { pathname: "/expertise/" });
+  const config = window.posthog._i[0][1];
+  const event = config.before_send({ event: "contact_form_submitted", properties: { project_type: "maintenance", currentTool: "private", description: "private" } });
+  assert.equal(event.properties.page_id, "/expertise/");
+  assert.equal(event.properties.project_type, "maintenance");
+  assert.ok(!JSON.stringify(event).includes("private"));
+  const captured = [];
+  window.posthog.capture = (...args) => captured.push(args);
+  listeners.click({ target: { closest: () => ({ getAttribute: () => "/contact/?projet=expertise" }) } });
+  assert.equal(captured[0][0], "service_enquiry_click");
+});
+
 test("analytics configuration and click properties cannot transmit personal contents", async () => {
   const html = await (await request("/offres/")).text();
   const { window, listeners } = analyticsHarness(html);
@@ -219,7 +233,7 @@ test("analytics configuration and click properties cannot transmit personal cont
     assert.equal(config.before_send({ event: "$pageview", properties: { [key]: uuid } }).properties[key], uuid);
     assert.equal(config.before_send({ event: "$pageview", properties: { [key]: "private@example.invalid" } }).properties[key], undefined);
   }
-  for (const project_type of ["new-application", "existing-software", "ai-integration", "other"]) {
+  for (const project_type of ["new-application", "existing-software", "maintenance", "ai-integration", "other"]) {
     const event = config.before_send({ event: "contact_form_submitted", properties: { project_type, email: "private", description: "private" } });
     assert.equal(event.properties.project_type, project_type);
     assert.ok(!JSON.stringify(event).includes("private"));
