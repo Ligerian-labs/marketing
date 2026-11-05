@@ -2,6 +2,7 @@ import { defineConfig } from "astro/config";
 import tailwindcss from "@tailwindcss/vite";
 import mdx from "@astrojs/mdx";
 import node from "@astrojs/node";
+import rehypeTables from "./src/lib/rehype-tables.mjs";
 
 export default defineConfig({
   site: "https://ligerianlabs.fr",
@@ -11,6 +12,7 @@ export default defineConfig({
   output: "server",
   adapter: node({ mode: "standalone" }),
   integrations: [mdx()],
+  markdown: { rehypePlugins: [rehypeTables] },
   vite: {
     plugins: [tailwindcss()],
   },

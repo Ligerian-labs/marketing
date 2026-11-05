@@ -54,7 +54,7 @@ const routes = ["/", "/offres/", "/expertise/", "/approche/", "/a-propos/", "/ia
         await button.click();
         assert.equal(await button.getAttribute("aria-expanded"), "true");
         const menu = page.locator("#ll-nav-panel");
-        for (const label of ["Services", "Réalisations", "À propos", "Ressources", "Contact"]) {
+        for (const label of ["Offres et tarifs", "Réalisations", "À propos", "Blog", "Contact"]) {
           assert.ok(await menu.getByRole("link", { name: label, exact: true }).isVisible(), label);
         }
         await page.keyboard.press("Escape");

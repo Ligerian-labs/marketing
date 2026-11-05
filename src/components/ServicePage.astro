@@ -18,7 +18,8 @@ const schema = {
 ---
 <Base title={service.title} description={service.intro} active="offres" structuredData={schema}>
   <MarketingFrame>
-    <PageHero heading={service.heading} intro={service.intro} label={service.label}>
+    <PageHero heading={service.heading} intro={service.intro} label={service.label}
+      contactHref={Astro.props.kind === "logiciel" ? "/contact/?projet=creation" : "/contact/?projet=expertise"}>
       <div class="ll-mono" style="color:inherit">Votre besoin d'abord</div>
       <p>{service.need}</p>
       <a href={Astro.props.kind === "logiciel" ? "/offres/#creation" : "/expertise/"}>{Astro.props.kind === "logiciel" ? "Construction à 2 000 € par mois : voir l'offre →" : "Voir aussi l'expertise IA en production →"}</a>

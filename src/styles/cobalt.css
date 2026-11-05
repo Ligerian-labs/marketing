@@ -12,11 +12,11 @@
   --ink-soft: #333333;
   --meta: #3a3a3a;
   --ink-invert: #a8a49b;
-  --meta-invert: #6e6a62;
+  --meta-invert: #a8a49b;
   --rule-hair: rgba(14, 14, 14, 0.14);
   --rule-hair-invert: rgba(236, 232, 223, 0.32);
   --rule-dark: #2a2a2a;
-  --placeholder: #8a8578;
+  --placeholder: #666257;
 
   --gutter: clamp(18px, 3vw, 40px);
   --shell: 1320px;
@@ -55,6 +55,21 @@ a:hover {
 :focus-visible {
   outline: 3px solid var(--cobalt);
   outline-offset: 2px;
+}
+
+:where(.ll-sec--ink, .ll-sec--cobalt, .ll-hero__aside--cobalt, .ll-hero__aside--ink, .ll-cobalt-panel, .ll-cell--cobalt, .ll-cell--ink, .ll-cta, .ll-foot, .ll-contact__aside) :focus-visible {
+  outline-color: var(--cream);
+}
+
+.ll-sec--ink a:not(.ll-btn) {
+  color: var(--cream);
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+.ll-sec--ink a:not(.ll-btn):hover {
+  color: var(--cream);
+  text-decoration-thickness: 2px;
 }
 
 input,
@@ -161,25 +176,29 @@ textarea::placeholder {
 .ll-h1 {
   font-family: var(--font-display);
   font-weight: 800;
-  font-size: clamp(32px, 4.4vw, 58px);
-  line-height: 0.93;
+  font-size: clamp(30px, 3.8vw, 54px);
+  line-height: 1.08;
   letter-spacing: -0.015em;
   text-transform: uppercase;
   margin: 0;
+  overflow-wrap: anywhere;
+  text-wrap: balance;
 }
 
 .ll-h2 {
   font-family: var(--font-display);
   font-weight: 700;
   font-size: clamp(26px, 3.2vw, 42px);
-  line-height: 0.96;
+  line-height: 1.08;
   text-transform: uppercase;
   margin: 0;
+  overflow-wrap: anywhere;
+  text-wrap: balance;
 }
 
 .ll-h2--tight {
   font-size: clamp(24px, 2.8vw, 36px);
-  line-height: 0.98;
+  line-height: 1.08;
 }
 
 .ll-h3 {
@@ -295,7 +314,7 @@ a.ll-bar__note:hover {
 .ll-btn-row {
   display: flex;
   flex-wrap: wrap;
-  gap: 0;
+  gap: 12px;
 }
 
 .ll-btn {
@@ -310,6 +329,8 @@ a.ll-bar__note:hover {
   font-size: 16.5px;
   cursor: pointer;
   text-align: center;
+  max-width: 100%;
+  white-space: normal;
 }
 
 .ll-btn:hover {
@@ -335,18 +356,12 @@ a.ll-bar__note:hover {
   border-color: var(--ink);
 }
 
-/* Two buttons welded together: the second loses its shared edge. */
-.ll-btn-row .ll-btn + .ll-btn {
-  border-left-width: 0;
-}
-
 .ll-btn--cream {
   background: var(--cream);
   color: var(--ink);
   border-color: var(--cream);
   padding: 20px 32px;
   font-size: 17.5px;
-  white-space: nowrap;
 }
 
 .ll-btn--cream:hover {
@@ -365,14 +380,15 @@ a.ll-bar__note:hover {
 
 .ll-hero {
   display: grid;
-  grid-template-columns: 1.3fr 1fr;
+  grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
 }
 
 .ll-hero--wide {
-  grid-template-columns: 1.35fr 1fr;
+  grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
 }
 
 .ll-hero__main {
+  min-width: 0;
   padding: clamp(38px, 4.8vw, 70px) clamp(24px, 3vw, 48px) clamp(38px, 4.8vw, 64px) 0;
   display: flex;
   flex-direction: column;
@@ -381,6 +397,7 @@ a.ll-bar__note:hover {
 }
 
 .ll-hero__aside {
+  min-width: 0;
   padding: clamp(24px, 2.8vw, 40px);
   display: flex;
   flex-direction: column;
@@ -1438,6 +1455,7 @@ a.ll-cell--cobalt:hover {
 
 button.ll-chip {
   cursor: pointer;
+  min-height: 44px;
 }
 
 button.ll-chip:hover {
@@ -1770,7 +1788,9 @@ textarea.ll-input {
 }
 
 .ll-contact__aside a:hover {
-  color: var(--cobalt);
+  color: var(--cream);
+  text-decoration: underline;
+  text-underline-offset: 4px;
 }
 
 @media (max-width: 900px) {
@@ -1924,11 +1944,12 @@ textarea.ll-input {
 }
 
 .ll-row--panel {
+  --copy-inset: min(22px, var(--gutter));
   background: var(--panel);
-  padding-left: 22px;
-  padding-right: 22px;
-  margin-left: -22px;
-  margin-right: -22px;
+  padding-left: var(--copy-inset);
+  padding-right: var(--copy-inset);
+  margin-left: calc(-1 * var(--copy-inset));
+  margin-right: calc(-1 * var(--copy-inset));
 }
 
 @media (max-width: 900px) {
@@ -2186,6 +2207,28 @@ textarea.ll-input {
   border-collapse: collapse;
   margin: 0 0 22px;
   font-size: 15px;
+}
+
+.ll-table-scroll {
+  max-width: 100%;
+  overflow-x: auto;
+  margin-bottom: 22px;
+}
+
+.ll-table-scroll table {
+  min-width: 32rem;
+  margin-bottom: 0;
+}
+
+@media (max-width: 620px) {
+  .ll-table-scroll::before {
+    content: "Faites défiler le tableau →";
+    display: block;
+    margin-bottom: 12px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--meta);
+  }
 }
 
 .ll-prose th,
@@ -2494,7 +2537,7 @@ a.ll-pager__link:hover {
   color: var(--ink);
 }
 
-.ll-nav__link[aria-current="page"] {
+.ll-nav__link[aria-current] {
   border-bottom-color: var(--cobalt);
 }
 
@@ -2612,7 +2655,13 @@ a.ll-pager__link:hover {
 }
 
 .ll-foot a:hover {
-  color: var(--cobalt);
+  color: var(--cream);
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+.ll-foot .ll-logo span {
+  color: var(--cream);
 }
 
 .ll-foot__blurb {
@@ -2779,6 +2828,14 @@ a.ll-listrow:hover {
 }
 
 @media (max-width: 620px) {
+  .ll-h1 {
+    font-size: clamp(26px, 7.5vw, 38px);
+  }
+
+  .ll-h2 {
+    font-size: clamp(23px, 6vw, 30px);
+  }
+
   .ll-progress {
     grid-template-columns: 1fr;
     gap: 12px;
@@ -3079,11 +3136,6 @@ a.ll-listrow:hover {
 
   .ll-btn-row .ll-btn {
     width: 100%;
-  }
-
-  .ll-btn-row .ll-btn + .ll-btn {
-    border-left-width: 2px;
-    border-top-width: 0;
   }
 
   .ll-foot__cols {

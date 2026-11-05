@@ -55,21 +55,21 @@ const blogSchema = {
       </div>
       <div class="ll-hero__aside ll-hero__aside--panel" style="gap:20px">
         <div class="ll-mono">Sujets</div>
-        <div class="ll-chips" id="ll-filters">
-          <button type="button" class="ll-chip ll-chip--on" data-filter="all">Tout</button>
+        <div class="ll-chips" id="ll-filters" role="group" aria-label="Filtrer les articles par sujet">
+          <button type="button" class="ll-chip ll-chip--on" data-filter="all" aria-pressed="true" aria-controls={featured ? "ll-featured ll-posts" : "ll-posts"}>Tout</button>
           {categories.map((name) => (
-            <button type="button" class="ll-chip" data-filter={slug(name)}>{name}</button>
+            <button type="button" class="ll-chip" data-filter={slug(name)} aria-pressed="false" aria-controls={featured ? "ll-featured ll-posts" : "ll-posts"}>{name}</button>
           ))}
         </div>
-        <div class="ll-mono ll-mono--plain">
-          {String(all.length).padStart(2, "0")} articles
+        <div class="ll-mono ll-mono--plain" id="ll-result-count" role="status" aria-atomic="true">
+          {all.length} {all.length === 1 ? "article" : "articles"}
         </div>
       </div>
     </div>
   </header>
 
   {featured && (
-    <section class="ll-sec">
+    <section class="ll-sec" id="ll-featured" data-category={slug(featuredCategory)}>
       <div class="ll-wrap">
         <a href={`/blog/${featured.slug}/`} class="ll-feature">
           <div class="ll-feature__text">
@@ -154,22 +154,28 @@ const blogSchema = {
   const filters = document.getElementById("ll-filters");
   const grid = document.getElementById("ll-posts");
   const empty = document.getElementById("ll-empty");
+  const count = document.getElementById("ll-result-count");
 
   filters?.addEventListener("click", (event) => {
     const button = (event.target as HTMLElement).closest<HTMLButtonElement>("[data-filter]");
     if (!button || !grid) return;
 
     const wanted = button.dataset.filter;
-    filters.querySelectorAll(".ll-chip").forEach((chip) => chip.classList.remove("ll-chip--on"));
-    button.classList.add("ll-chip--on");
+    filters.querySelectorAll(".ll-chip").forEach((chip) => {
+      const selected = chip === button;
+      chip.classList.toggle("ll-chip--on", selected);
+      chip.setAttribute("aria-pressed", String(selected));
+    });
 
     let shown = 0;
-    grid.querySelectorAll<HTMLElement>("[data-category]").forEach((card) => {
+    document.querySelectorAll<HTMLElement>("[data-category]").forEach((card) => {
       const match = wanted === "all" || card.dataset.category === wanted;
       card.hidden = !match;
       if (match) shown++;
     });
 
     if (empty) empty.hidden = shown > 0;
+    grid.hidden = !grid.querySelector("[data-category]:not([hidden])");
+    if (count) count.textContent = `${shown} article${shown === 1 ? "" : "s"}`;
   });
 </script>
