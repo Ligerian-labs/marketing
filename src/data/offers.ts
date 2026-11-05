@@ -1,7 +1,7 @@
 /**
- * The four offers and the four-stage diagnostic.
- * Single source of truth: the homepage, /offres, /ia-angers and the article
- * sidebar all read from here so a wording change lands everywhere at once.
+ * The four AI expertises and the four-stage diagnostic.
+ * Shared by /expertise, its discovery cards and the article sidebar.
+ * Commercial creation, takeover and support offers live in project-offers.ts.
  */
 import { projects } from "./projects";
 

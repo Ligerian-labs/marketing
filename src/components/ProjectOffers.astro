@@ -2,7 +2,7 @@
 import { projectOffers } from "../data/project-offers";
 ---
 
-<div class="ll-grid ll-grid--3 ll-project-offers">
+<div class="ll-grid ll-grid--3 ll-grid--boxed ll-project-offers">
   {projectOffers.map((offer) => (
     <a href={`/offres/#${offer.slug}`} class="ll-cell ll-offer">
       <div class="ll-mono">{offer.step}</div>

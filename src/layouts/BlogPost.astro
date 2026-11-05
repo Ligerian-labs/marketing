@@ -81,7 +81,7 @@ const breadcrumbSchema = {
             <time datetime={isoDate(frontmatter.date)}>{formatDate(frontmatter.date)}</time>
             · {minutes} min de lecture
           </div>
-          <h1 class="ll-h1" style="font-size:clamp(28px,3.8vw,50px);line-height:.96">
+          <h1 class="ll-h1" style="font-size:clamp(28px,3.8vw,50px)">
             {frontmatter.title}
           </h1>
           <p class="ll-lede ll-lede--strong" style="max-width:50ch">{frontmatter.excerpt}</p>
@@ -115,10 +115,10 @@ const breadcrumbSchema = {
         </div>
         <aside class="ll-article__aside">
           <div class="ll-article__sticky">
-            <div
+            <div class="ll-cobalt-panel"
               style="background:var(--cobalt);color:var(--cream);padding:24px;display:flex;flex-direction:column;gap:13px"
             >
-              <div class="ll-label" style="color:inherit">L'offre liée</div>
+              <div class="ll-label" style="color:inherit">L'expertise liée</div>
               <div
                 style="font-family:var(--font-display);font-weight:700;font-size:20px;text-transform:uppercase;line-height:1.04"
               >
@@ -131,7 +131,7 @@ const breadcrumbSchema = {
                 href={`/expertise/#${offer.slug}`}
                 style="font-family:var(--font-mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--cream);margin-top:4px"
               >
-                Voir l'offre →
+                Voir l'expertise →
               </a>
             </div>
 
@@ -162,6 +162,7 @@ const breadcrumbSchema = {
 
   <CtaBand
     title="Et chez vous,<br />ça donne quoi&nbsp;?"
-    body="Deux semaines de cadrage pour savoir ce qui manque et ce que ça coûterait de le poser."
+    body="Décrivez votre besoin et l'existant. Nous précisons avec vous le périmètre, la durée estimée et le budget avant de démarrer."
+    href="/contact/?projet=expertise"
   />
 </Base>

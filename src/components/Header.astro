@@ -8,10 +8,10 @@ const { active = "", user = null } = Astro.props;
 const path = Astro.url.pathname;
 const servicePage = ["/offres", "/developpement-logiciel-sur-mesure", "/integration-ia", "/expertise"].some((prefix) => path === prefix || path.startsWith(prefix + "/"));
 const tabs = [
-  { href: "/offres/", label: "Services", current: servicePage || ["offres", "services", "developpement", "integration"].includes(active) },
+  { href: "/offres/", label: "Offres et tarifs", current: servicePage || ["offres", "services", "developpement", "integration"].includes(active) },
   { href: "/realisations/", label: "Réalisations", current: path.startsWith("/realisations/") || active === "realisations" },
-  { href: "/a-propos/", label: "À propos", current: active === "apropos" },
-  { href: "/blog/", label: "Ressources", current: active === "blog" },
+  { href: "/a-propos/", label: "À propos", current: active === "apropos" || active === "approche" },
+  { href: "/blog/", label: "Blog", current: active === "blog" },
   { href: "/contact/", label: "Contact", current: path === "/contact/" || path === "/contact" },
 ];
 ---
@@ -19,7 +19,7 @@ const tabs = [
   <div class="ll-wrap"><div class="ll-nav__bar">
     <Logo />
     <nav class="ll-nav__links" aria-label="Navigation principale">
-      {tabs.map((tab) => <a href={tab.href} class="ll-nav__link" aria-current={tab.current ? "page" : undefined}>{tab.label}</a>)}
+      {tabs.map((tab) => <a href={tab.href} class="ll-nav__link" aria-current={tab.current ? (path === tab.href || path + "/" === tab.href ? "page" : "location") : undefined}>{tab.label}</a>)}
       <a href={user ? "/dashboard/" : "/auth/connexion/"} class="ll-nav__minor">{user ? "Espace client" : "Connexion"}</a>
     </nav>
     <div class="ll-nav__end">
@@ -31,7 +31,7 @@ const tabs = [
   </div></div>
   <nav class="ll-nav__panel" id="ll-nav-panel" aria-label="Navigation mobile" inert>
     <div class="ll-wrap">
-      {tabs.map((tab) => <a href={tab.href} aria-current={tab.current ? "page" : undefined}>{tab.label}</a>)}
+      {tabs.map((tab) => <a href={tab.href} aria-current={tab.current ? (path === tab.href || path + "/" === tab.href ? "page" : "location") : undefined}>{tab.label}</a>)}
       <a href="/developpement-logiciel-sur-mesure/">Logiciels sur mesure</a>
       <a href="/integration-ia/">Intégration IA</a>
       <a href="/expertise/">Expertise IA</a>
@@ -66,7 +66,7 @@ const tabs = [
   .ll-nav__end { flex-shrink: 0; }
   .mobile-contact { display: none; }
   .ll-nav__panel { max-height: calc(100dvh - var(--nav-h)); overflow-y: auto; }
-  .ll-nav__panel a[aria-current="page"] { color: var(--cobalt); font-weight: 700; }
+  .ll-nav__panel a[aria-current] { color: var(--cobalt); font-weight: 700; }
   @media (min-width: 1101px) { .ll-nav__end { display: none; } }
   @media (max-width: 1100px) {
     .ll-nav__links { display: none; }

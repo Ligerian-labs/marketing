@@ -1,7 +1,7 @@
 ---
 import { projects } from "../data/projects";
 ---
-<div class="ll-grid ll-grid--2">
+<div class="ll-grid ll-grid--2 ll-grid--boxed">
   {projects.map((project) => (
     <a class="ll-cell" href={`/realisations/${project.slug}/`}>
       <div class="ll-mono">{project.status}</div>

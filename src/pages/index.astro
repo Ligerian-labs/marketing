@@ -28,7 +28,7 @@ const steps = [
     <PageHero heading="Développement de logiciels sur mesure et de solutions IA à Angers" label="Pour les entreprises · Angers, Pays de la Loire"
       intro="Ligerian Labs conçoit vos applications métier et intègre l'intelligence artificielle à vos logiciels. Basé à Angers, nous accompagnons les entreprises du cadrage à la mise en production.">
       <div class="ll-mono" style="color:inherit">Créer votre logiciel</div>
-      <h2 class="ll-h2">2 000 €<br />par mois de construction</h2>
+      <h2 class="home-price"><span>2 000 €</span><span>par mois de construction</span></h2>
       <p>Un périmètre initial, une durée estimée et un budget cible définis avant de démarrer. Après livraison, l'hébergement et la maintenance font l'objet d'un abonnement distinct, sur devis.</p>
       <a href="/offres/#creation">Voir l'offre et les tarifs →</a>
     </PageHero>
@@ -45,7 +45,7 @@ const steps = [
       <ProjectCards />
     </div></section>
     <SectionBar label="04 · Du besoin au logiciel exploitable" />
-    <section class="ll-sec"><div class="ll-wrap marketing-section"><div class="ll-grid ll-grid--2">
+    <section class="ll-sec"><div class="ll-wrap marketing-section"><div class="ll-grid ll-grid--2 ll-grid--boxed">
       {steps.map(([title, body], i) => <div class="ll-cell"><span class="ll-mono">Étape {i + 1}</span><h2 class="ll-h3">{title}</h2><p>{body}</p></div>)}
     </div><p class="marketing-note">Les droits sur le code, l'hébergement et le périmètre de maintenance sont précisés dans la proposition. Les délais et le budget dépendent du périmètre convenu.</p></div></section>
     <SectionBar label="05 · Votre interlocuteur" />
@@ -56,3 +56,9 @@ const steps = [
     <CtaBand title="Parlons du logiciel dont vous avez besoin" body="Une nouvelle application, un outil à faire évoluer ou une intégration IA : commencez par votre problème métier." cta="Parler de mon projet →" />
   </MarketingFrame>
 </Base>
+
+<style>
+  .home-price { display: flex; flex-direction: column; gap: 12px; margin: 0; }
+  .home-price span:first-child { font-family: var(--font-display); font-size: clamp(40px, 4.5vw, 62px); font-weight: 800; line-height: 1.08; }
+  .home-price span:last-child { font-size: clamp(18px, 1.8vw, 24px); font-weight: 500; line-height: 1.35; }
+</style>

@@ -54,7 +54,7 @@ Une seule chromie, des filets 2px, aucun arrondi, aucun dégradé.
 | `--ink-soft` | `#333333` | corps de texte sur crème |
 | `--meta` | `#3A3A3A` | labels mono, méta |
 | `--ink-invert` | `#A8A49B` | corps de texte sur ink |
-| `--meta-invert` | `#6E6A62` | labels mono sur ink |
+| `--meta-invert` | `#A8A49B` | labels mono sur ink |
 
 Typographie : **Unbounded** 700/800 (display, capitales), **Archivo** 400–700
 (titres et corps), **Space Mono** 400/700 (labels, méta, chiffres).
@@ -202,6 +202,7 @@ Après intégration de la branche contact B, ses tests se lancent après le buil
 ```bash
 node --test tests/contact.test.ts tests/contact-client.test.ts tests/contact-http.test.ts
 CONTACT_PLAYWRIGHT=/absolute/path/to/node_modules/@playwright/test node --test tests/contact-browser.test.ts
+CONTACT_PLAYWRIGHT=/absolute/path/to/node_modules/@playwright/test node --test tests/ui-coherence-browser.test.ts
 ```
 
 Ils demandent Node 24 ou 22.18+. Le test HTTP utilise un port éphémère, un dossier
@@ -211,6 +212,12 @@ les requêtes hors du serveur local, y compris `/ingest` et les polices.
 `CONTACT_LEADS_DIR` choisit le dossier des leads, `./leads` par défaut. La
 notification email n'est envoyée que si `RESEND_API_KEY` est définie. Ces fichiers
 contact appartiennent à B et ne sont pas présents dans le candidat C seul.
+
+Le contrôle de cohérence UI exige Playwright et échoue si le module manque. Il
+vérifie le filtrage de tous les articles, le compteur annoncé, les états des
+filtres, les liens de contact contextualisés et les boutons de 320 à 1 440 px.
+Il couvre aussi les encarts du kit presse et le défilement au clavier des
+tableaux Markdown sur petit écran.
 
 Le dossier `public/brand/` doit être déployé à la racine du site : les balises
 `og:image` et les téléchargements du kit presse pointent vers `/brand/…`.
