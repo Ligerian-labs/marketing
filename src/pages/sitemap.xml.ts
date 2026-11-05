@@ -1,41 +1,33 @@
 import { getCollection } from "astro:content";
+import { execFileSync } from "node:child_process";
+import { publicPages } from "../lib/seo-pages";
+import { canonicalUrl } from "../../scripts/server/urls.mjs";
 
 export const prerender = true;
 
-const site = "https://ligerianlabs.fr";
-const staticPages = [
-  { path: "/", priority: "1.0", changefreq: "weekly" },
-  { path: "/offres", priority: "0.95", changefreq: "monthly" },
-  { path: "/approche", priority: "0.9", changefreq: "monthly" },
-  { path: "/ia-angers", priority: "0.9", changefreq: "monthly" },
-  { path: "/ia-angers-pme", priority: "0.9", changefreq: "monthly" },
-  { path: "/blog", priority: "0.8", changefreq: "weekly" },
-  { path: "/contact", priority: "0.8", changefreq: "monthly" },
-  { path: "/a-propos", priority: "0.7", changefreq: "monthly" },
-  { path: "/formations", priority: "0.6", changefreq: "monthly" },
-  { path: "/kit-presse", priority: "0.4", changefreq: "yearly" },
-  { path: "/mentions-legales", priority: "0.2", changefreq: "yearly" },
-];
-
-function entry(url: string, lastmod: string, changefreq: string, priority: string) {
-  return `  <url>\n    <loc>${url}</loc>\n    <lastmod>${lastmod}</lastmod>\n    <changefreq>${changefreq}</changefreq>\n    <priority>${priority}</priority>\n  </url>`;
+function sourceDate(source: string) {
+  try {
+    const value = execFileSync("git", ["log", "-1", "--format=%cs", "--", source], { encoding: "utf8", stdio: ["ignore", "pipe", "ignore"] }).trim();
+    return /^\d{4}-\d{2}-\d{2}$/.test(value) ? value : undefined;
+  } catch {
+    // Archives and container builds may lack Git/history. Never substitute the
+    // build clock for missing content-update evidence.
+    return undefined;
+  }
 }
 
+const escapeXml = (value: string) => value.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/"/g, "&quot;");
+
 export async function GET() {
-  const today = new Date().toISOString().slice(0, 10);
   const posts = await getCollection("blog");
-
-  const urls = [
-    ...staticPages.map((page) => entry(`${site}${page.path}`, today, page.changefreq, page.priority)),
-    ...posts.map((post) => entry(`${site}/blog/${post.slug}`, post.data.date, "monthly", "0.7")),
+  const pages = [
+    ...publicPages.map((page) => ({ path: page.path, lastmod: sourceDate(page.source) })),
+    ...posts.map((post) => ({ path: `/blog/${post.slug}/`, lastmod: (post.data.updated ?? post.data.date).slice(0, 10) })),
   ];
-
-  return new Response(
-    `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls.join("\n")}\n</urlset>\n`,
-    {
-      headers: {
-        "Content-Type": "application/xml; charset=utf-8",
-      },
-    },
+  const entries = pages.sort((a, b) => a.path.localeCompare(b.path)).map((page) =>
+    `  <url><loc>${escapeXml(canonicalUrl(page.path))}</loc>${page.lastmod ? `<lastmod>${escapeXml(page.lastmod)}</lastmod>` : ""}</url>`,
   );
+  return new Response(`<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${entries.join("\n")}\n</urlset>\n`, {
+    headers: { "Content-Type": "application/xml; charset=utf-8" },
+  });
 }

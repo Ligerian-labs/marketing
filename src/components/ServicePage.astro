@@ -1,0 +1,50 @@
+---
+import Base from "../layouts/Base.astro";
+import MarketingFrame from "./MarketingFrame.astro";
+import PageHero from "./PageHero.astro";
+import SectionBar from "./SectionBar.astro";
+import CtaBand from "./CtaBand.astro";
+import { services } from "../data/services";
+import { projects } from "../data/projects";
+interface Props { kind: keyof typeof services; }
+const service = services[Astro.props.kind];
+const project = projects.find((item) => item.slug === service.project)!;
+const schema = {
+  "@type": "Service", "@id": `https://ligerianlabs.fr${service.path}#service`,
+  name: service.label, description: service.intro, url: `https://ligerianlabs.fr${service.path}`,
+  provider: { "@id": "https://ligerianlabs.fr/#organization" },
+  areaServed: { "@type": "City", name: "Angers" },
+};
+---
+<Base title={service.title} description={service.intro} active="offres" structuredData={schema}>
+  <MarketingFrame>
+    <PageHero heading={service.heading} intro={service.intro} label={service.label}>
+      <div class="ll-mono" style="color:inherit">Votre besoin d'abord</div>
+      <p>{service.need}</p>
+      <a href={Astro.props.kind === "logiciel" ? "/offres/#creation" : "/expertise/"}>{Astro.props.kind === "logiciel" ? "Construction à 2 000 € par mois : voir l'offre →" : "Voir aussi l'expertise IA en production →"}</a>
+    </PageHero>
+    <SectionBar label="01 · Le besoin et la livraison" />
+    <section class="ll-sec"><div class="ll-wrap marketing-section marketing-columns">
+      <div><h2 class="ll-h2">Ce que vous pouvez commander</h2><ul class="marketing-list">{service.examples.map((item) => <li>{item}</li>)}</ul></div>
+      <div><h2 class="ll-h2">Ce que vous recevez</h2><ul class="marketing-list">{service.deliverables.map((item) => <li>{item}</li>)}</ul></div>
+    </div></section>
+    <SectionBar label="02 · Un travail à examiner" />
+    <section class="ll-sec"><div class="ll-wrap marketing-section">
+      <h2 class="ll-h2">{project.name}</h2>
+      <p class="marketing-intro">{project.summary}</p>
+      <p class="marketing-note">{project.status}. Ce projet montre une démarche et du code public, sans constituer une référence client ni une promesse de résultat.</p>
+      <a class="ll-btn ll-btn--ghost" href={`/realisations/${project.slug}/`}>Lire le projet, ses sources et ses limites →</a>
+    </div></section>
+    <SectionBar label="03 · Préparer une estimation" />
+    <section class="ll-sec"><div class="ll-wrap marketing-section marketing-columns">
+      <div><h2 class="ll-h2">Les informations utiles</h2><ul class="marketing-list">{service.estimate.map((item) => <li>{item}</li>)}</ul></div>
+      <div><h2 class="ll-h2">Prix et calendrier</h2><p class="marketing-intro">{service.drivers}</p></div>
+    </div></section>
+    <SectionBar label="04 · Après le développement" />
+    <section class="ll-sec"><div class="ll-wrap marketing-section marketing-columns">
+      <div><h2 class="ll-h2">Propriété, hébergement, maintenance</h2><p class="marketing-intro">Le contrat précise les droits sur le code et les livrables, les licences tierces et les accès remis. L'hébergement est choisi avec vous selon les données et les contraintes. Le périmètre de maintenance, son coût, les délais d'intervention et les responsabilités sont convenus séparément.</p></div>
+      <div><h2 class="ll-h2">Une exploitation préparée</h2><p class="marketing-intro">{service.production}</p><a href={service.article.href}>{service.article.label} →</a></div>
+    </div></section>
+    <CtaBand title="Décrivons le premier périmètre" body="Présentez votre activité, les utilisateurs et le problème à résoudre. Nous pourrons préciser les informations nécessaires à une proposition." href={Astro.props.kind === "logiciel" ? "/contact/?projet=creation" : "/contact/?projet=expertise"} />
+  </MarketingFrame>
+</Base>

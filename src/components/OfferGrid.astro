@@ -12,7 +12,7 @@ const { variant = "teaser" } = Astro.props;
 <div class="ll-grid ll-grid--4">
   {offers.map((offer) => (
     <a
-      href={`/offres#${offer.slug}`}
+      href={`/expertise/#${offer.slug}`}
       class:list={["ll-cell", "ll-offer", offer.lead && "ll-cell--cobalt ll-offer--cobalt"]}
     >
       <div class="ll-offer__head">

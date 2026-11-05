@@ -60,4 +60,4 @@ L'IA locale, c'est un levier concret pour les entreprises qui veulent profiter d
 
 Chez Ligerian Labs, on accompagne les entreprises d'Angers et de la région dans cette transition. Audit de vos besoins, choix du modèle adapté, installation et formation de vos équipes — on s'occupe de tout pour que vous puissiez vous concentrer sur votre métier.
 
-Envie d'en savoir plus ? [Parlons-en.](/contact)
+Envie d'en savoir plus ? [Parlons-en.](/contact/)

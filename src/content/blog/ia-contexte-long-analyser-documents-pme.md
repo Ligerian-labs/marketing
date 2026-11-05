@@ -64,4 +64,4 @@ Pas besoin de grand projet de transformation digitale. Voici trois actions concr
 2. **Testez sur un appel d'offres ou un contrat.** Pas pour remplacer votre analyse, mais en parallèle. Comparez ce que l'IA relève avec ce que vous aviez noté.
 3. **Créez un rituel mensuel.** Chargez vos comptes rendus du mois et demandez une synthèse des décisions prises et des sujets en suspens. Vous gagnerez une heure de réunion inutile.
 
-Le contexte long, c'est le genre de levier discret qui ne fait pas la une des journaux, mais qui change la productivité d'une équipe de cinq personnes autant que d'une équipe de cinquante. Si vous voulez creuser le sujet ou tester sur vos propres documents, [on est à Angers et on adore ce genre de défi](https://ligerianlabs.fr/contact).
+Le contexte long, c'est le genre de levier discret qui ne fait pas la une des journaux, mais qui change la productivité d'une équipe de cinq personnes autant que d'une équipe de cinquante. Si vous voulez creuser le sujet ou tester sur vos propres documents, [on est à Angers et on adore ce genre de défi](https://ligerianlabs.fr/contact/).

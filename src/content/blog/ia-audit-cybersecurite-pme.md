@@ -48,4 +48,4 @@ Pas besoin d'un budget de multinationale. Voici trois actions concrètes pour un
 
 L'IA en cybersécurité ne va pas résoudre tous vos problèmes d'un coup. Mais elle rend accessible des niveaux de protection qui étaient impensables pour une PME il y a encore deux ans. Le coût d'un incident cyber moyen pour une entreprise française dépasse les 50 000 € — largement de quoi justifier un investissement préventif.
 
-Chez Ligerian Labs, on accompagne les entreprises du Pays de la Loire à identifier les outils d'IA adaptés à leur contexte — cybersécurité comprise. Si le sujet vous parle, [prenons le temps d'en discuter](/contact).
+Chez Ligerian Labs, on accompagne les entreprises du Pays de la Loire à identifier les outils d'IA adaptés à leur contexte — cybersécurité comprise. Si le sujet vous parle, [prenons le temps d'en discuter](/contact/).

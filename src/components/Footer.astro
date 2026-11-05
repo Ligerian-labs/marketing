@@ -1,16 +1,24 @@
 ---
 const offers = [
-  { href: "/offres#voir", label: "Voir — Token ops" },
-  { href: "/offres#livrer", label: "Livrer — mise en production" },
-  { href: "/offres#reconstruire", label: "Reconstruire — l'IA au cœur" },
-  { href: "/offres#automatiser", label: "Automatiser — agents" },
+  { href: "/offres/#creation", label: "Création à 2 000 € par mois" },
+  { href: "/offres/#reprise", label: "Reprise de logiciel" },
+  { href: "/offres/#suivi", label: "Hébergement et maintenance" },
+  { href: "/developpement-logiciel-sur-mesure/", label: "Logiciels sur mesure" },
+  { href: "/integration-ia/", label: "Intégration IA" },
+  { href: "/expertise/#voir", label: "Voir — Token ops" },
+  { href: "/expertise/#livrer", label: "Livrer — mise en production" },
+  { href: "/expertise/#reconstruire", label: "Reconstruire — l'IA au cœur" },
+  { href: "/expertise/#automatiser", label: "Automatiser — agents" },
 ];
 
 const territory = [
-  { href: "/ia-angers", label: "Agence IA à Angers" },
-  { href: "/ia-angers-pme", label: "IA pour PME à Angers" },
-  { href: "/a-propos", label: "À propos" },
-  { href: "/blog", label: "Blog" },
+  { href: "/realisations/", label: "Réalisations" },
+  { href: "/contact/", label: "Contact" },
+  { href: "/ia-angers/", label: "Agence IA à Angers" },
+  { href: "/ia-angers-pme/", label: "IA pour PME à Angers" },
+  { href: "/a-propos/", label: "À propos" },
+  { href: "/approche/", label: "Notre approche" },
+  { href: "/blog/", label: "Blog" },
 ];
 
 const elsewhere = [
@@ -29,7 +37,7 @@ const year = new Date().getFullYear();
       <div class="ll-foot__col" style="gap:16px">
         <a href="/" class="ll-logo" style="color:var(--cream)">Ligerian <span>Labs</span></a>
         <p class="ll-foot__blurb">
-          L'IA en production, mesurée et tenue. Depuis Angers, pour des équipes partout.
+          Logiciels sur mesure et intégration IA. Depuis Angers, du cadrage à la mise en production.
         </p>
         <a href="mailto:bonjour@ligerianlabs.fr" style="font-size:15px;font-weight:700">
           bonjour@ligerianlabs.fr
@@ -37,12 +45,12 @@ const year = new Date().getFullYear();
       </div>
 
       <div class="ll-foot__col">
-        <div class="ll-foot__head">Offres</div>
+        <div class="ll-foot__head">Services</div>
         {offers.map((link) => <a href={link.href}>{link.label}</a>)}
       </div>
 
       <div class="ll-foot__col">
-        <div class="ll-foot__head">Territoire</div>
+        <div class="ll-foot__head">Découvrir</div>
         {territory.map((link) => <a href={link.href}>{link.label}</a>)}
       </div>
 
@@ -51,7 +59,7 @@ const year = new Date().getFullYear();
         {elsewhere.map((link) => (
           <a href={link.href} rel="me noopener" target="_blank">{link.label}</a>
         ))}
-        <a href="/kit-presse">Kit presse</a>
+        <a href="/kit-presse/">Kit presse</a>
       </div>
     </div>
 
@@ -59,7 +67,12 @@ const year = new Date().getFullYear();
 
     <div class="ll-foot__legal">
       <span>© {year} Ligerian Labs · Angers, Pays de la Loire · 47.4784 N, −0.5632 E</span>
-      <a href="/mentions-legales">Mentions légales</a>
+      <a href="/mentions-legales/">Mentions légales</a>
     </div>
   </div>
 </footer>
+
+<style>
+  .ll-foot__col { min-width: 0; overflow-wrap: anywhere; }
+  .ll-foot__legal { flex-wrap: wrap; }
+</style>

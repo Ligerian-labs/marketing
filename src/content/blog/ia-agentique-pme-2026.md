@@ -67,4 +67,4 @@ Le tissu économique du Pays de la Loire est exactement le terrain où l'IA agen
 
 Chez **Ligerian Labs**, c'est ce qu'on construit depuis le début : des agents IA sur mesure pour les entreprises locales. Pas des démos qui impressionnent en réunion, mais des outils qui tournent au quotidien et font gagner du temps réel.
 
-Si le terme "IA agentique" vient d'apparaître dans votre radar, c'est le bon moment pour creuser le sujet. [On est là pour en parler →](/contact)
+Si le terme "IA agentique" vient d'apparaître dans votre radar, c'est le bon moment pour creuser le sujet. [On est là pour en parler →](/contact/)

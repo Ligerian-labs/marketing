@@ -94,4 +94,4 @@ Ensuite, on observe pendant une semaine : quels messages reviennent ? quelles d�
 
 C'est moins flamboyant qu'un agent autonome qui promet de gérer l'entreprise. Mais c'est exactement le type d'automatisation IA qui tient dans la vraie vie.
 
-Ligerian Labs aide les PME et acteurs locaux à Angers à identifier ces points de friction, cadrer les risques, puis construire des outils IA utiles sans usine à gaz. Si votre équipe passe trop de temps à se relancer elle-même, on peut en parler sur [/contact](/contact).
+Ligerian Labs aide les PME et acteurs locaux à Angers à identifier ces points de friction, cadrer les risques, puis construire des outils IA utiles sans usine à gaz. Si votre équipe passe trop de temps à se relancer elle-même, on peut en parler sur [/contact](/contact/).

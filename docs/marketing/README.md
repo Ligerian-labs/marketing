@@ -1,0 +1,107 @@
+# Suivi du plan marketing
+
+## Mise à jour du 4 novembre 2026
+
+Le dirigeant confirme la création à **2 000 € par mois de construction**, avec
+hébergement et maintenance sur devis distinct, ainsi que les textes commerciaux
+existants et l'engagement de réponse sous 48 h ouvrées. Sans preuve client, les
+deux réalisations restent présentées comme des prototypes indépendants.
+
+Le [point de départ Search Console](search-console-2026-11-04.md), fusionné dans
+la PR #101, couvre le 3 août au 2 novembre : 17 clics et 1 493 impressions pour
+la propriété exportée, qui comprend aussi le sous-domaine personnel. L'indexation
+actuelle, les URL canoniques choisies par Google, PostHog et Business Profile
+attendent leurs exports ou accès. Les observations datées du 3 novembre ci-dessous
+restent le constat d'avant modification.
+
+La nouvelle composition rapproche les PR #97 à #100 autour de cette offre.
+`/offres/` présente création, reprise et suivi ; `/expertise/` conserve les quatre
+interventions IA. Les anciennes ancres d'offres restent accessibles. Les liens
+de contact préselectionnent une catégorie autorisée ; le contrat B conserve ses
+identifiants et ajoute `maintenance` et le champ facultatif `currentTool`.
+L'analytics accepte la catégorie maintenance et la page expertise, sans le contenu
+du formulaire. Cette composition sera livrée en PR et en aperçu local avant
+toute nouvelle décision de fusion ou de publication.
+
+Le [plan de 90 jours](90-day-plan.md) conserve le brief fourni le 3 novembre 2026, ses neuf volets, les formulations proposées, l'ordre de l'accueil, les pages, les sujets d'articles, les estimations et les décisions J30/J60/J90. Il décrit un travail prévu, pas des faits commerciaux vérifiés. Le site reste destiné aux entreprises francophones autour d'Angers qui commandent un logiciel ou une intégration IA, tout en conservant les offres IA en production et l'identité visuelle.
+
+## Point de départ avant modification
+
+Capture du site public le **2026-11-03 à 14:28:37 UTC**, base Git `9026f4d3111da89c4191ce725b6f44e8289d039d`. Les mesures HTTP sont conservées dans [baseline-2026-11-03.json](baseline-2026-11-03.json). Les réponses HTML intégrales restent dans le dossier privé du run `marketing-20261103`, fichiers `baseline-live-*`. Elles ne contiennent pas de données de prospects soumises.
+
+| Observation vérifiée | Résultat avant modification |
+| --- | --- |
+| `/` | HTTP 200, 25 464 octets |
+| `/ia-angers` et `/ia-angers/` | HTTP 200 tous deux, 20 341 octets chacun |
+| `/services` | HTTP 301 vers `/offres` |
+| `/contact/` | HTTP 200, 17 907 octets |
+| `/sitemap.xml` | HTTP 200, 10 731 octets ; pages sans slash final ; date du build pour toutes les pages statiques |
+| Sources sur la base | 45 articles, 11 destinations publiques dans le sitemap ; pages marketing, formations publiques, espace client privé |
+| Analytics sur la base | PostHog chargé globalement, autocapture et pages/referrers automatiques ; aucun export de compte fourni |
+| Build sur la base | installation npm figée puis build réussis ; scripts dev/build/preview seulement, aucun lint/typecheck/test configuré |
+| Mobile | Débordement de l'accueil à 390 px constaté par la coordination avant modification ; correction attribuée à A |
+
+L'inventaire source comprend accueil, offres, approche, à propos, contact, deux pages Angers, blog, formations, kit presse et mentions légales. Les achats, comptes, contenus de formation réservés et tableaux de bord ne sont pas des destinations SEO publiques. `/ia-angers-pme/` est conservée, faute de données permettant une consolidation. Les nouveaux services et projets A sont découverts seulement lorsque leurs fichiers existent dans la branche construite.
+
+## Affirmations existantes, faits à confirmer et accès manquants
+
+Les textes actuels du site sont des affirmations publiées, pas des preuves externes. La fondation en 2021, la précision des coordonnées géographiques et la tranche de prix du schéma n'étaient pas étayées ; elles sont retirées du schéma partagé. Le fondateur nommé et la zone d'Angers reprennent le contenu existant. Les deux identifiants `#organization` et `#business` désignent la même marque publique ; aucun lien de société mère n'est affirmé. Sans adresse vérifiée complète, aucune éligibilité à un résultat enrichi LocalBusiness n'est promise.
+
+| À confirmer par le dirigeant | État et prochaine action |
+| --- | --- |
+| Nom légal, identifiants et relation avec la marque Ligerian Labs | La page légale dit « raison sociale Ligerian Labs » mais omet les identifiants d'entité. Relation juridique/commerciale non vérifiée ; question en attente |
+| Date de création distincte de l'expérience du fondateur | Non vérifiée ; ne pas déduire l'âge de l'entreprise de son parcours |
+| Offres réellement disponibles, propriété, hébergement, maintenance, capacité | Confirmer périmètres et disponibilité avant publication |
+| Visites clients, accueil physique, zone et horaires réels | Conditionnent l'éligibilité et la configuration Google Business Profile |
+| Engagement de réponse sous 48 h ouvrées | Présent sur le site, copié par B ; confirmé par le dirigeant le 4 novembre 2026 |
+| Base légale, responsable, sous-traitants, durées de conservation | Assertions légales existantes laissées inchangées ; confirmation du propriétaire requise, aucune validation juridique déduite des modifications techniques |
+| Noms clients, captures, témoignages, résultats | Autorisations et preuves non fournies ; aucun résultat client inventé |
+| Relation entre projets publics et prestations clients | Assistant Export et Contremaitre sont présentés par A comme projets indépendants en développement ; aucune preuve de déploiement client ou résultat mesuré |
+
+Les impressions, clics, pages et requêtes visibles sont désormais documentés dans le [point de départ Search Console du 4 novembre](search-console-2026-11-04.md). Les conversions, demandes qualifiées, pages actuellement indexées et URL canoniques choisies par Google restent inconnues. L'observation HTTP ne prouve ni l'indexation ni les performances commerciales. Google Business Profile, son contrôleur, son éligibilité, sa vérification et la visibilité Maps restent inconnus sans accès propriétaire. Les objectifs chiffrés attendent les demandes qualifiées et la capacité de livraison.
+
+## Mesure et contrat de contact
+
+Le bootstrap global initialise PostHog uniquement sur `ligerianlabs.fr` et `www.ligerianlabs.fr`, pour les pages publiques indexables. Le rendu SSR exclut aussi un utilisateur authentifié détecté ; les pages prérendues ne lisent pas la session, mais ne transmettent aucun identifiant de compte. Aucun chargement sur localhost, aperçu, pages privées ou navigateur ayant `localStorage.ll_analytics_disabled = "1"`. Pour un test interne sur le domaine public, définir cet opt-out puis recharger avant le parcours. Les tests navigateur bloquent aussi les requêtes analytics.
+
+Autocapture, enregistrement de session, profils identifiés, pages automatiques et enquêtes sont désactivés. L'identifiant anonyme du SDK est en mémoire seulement. Une petite mémoire de contexte dans `sessionStorage` conserve uniquement `landing_page_id` et `channel` pour l'onglet, sans identifiant de visiteur. La politique HTML `no-referrer` empêche aussi la query du document de partir dans les en-têtes des requêtes SDK/proxy. Le filtre d'envoi conserve une catégorie de page, `page_id` et `landing_page_id` issus de la liste des chemins publics générée au build, `channel` parmi `direct`, `organic`, `maps`, `social`, `referral`, `campaign`, le jeton public du projet et les identifiants anonymes au format UUID. Il supprime URL, requêtes, fragments, referrer, titre, coordonnées, saisies et propriétés libres. Chaque article/projet est distingué par son chemin canonique public. Le premier contexte de l'onglet est conservé jusqu'à une nouvelle provenance externe ou une campagne explicite. Une provenance est classée localement sans enregistrer son URL : moteur de recherche connu → organic, hôte social connu → social, autre site → referral ; les tags `utm_source=google_maps`, `google-business-profile`, `gbp` ou `gmb` → maps. Sans referrer ou tag utilisable, direct. Aucune valeur UTM libre ne sort. Ce sont des groupes d'événements par page, page d'entrée et canal, pas une identité multi-visites, un décompte de visiteurs uniques ou une qualification commerciale automatique. Les liens Business Profile doivent être balisés avec un tag accepté après confirmation du profil ; du trafic Google non balisé peut être classé organic sans pouvoir isoler Maps.
+
+| Événement | Condition | Propriétés métier autorisées |
+| --- | --- | --- |
+| `$pageview` | page publique autorisée | `page`, `page_id`, `landing_page_id`, `channel` bornés |
+| `email_contact_click` | clic mailto sur page autorisée | `page`, `page_id`, `landing_page_id`, `channel` ; aucune adresse ou corps du lien |
+| `service_enquiry_click` | lien interne vers contact depuis offres, logiciel, intégration IA ou Angers | `page`, `page_id`, `landing_page_id`, `channel` ; aucune query ou ancre |
+| `contact_form_submitted` | B uniquement, après réponse acceptée du serveur | `project_type` parmi `new-application`, `existing-software`, `maintenance`, `ai-integration`, `other`, plus `page`, `page_id`, `landing_page_id`, `channel` ajoutés globalement |
+| `blog_post_viewed` | événement historique conservé | `page`, `page_id`, `landing_page_id`, `channel`, sans titre ni tags libres |
+
+B n'utilise que `window.posthog` et gère son absence/échec. L'acceptation d'un formulaire dépend du serveur, jamais de l'analytics. Aucune mesure réelle de réception PostHog n'est revendiquée par les tests locaux. Le proxy `/ingest/` ne transmet que les en-têtes de protocole nécessaires : aucun cookie, Authorization, referrer, IP client ou en-tête interne. Les cookies de réponse et les anciens en-têtes encoding/length des corps décodés sont écartés. Les tests automatisés utilisent une fonction amont injectée et des valeurs synthétiques, sans requête externe. Le contrôle statique facultatif GET/HEAD du README ne lit que le JavaScript public sans l'exécuter ni envoyer de capture. Les chemins SDK `/static/` et `/array/` sont routés vers `eu-assets.i.posthog.com`, les autres vers `eu.i.posthog.com` ; seuls ces deux domaines HTTPS sont acceptés pour les redirections.
+
+Le contrat de contact collecte nom, email, entreprise et outil actuel facultatifs, type de projet, description, délai/budget facultatifs et consentement vrai. Le stockage ajoute identifiant, horodatage, libellé du type de projet et statut `new`. Le honeypot `website` est jeté ; aucun IP/UA n'est stocké par ce code. La notification Resend facultative suit la persistance et sert à répondre à la demande. La liste factuelle des mentions légales est alignée sur ce contrat ; la confirmation du texte existant par le dirigeant ne constitue pas une vérification juridique indépendante.
+
+## Convention et vérification avant mise en ligne
+
+`npm start`, soit `node scripts/server/entry.mjs`, est l'entrée de production, y compris dans Docker. Le serveur importe le handler standalone natif avec son démarrage automatique désactivé. Les pages statiques, le SSR et les sessions passent par ce handler. Les GET/HEAD vers des versions sans slash ou `/index.html` de pages publiques existantes sont redirigés en 301, query intacte. `/services` et `/services/` vont directement vers `/offres/`. Les API, auth, Stripe, ingest, fichiers et routes inconnues ne sont pas normalisés. Les fragments restent gérés par le navigateur ; les identifiants `voir`, `livrer`, `reconstruire`, `automatiser` sont conservés.
+
+Le sitemap découvre les fichiers `.astro` publics sans paramètres et les articles de la collection. Il écarte les pages privées, erreurs, redirections et celles déclarées noindex. Toute nouvelle route publique dynamique hors blog doit fournir une découverte explicite et un test avant publication. Pour les pages statiques, `lastmod` utilise le dernier commit du fichier source, non le build ; sans Git, cette date est omise. Pour les articles, `lastmod` et `BlogPosting.dateModified` utilisent exclusivement le champ rédigé `updated` quand il existe, sinon `date`. Aucun frontmatter existant n'a été changé : les 40 corrections mécaniques de liens ne rendent donc pas les anciens articles artificiellement récents. `updated` doit être renseigné uniquement pour une modification significative du contenu, pas une correction mécanique. Les changements de composants partagés ne constituent pas automatiquement une nouvelle date de chaque contenu. Le sitemap ne promet pas que Google utilisera cette date.
+
+L'ancien démarrage direct `node dist/server/entry.mjs` et `npm run preview` servent toujours le handler natif mais contournent la normalisation des pages prérendues. Les contrôles de release doivent utiliser `npm start` ou la commande Docker mise à jour. Le couple scripts/dist doit être livré ensemble et reconstruit avec `npm run build` après changement de source. Limite vérifiée le 3 novembre : `astro dev` perd les paramètres des redirections de pages prérendues ; utiliser `context.request.url` ne corrige pas cette perte. Le serveur de production conserve les paramètres et reste le contrôle de release. Aucun alignement complet dev/production n'est revendiqué.
+
+La normalisation de tous les liens internes est une acceptation de composition A+B+C. Le candidat C conserve les liens hérités des composants/pages A et du contact B conformément à l'attribution initiale ; il ne les modifie pas. Les littéraux des pages de formation et des articles existants appartiennent à C. Le crawl coordonné sur `fbb4b83` composé de A `6788649`, B `f1bc428` et C `b8e51d2` a trouvé 61 pages, 2 782 liens publics internes, aucune ancre cassée et 40 liens non canoniques dans les destinations Markdown vers contact ; C corrige ces 40 URL sans changer texte, frontmatter ou date publiée. Le crawl final de la composition est une preuve distincte à fournir par la coordination.
+
+Voir le README racine pour les commandes de tests. Vérifier les redirections, canonicals/og:url, tous les loc du sitemap, schémas connectés, ancres, assets, parcours auth/Stripe sans création d'achat et suppression des analytics locaux. Les tests n'envoient aucune demande commerciale en production et utilisent des données locales éphémères. Mobile accueil et formulaire relèvent aussi des contrôles A/B ; ne pas transformer la couverture C en validation de toute la release.
+
+Références primaires consultées le 3 novembre 2026 : [canonicals Google](https://developers.google.com/search/docs/crawling-indexing/consolidate-duplicate-urls), [qualité des données structurées Google](https://developers.google.com/search/docs/appearance/structured-data/sd-policies), [LocalBusiness Google](https://developers.google.com/search/docs/appearance/structured-data/local-business), [Astro trailingSlash](https://docs.astro.build/en/reference/configuration-reference/#trailingslash), [configuration PostHog](https://posthog.com/docs/libraries/js/config). Le comportement réel de l'adapter a été contrôlé dans les versions installées Astro 5.17.1 / @astrojs/node 9.5.2.
+
+## Journal et décisions mensuelles
+
+- 2026-11-03T14:28:37Z : capture publique avant édition, aucune donnée de compte disponible.
+- 2026-11-03T14:30:38Z : runtime C vérifié, modèle demandé/observé gpt-6.1-sol, politique full-access/never.
+- 2026-11-03T14:44:34Z : correctifs C en cours dans une branche dédiée ; cinq assertions régressives échouaient sur la base avant édition, un contrôle API sûr passait. Les changements de code ne sont ni fusionnés ni déployés.
+
+- 2026-11-03T15:30:06Z : revue indépendante du premier candidat en FAIL, rapport intégral sur [issue96](https://github.com/Ligerian-labs/marketing/issues/96#issuecomment-6607624205). Correctifs de couverture, attribution bornée et proxy en cours ; 40 destinations Markdown normalisées, aucune modification des dates publiées. Nouvelle revue indépendante requise avant livraison.
+
+Avant de publier une nouvelle date ou un résultat, inscrire l'heure UTC mesurée, le commit/PR, ce qui a changé, les vérifications et la disponibilité réelle. Les corrections A/B/C restent des candidats jusqu'à la revue puis une fusion/diffusion explicitement autorisée.
+
+J30 : revoir indexation, canonicals choisis, suivi et pages livrées. J60 : revoir requêtes pertinentes, pages et qualification des demandes. J90 : décider selon les données, découverte faible → indexation/pertinence/références externes ; impressions en hausse sans clics → titres/descriptions ; visites pertinentes sans demandes → preuves/offres/contact ; demandes qualifiées en hausse → développer les services/projets associés. Ne pas inventer de seuil ni de cible de leads avant les mesures.
+
+Le dirigeant possède les faits, permissions clients, profils externes et suivi commercial. La coordination possède la composition et la validation de release. Le développement fournit des PR et une preuve technique. Search Console, Business Profile, permissions, nouveaux articles de campagne, prise de contact externe, fusion et déploiement restent des actions ultérieures avec leurs autorisations propres.

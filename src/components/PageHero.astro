@@ -1,0 +1,24 @@
+---
+interface Props { heading: string; intro: string; label: string; }
+const { heading, intro, label } = Astro.props;
+---
+<header class="ll-sec">
+  <div class="ll-wrap ll-hero">
+    <div class="ll-hero__main">
+      <div class="ll-mono">{label}</div>
+      <h1>{heading}</h1>
+      <p class="ll-lede">{intro}</p>
+      <div class="ll-btn-row">
+        <a href="/contact/" class="ll-btn">Parler de mon projet →</a>
+        <a href="/realisations/" class="ll-btn ll-btn--ghost">Voir les réalisations</a>
+      </div>
+    </div>
+    <aside class="ll-hero__aside ll-hero__aside--cobalt"><slot /></aside>
+  </div>
+</header>
+<style>
+  h1 { font-family: var(--font-display); font-weight: 800; font-size: clamp(30px, 3.8vw, 54px); line-height: 1.1; text-transform: uppercase; letter-spacing: -.02em; margin: 0; overflow-wrap: anywhere; text-wrap: balance; }
+  aside { font-size: 17px; line-height: 1.65; }
+  aside :global(a) { color: inherit; text-decoration: underline; text-underline-offset: 4px; }
+  @media (max-width: 620px) { h1 { font-size: clamp(26px, 7vw, 36px); } }
+</style>

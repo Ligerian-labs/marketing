@@ -1,0 +1,28 @@
+<div class="marketing-frame"><slot /></div>
+
+<style>
+  .marketing-frame { overflow-wrap: anywhere; }
+  .marketing-frame :global(h1), .marketing-frame :global(h2), .marketing-frame :global(h3) { text-wrap: balance; }
+  .marketing-frame :global(.ll-hero > *), .marketing-frame :global(.ll-grid > *),
+  .marketing-frame :global(.ll-intro > *), .marketing-frame :global(.ll-offerbody > *) { min-width: 0; }
+  .marketing-frame :global(.marketing-section) { padding-block: clamp(32px, 5vw, 64px); }
+  .marketing-frame :global(.marketing-intro) { max-width: 65ch; margin: 18px 0 30px; font-size: 18px; line-height: 1.6; }
+  .marketing-frame :global(.marketing-columns) { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 40px; }
+  .marketing-frame :global(.marketing-list) { padding-left: 22px; line-height: 1.65; }
+  .marketing-frame :global(.marketing-list li + li) { margin-top: 12px; }
+  .marketing-frame :global(.marketing-note) { border-left: 4px solid var(--cobalt); padding: 16px 20px; background: var(--panel); line-height: 1.6; }
+  .marketing-frame :global(.marketing-step) { padding: 24px; border-top: 2px solid var(--ink); }
+  .marketing-frame :global(.marketing-step h3) { margin: 14px 0; }
+  .marketing-frame :global(.marketing-step p) { margin: 0; line-height: 1.6; }
+  @media (max-width: 900px) {
+    .marketing-frame :global(.marketing-columns) { grid-template-columns: minmax(0, 1fr); gap: 24px; }
+    .marketing-frame :global(.ll-hero) { grid-template-columns: minmax(0, 1fr); }
+  }
+  @media (max-width: 620px) {
+    .marketing-frame :global(.ll-h1) { font-size: clamp(26px, 7.5vw, 38px); line-height: 1.12; }
+    .marketing-frame :global(.ll-h2) { font-size: clamp(23px, 6vw, 30px); line-height: 1.12; }
+    .marketing-frame :global(.ll-grid) { grid-template-columns: minmax(0, 1fr); }
+    .marketing-frame :global(.ll-pipeline) { flex-wrap: wrap; }
+    .marketing-frame :global(.ll-offerbar), .marketing-frame :global(.ll-toc) { flex-wrap: wrap; gap: 8px; }
+  }
+</style>

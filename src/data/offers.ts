@@ -3,6 +3,7 @@
  * Single source of truth: the homepage, /offres, /ia-angers and the article
  * sidebar all read from here so a wording change lands everywhere at once.
  */
+import { projects } from "./projects";
 
 export type OfferSlug = "voir" | "livrer" | "reconstruire" | "automatiser";
 
@@ -114,26 +115,9 @@ export const stages: Stage[] = [
   },
 ];
 
-export interface OpenSourceProject {
-  name: string;
-  what: string;
-}
-
-export const openSource: OpenSourceProject[] = [
-  {
-    name: "marathon",
-    what: "Runner Zig exécutant des tâches d'agent dans des VM Firecracker isolées. L'isolation réelle, pas un conteneur avec de bonnes intentions.",
-  },
-  {
-    name: "claudeswarm",
-    what: "Orchestration du ticket à la pull request, avec des points de contrôle humains là où l'erreur coûte cher.",
-  },
-  {
-    name: "atelier",
-    what: "Studio Rust pilotant quatre agents de code derrière une seule interface.",
-  },
-  {
-    name: "dojo.js · torii",
-    what: "Maintenance de bibliothèques onchain utilisées par des équipes tierces en production.",
-  },
-];
+// Keep the existing press-kit data contract, using the same verified records.
+export interface OpenSourceProject { name: string; what: string; }
+export const openSource: OpenSourceProject[] = projects.map((project) => ({
+  name: project.name,
+  what: `${project.summary} ${project.status}.`,
+}));

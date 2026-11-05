@@ -1,0 +1,17 @@
+---
+import { projects } from "../data/projects";
+---
+<div class="ll-grid ll-grid--2">
+  {projects.map((project) => (
+    <a class="ll-cell" href={`/realisations/${project.slug}/`}>
+      <div class="ll-mono">{project.status}</div>
+      <h3 class="ll-h3">{project.name}</h3>
+      <p>{project.summary}</p>
+      <span class="ll-cell__foot">Lire le projet et ses limites →</span>
+    </a>
+  ))}
+</div>
+<style>
+  .ll-cell { min-width: 0; overflow-wrap: anywhere; }
+  .ll-mono { font-size: 10px; line-height: 1.7; letter-spacing: .07em; }
+</style>

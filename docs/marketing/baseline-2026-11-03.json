@@ -1,0 +1,51 @@
+{
+  "captured_at": "2026-11-03T14:28:37.629376+00:00",
+  "base": "9026f4d3111da89c4191ce725b6f44e8289d039d",
+  "observations": [
+    {
+      "path": "/",
+      "status": 200,
+      "location": null,
+      "bytes": 25464,
+      "artifact": "baseline-live-home-slash.html"
+    },
+    {
+      "path": "/ia-angers",
+      "status": 200,
+      "location": null,
+      "bytes": 20341,
+      "artifact": "baseline-live-ia-angers.html"
+    },
+    {
+      "path": "/ia-angers/",
+      "status": 200,
+      "location": null,
+      "bytes": 20341,
+      "artifact": "baseline-live-ia-angers-slash.html"
+    },
+    {
+      "path": "/services",
+      "status": 301,
+      "location": "/offres",
+      "bytes": 0,
+      "artifact": "baseline-live-services.html"
+    },
+    {
+      "path": "/sitemap.xml",
+      "status": 200,
+      "location": null,
+      "bytes": 10731,
+      "artifact": "baseline-live-sitemap.xml.html"
+    },
+    {
+      "path": "/contact/",
+      "status": 200,
+      "location": null,
+      "bytes": 17907,
+      "artifact": "baseline-live-contact-slash.html"
+    }
+  ],
+  "traffic": "unknown; no Search Console/analytics account exports available",
+  "maps_visibility": "unknown; no business-profile account access",
+  "repository_notes": "No product files changed yet. npm ci and build passed in setup. 45 blog posts on base; no lint/typecheck/test scripts. Current homepage, services and form inspected at baseline."
+}
